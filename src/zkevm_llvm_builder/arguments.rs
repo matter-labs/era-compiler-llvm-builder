@@ -13,6 +13,10 @@ pub struct Arguments {
     /// Whether to build the 'Release' version.
     #[structopt(long = "release")]
     pub release: bool,
+
+    /// Clean the build artifacts and exit.
+    #[structopt(long = "clean")]
+    pub clean: bool,
 }
 
 impl Arguments {

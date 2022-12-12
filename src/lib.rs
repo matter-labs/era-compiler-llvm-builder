@@ -8,11 +8,11 @@ pub mod utils;
 pub mod lock;
 
 pub use self::lock::Lock;
+pub use self::llvm_path::LLVMPath;
 
 use std::path::PathBuf;
 use std::process::Command;
 
-use self::llvm_path::LLVMPath;
 
 ///
 /// Clones the LLVM repository.
