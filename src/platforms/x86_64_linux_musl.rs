@@ -182,6 +182,8 @@ fn build_crt(
             "-G",
             "Ninja",
             "-DPACKAGE_VENDOR='Matter Labs'",
+            "-DCLANG_VENDOR='Matter Labs'",
+            "-DCLANG_REPOSITORY_STRING='origin'",
             format!(
                 "-DCMAKE_INSTALL_PREFIX={}",
                 target_directory.to_string_lossy()
@@ -248,6 +250,8 @@ fn build_host(
             "-G",
             "Ninja",
             "-DPACKAGE_VENDOR='Matter Labs'",
+            "-DCLANG_VENDOR='Matter Labs'",
+            "-DCLANG_REPOSITORY_STRING='origin'",
             format!(
                 "-DDEFAULT_SYSROOT={}",
                 musl_target_directory.to_string_lossy()
@@ -263,6 +267,7 @@ fn build_host(
             "-DCMAKE_CXX_COMPILER='clang++'",
             "-DCLANG_DEFAULT_CXX_STDLIB='libc++'",
             "-DCLANG_DEFAULT_RTLIB='compiler-rt'",
+            "-DLLVM_DEFAULT_TARGET_TRIPLE='x86_64-pc-linux-musl'",
             "-DLLVM_TARGETS_TO_BUILD='X86'",
             "-DLLVM_BUILD_DOCS='Off'",
             "-DLLVM_BUILD_TESTS='Off'",
@@ -291,6 +296,13 @@ fn build_host(
             "-DLIBCXXABI_USE_COMPILER_RT='On'",
             "-DLIBUNWIND_ENABLE_STATIC='On'",
             "-DLIBUNWIND_ENABLE_SHARED='Off'",
+            "-DCOMPILER_RT_BUILD_CRT='On'",
+            "-DCOMPILER_RT_BUILD_SANITIZERS='Off'",
+            "-DCOMPILER_RT_BUILD_XRAY='Off'",
+            "-DCOMPILER_RT_BUILD_LIBFUZZER='Off'",
+            "-DCOMPILER_RT_BUILD_PROFILE='Off'",
+            "-DCOMPILER_RT_BUILD_MEMPROF='Off'",
+            "-DCOMPILER_RT_BUILD_ORC='Off'",
             "-DCOMPILER_RT_DEFAULT_TARGET_ARCH='x86_64'",
             "-DCOMPILER_RT_DEFAULT_TARGET_ONLY='On'",
         ]),
@@ -347,6 +359,8 @@ fn build_target(
             "-G",
             "Ninja",
             "-DPACKAGE_VENDOR='Matter Labs'",
+            "-DCLANG_VENDOR='Matter Labs'",
+            "-DCLANG_REPOSITORY_STRING='origin'",
             "-DBUILD_SHARED_LIBS='Off'",
             format!(
                 "-DCMAKE_INSTALL_PREFIX={}",
