@@ -7,7 +7,7 @@
 
 # The LLVM source and build
 /llvm/
-/target-llvm/
+/target-llvm*/
 /LLVM.lock
 
 # IDE project data

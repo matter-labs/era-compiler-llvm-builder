@@ -46,6 +46,7 @@ pub fn build() -> anyhow::Result<()> {
             "-DLLVM_ENABLE_SPHINX='Off'",
             "-DLLVM_ENABLE_OCAMLDOC='Off'",
             "-DLLVM_ENABLE_ZLIB='Off'",
+            "-DLLVM_ENABLE_ZSTD='Off'",
             "-DLLVM_ENABLE_LIBXML2='Off'",
             "-DLLVM_ENABLE_BINDINGS='Off'",
             "-DLLVM_ENABLE_TERMINFO='Off'",
