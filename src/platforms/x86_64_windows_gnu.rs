@@ -36,7 +36,7 @@ pub fn build() -> anyhow::Result<()> {
             "-DCLANG_VENDOR='Matter Labs'",
             "-DCLANG_REPOSITORY_STRING='origin'",
             format!(
-                "-DCMAKE_INSTALL_PREFIX={}",
+                "-DCMAKE_INSTALL_PREFIX='{}'",
                 llvm_target_final.to_string_lossy().as_ref(),
             )
             .as_str(),

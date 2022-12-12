@@ -42,13 +42,13 @@ pub fn clone(lock: Lock) -> anyhow::Result<()> {
         utils::command(
             Command::new("git")
                 .current_dir(destination_path.as_path())
-                .args(["checkout", lock.branch.as_str()]),
+                .args(["clean", "-d", "-x", "--force"]),
             "LLVM repository checking out",
         )?;
         utils::command(
             Command::new("git")
                 .current_dir(destination_path.as_path())
-                .args(["clean", "-d", "--force"]),
+                .args(["checkout", "--force", lock.branch.as_str()]),
             "LLVM repository checking out",
         )?;
     }

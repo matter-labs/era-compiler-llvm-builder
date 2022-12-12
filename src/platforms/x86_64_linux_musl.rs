@@ -185,7 +185,7 @@ fn build_crt(
             "-DCLANG_VENDOR='Matter Labs'",
             "-DCLANG_REPOSITORY_STRING='origin'",
             format!(
-                "-DCMAKE_INSTALL_PREFIX={}",
+                "-DCMAKE_INSTALL_PREFIX='{}'",
                 target_directory.to_string_lossy()
             )
             .as_str(),
@@ -253,12 +253,12 @@ fn build_host(
             "-DCLANG_VENDOR='Matter Labs'",
             "-DCLANG_REPOSITORY_STRING='origin'",
             format!(
-                "-DDEFAULT_SYSROOT={}",
+                "-DDEFAULT_SYSROOT='{}'",
                 musl_target_directory.to_string_lossy()
             )
             .as_str(),
             format!(
-                "-DCMAKE_INSTALL_PREFIX={}",
+                "-DCMAKE_INSTALL_PREFIX='{}'",
                 target_directory.to_string_lossy()
             )
             .as_str(),
@@ -363,15 +363,16 @@ fn build_target(
             "-DCLANG_REPOSITORY_STRING='origin'",
             "-DBUILD_SHARED_LIBS='Off'",
             format!(
-                "-DCMAKE_INSTALL_PREFIX={}",
+                "-DCMAKE_INSTALL_PREFIX='{}'",
                 target_directory.to_string_lossy()
             )
             .as_str(),
             "-DCMAKE_BUILD_TYPE='Release'",
-            format!("-DCMAKE_C_COMPILER={}", clang_path.to_string_lossy()).as_str(),
-            format!("-DCMAKE_CXX_COMPILER={}", clang_cxx_path.to_string_lossy()).as_str(),
+            format!("-DCMAKE_C_COMPILER='{}'", clang_path.to_string_lossy()).as_str(),
+            format!("-DCMAKE_CXX_COMPILER='{}'", clang_cxx_path.to_string_lossy()).as_str(),
             "-DCMAKE_FIND_LIBRARY_SUFFIXES='.a'",
             "-DCMAKE_EXE_LINKER_FLAGS='-fuse-ld=lld -static'",
+            "-DLLVM_DEFAULT_TARGET_TRIPLE='x86_64-pc-linux-musl'",
             "-DLLVM_TARGETS_TO_BUILD='SyncVM'",
             "-DLLVM_BUILD_DOCS='Off'",
             "-DLLVM_BUILD_TESTS='Off'",
