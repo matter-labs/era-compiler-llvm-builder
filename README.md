@@ -1,2 +1,3 @@
-# compiler-llvm-builder
-The builder of the zkEVM fork of the LLVM framework
+# zkEVM LLVM builder
+
+The builder of the zkEVM fork of the LLVM framework.
