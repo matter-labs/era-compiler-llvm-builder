@@ -1,0 +1,23 @@
+[package]
+name = "compiler-llvm-builder"
+version = "1.0.0"
+authors = [
+    "Alex Zarudnyy <a.zarudnyy@matterlabs.dev>",
+]
+license = "Apache-2.0"
+edition = "2021"
+description = "The builder of the zkEVM fork of the LLVM framework"
+
+[[bin]]
+name = "zkevm-llvm-builder"
+path = "src/zkevm_llvm_builder/main.rs"
+
+[lib]
+doctest = false
+
+[dependencies]
+structopt = { version = "0.3", default-features = false }
+anyhow = "1.0"
+num_cpus = "1.14"
+fs_extra = "1.2"
+path-slash = "0.2"
