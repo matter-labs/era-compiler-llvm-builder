@@ -5,6 +5,9 @@
 pub mod llvm_path;
 pub mod platforms;
 pub mod utils;
+pub mod lock;
+
+pub use self::lock::Lock;
 
 use std::path::PathBuf;
 use std::process::Command;
@@ -14,7 +17,7 @@ use self::llvm_path::LLVMPath;
 ///
 /// Clones the LLVM repository.
 ///
-pub fn clone(repository_url: &str, repository_branch: &str) -> anyhow::Result<()> {
+pub fn clone(lock: Lock) -> anyhow::Result<()> {
     utils::check_presence("git")?;
 
     let destination_path = PathBuf::from(LLVMPath::DIRECTORY_LLVM_SOURCE);
@@ -23,8 +26,8 @@ pub fn clone(repository_url: &str, repository_branch: &str) -> anyhow::Result<()
             Command::new("git").args([
                 "clone",
                 "--branch",
-                repository_branch,
-                repository_url,
+                lock.branch.as_str(),
+                lock.url.as_str(),
                 destination_path.to_string_lossy().as_ref(),
             ]),
             "LLVM repository cloning",
@@ -39,7 +42,7 @@ pub fn clone(repository_url: &str, repository_branch: &str) -> anyhow::Result<()
         utils::command(
             Command::new("git")
                 .current_dir(destination_path.as_path())
-                .args(["checkout", repository_branch]),
+                .args(["checkout", lock.branch.as_str()]),
             "LLVM repository checking out",
         )?;
         utils::command(

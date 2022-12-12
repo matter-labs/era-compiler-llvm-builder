@@ -4,6 +4,8 @@
 
 pub(crate) mod arguments;
 
+use std::path::PathBuf;
+
 use self::arguments::Arguments;
 
 ///
@@ -19,10 +21,9 @@ fn main() {
 fn main_wrapper() -> anyhow::Result<()> {
     let arguments = Arguments::new();
 
-    // compiler_llvm_builder::clone(
-    //     "https://github.com/matter-labs/compiler-llvm",
-    //     arguments.branch.as_str(),
-    // )?;
+    let lock = compiler_llvm_builder::Lock::try_from(&PathBuf::from("LLVM.lock"))?;
+
+    compiler_llvm_builder::clone(lock)?;
     compiler_llvm_builder::build()?;
 
     Ok(())

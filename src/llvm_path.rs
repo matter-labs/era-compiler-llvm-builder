@@ -26,10 +26,20 @@ impl LLVMPath {
     }
 
     ///
+    /// Returns the path to the MUSL build directory.
+    ///
+    pub fn musl_build(source_directory: &str) -> anyhow::Result<PathBuf> {
+        let mut path = PathBuf::from(Self::DIRECTORY_LLVM_TARGET);
+        path.push(source_directory);
+        path.push("build");
+        crate::utils::absolute_path(path)
+    }
+
+    ///
     /// Returns the path to the LLVM CRT build directory.
     ///
     pub fn llvm_build_crt() -> anyhow::Result<PathBuf> {
-        let mut path = PathBuf::from(Self::DIRECTORY_LLVM_SOURCE);
+        let mut path = PathBuf::from(Self::DIRECTORY_LLVM_TARGET);
         path.push("build-crt");
         crate::utils::absolute_path(path)
     }
@@ -38,7 +48,7 @@ impl LLVMPath {
     /// Returns the path to the LLVM host build directory.
     ///
     pub fn llvm_build_host() -> anyhow::Result<PathBuf> {
-        let mut path = PathBuf::from(Self::DIRECTORY_LLVM_SOURCE);
+        let mut path = PathBuf::from(Self::DIRECTORY_LLVM_TARGET);
         path.push("build-host");
         crate::utils::absolute_path(path)
     }
@@ -47,8 +57,17 @@ impl LLVMPath {
     /// Returns the path to the LLVM final build directory.
     ///
     pub fn llvm_build_final() -> anyhow::Result<PathBuf> {
-        let mut path = PathBuf::from(Self::DIRECTORY_LLVM_SOURCE);
+        let mut path = PathBuf::from(Self::DIRECTORY_LLVM_TARGET);
         path.push("build-final");
+        crate::utils::absolute_path(path)
+    }
+
+    ///
+    /// Returns the path to the MUSL target directory.
+    ///
+    pub fn musl_target() -> anyhow::Result<PathBuf> {
+        let mut path = PathBuf::from(Self::DIRECTORY_LLVM_TARGET);
+        path.push("target-musl");
         crate::utils::absolute_path(path)
     }
 
@@ -57,7 +76,7 @@ impl LLVMPath {
     ///
     pub fn llvm_target_crt() -> anyhow::Result<PathBuf> {
         let mut path = PathBuf::from(Self::DIRECTORY_LLVM_TARGET);
-        path.push("target-host");
+        path.push("target-crt");
         crate::utils::absolute_path(path)
     }
 
@@ -76,25 +95,6 @@ impl LLVMPath {
     pub fn llvm_target_final() -> anyhow::Result<PathBuf> {
         let mut path = PathBuf::from(Self::DIRECTORY_LLVM_TARGET);
         path.push("target-final");
-        crate::utils::absolute_path(path)
-    }
-
-    ///
-    /// Returns the path to the MUSL build directory.
-    ///
-    pub fn musl_build(source_directory: &str) -> anyhow::Result<PathBuf> {
-        let mut path = PathBuf::from(Self::DIRECTORY_LLVM_TARGET);
-        path.push(source_directory);
-        path.push("build");
-        crate::utils::absolute_path(path)
-    }
-
-    ///
-    /// Returns the path to the MUSL target directory.
-    ///
-    pub fn musl_target() -> anyhow::Result<PathBuf> {
-        let mut path = PathBuf::from(Self::DIRECTORY_LLVM_TARGET);
-        path.push("target-musl");
         crate::utils::absolute_path(path)
     }
 }
