@@ -371,7 +371,11 @@ fn build_target(
             .as_str(),
             "-DCMAKE_BUILD_TYPE='Release'",
             format!("-DCMAKE_C_COMPILER='{}'", clang_path.to_string_lossy()).as_str(),
-            format!("-DCMAKE_CXX_COMPILER='{}'", clang_cxx_path.to_string_lossy()).as_str(),
+            format!(
+                "-DCMAKE_CXX_COMPILER='{}'",
+                clang_cxx_path.to_string_lossy()
+            )
+            .as_str(),
             "-DCMAKE_FIND_LIBRARY_SUFFIXES='.a'",
             "-DCMAKE_EXE_LINKER_FLAGS='-fuse-ld=lld -static'",
             "-DLLVM_DEFAULT_TARGET_TRIPLE='x86_64-pc-linux-musl'",

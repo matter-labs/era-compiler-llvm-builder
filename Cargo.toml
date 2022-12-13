@@ -9,8 +9,8 @@ edition = "2021"
 description = "The builder of the zkEVM fork of the LLVM framework"
 
 [[bin]]
-name = "zkevm-llvm-builder"
-path = "src/zkevm_llvm_builder/main.rs"
+name = "zkevm-llvm"
+path = "src/zkevm_llvm/main.rs"
 
 [lib]
 doctest = false

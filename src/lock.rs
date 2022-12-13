@@ -3,8 +3,8 @@
 //!
 
 use std::fs::File;
-use std::path::PathBuf;
 use std::io::Read;
+use std::path::PathBuf;
 
 use serde::Deserialize;
 
@@ -27,8 +27,7 @@ impl TryFrom<&PathBuf> for Lock {
     fn try_from(path: &PathBuf) -> Result<Self, Self::Error> {
         let mut config_str = String::new();
         let mut config_file = File::open(path)?;
-        config_file
-            .read_to_string(&mut config_str)?;
+        config_file.read_to_string(&mut config_str)?;
         Ok(toml::from_str(&config_str)?)
     }
 }

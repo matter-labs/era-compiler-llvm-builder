@@ -3,16 +3,15 @@
 //!
 
 pub mod llvm_path;
+pub mod lock;
 pub mod platforms;
 pub mod utils;
-pub mod lock;
 
-pub use self::lock::Lock;
 pub use self::llvm_path::LLVMPath;
+pub use self::lock::Lock;
 
 use std::path::PathBuf;
 use std::process::Command;
-
 
 ///
 /// Clones the LLVM repository.
