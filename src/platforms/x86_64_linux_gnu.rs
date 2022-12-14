@@ -4,12 +4,13 @@
 
 use std::process::Command;
 
+use crate::build_type::BuildType;
 use crate::llvm_path::LLVMPath;
 
 ///
 /// The building sequence.
 ///
-pub fn build() -> anyhow::Result<()> {
+pub fn build(build_type: BuildType) -> anyhow::Result<()> {
     crate::utils::check_presence("cmake")?;
     crate::utils::check_presence("clang")?;
     crate::utils::check_presence("clang++")?;
@@ -36,7 +37,7 @@ pub fn build() -> anyhow::Result<()> {
                 llvm_target_final.to_string_lossy().as_ref(),
             )
             .as_str(),
-            "-DCMAKE_BUILD_TYPE='Release'",
+            format!("-DCMAKE_BUILD_TYPE='{}'", build_type).as_str(),
             "-DCMAKE_C_COMPILER='clang'",
             "-DCMAKE_CXX_COMPILER='clang++'",
             "-DLLVM_TARGETS_TO_BUILD='SyncVM'",
@@ -44,8 +45,16 @@ pub fn build() -> anyhow::Result<()> {
             "-DLLVM_USE_LINKER='lld'",
             "-DLLVM_BUILD_TESTS='Off'",
             "-DLLVM_BUILD_DOCS='Off'",
-            "-DLLVM_INCLUDE_DOCS='Off'",
+            "-DLLVM_BUILD_RUNTIME='Off'",
+            "-DLLVM_BUILD_RUNTIMES='Off'",
+            "-DLLVM_BUILD_UTILS='Off'",
             "-DLLVM_INCLUDE_TESTS='Off'",
+            "-DLLVM_INCLUDE_DOCS='Off'",
+            "-DLLVM_INCLUDE_BENCHMARKS='Off'",
+            "-DLLVM_INCLUDE_EXAMPLES='Off'",
+            "-DLLVM_INCLUDE_RUNTIMES='Off'",
+            "-DLLVM_INCLUDE_UTILS='Off'",
+            "-DLLVM_ENABLE_RUNTIMES='Off'",
             "-DLLVM_ENABLE_ASSERTIONS='Off'",
             "-DLLVM_ENABLE_TERMINFO='Off'",
             "-DLLVM_ENABLE_DOXYGEN='Off'",
@@ -56,6 +65,8 @@ pub fn build() -> anyhow::Result<()> {
             "-DLLVM_ENABLE_LIBXML2='Off'",
             "-DLLVM_ENABLE_BINDINGS='Off'",
             "-DLLVM_ENABLE_TERMINFO='Off'",
+            "-DLLVM_ENABLE_LIBEDIT='Off'",
+            "-DLLVM_ENABLE_LIBPFM='Off'",
             "-DLLVM_ENABLE_PIC='Off'",
         ]),
         "LLVM building cmake",

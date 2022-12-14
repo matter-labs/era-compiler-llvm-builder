@@ -5,12 +5,13 @@
 use std::path::Path;
 use std::process::Command;
 
+use crate::build_type::BuildType;
 use crate::llvm_path::LLVMPath;
 
 ///
 /// The building sequence.
 ///
-pub fn build() -> anyhow::Result<()> {
+pub fn build(build_type: BuildType) -> anyhow::Result<()> {
     crate::utils::check_presence("wget")?;
     crate::utils::check_presence("tar")?;
     crate::utils::check_presence("cmake")?;
@@ -49,6 +50,7 @@ pub fn build() -> anyhow::Result<()> {
         llvm_target_crt.as_path(),
     )?;
     build_target(
+        build_type,
         llvm_module_llvm.as_path(),
         llvm_build_final.as_path(),
         llvm_target_final.as_path(),
@@ -195,11 +197,19 @@ fn build_crt(
             "-DLLVM_ENABLE_PROJECTS='compiler-rt'",
             "-DLLVM_TARGETS_TO_BUILD='X86'",
             "-DLLVM_DEFAULT_TARGET_TRIPLE='x86_64-pc-linux-musl'",
-            "-DLLVM_BUILD_DOCS='Off'",
             "-DLLVM_BUILD_TESTS='Off'",
-            "-DLLVM_INCLUDE_DOCS='Off'",
+            "-DLLVM_BUILD_DOCS='Off'",
+            "-DLLVM_BUILD_RUNTIMES='Off'",
+            "-DLLVM_BUILD_UTILS='Off'",
             "-DLLVM_INCLUDE_TESTS='Off'",
+            "-DLLVM_INCLUDE_DOCS='Off'",
+            "-DLLVM_INCLUDE_BENCHMARKS='Off'",
+            "-DLLVM_INCLUDE_EXAMPLES='Off'",
+            "-DLLVM_INCLUDE_RUNTIMES='Off'",
+            "-DLLVM_INCLUDE_UTILS='Off'",
+            "-DLLVM_ENABLE_RUNTIMES='Off'",
             "-DLLVM_ENABLE_ASSERTIONS='Off'",
+            "-DLLVM_ENABLE_TERMINFO='Off'",
             "-DLLVM_ENABLE_DOXYGEN='Off'",
             "-DLLVM_ENABLE_SPHINX='Off'",
             "-DLLVM_ENABLE_OCAMLDOC='Off'",
@@ -208,6 +218,8 @@ fn build_crt(
             "-DLLVM_ENABLE_LIBXML2='Off'",
             "-DLLVM_ENABLE_BINDINGS='Off'",
             "-DLLVM_ENABLE_TERMINFO='Off'",
+            "-DLLVM_ENABLE_LIBEDIT='Off'",
+            "-DLLVM_ENABLE_LIBPFM='Off'",
             "-DLLVM_ENABLE_PIC='Off'",
             "-DCOMPILER_RT_DEFAULT_TARGET_ARCH='x86_64'",
             "-DCOMPILER_RT_BUILD_CRT='On'",
@@ -270,13 +282,18 @@ fn build_host(
             "-DCLANG_DEFAULT_RTLIB='compiler-rt'",
             "-DLLVM_DEFAULT_TARGET_TRIPLE='x86_64-pc-linux-musl'",
             "-DLLVM_TARGETS_TO_BUILD='X86'",
-            "-DLLVM_BUILD_DOCS='Off'",
             "-DLLVM_BUILD_TESTS='Off'",
-            "-DLLVM_INCLUDE_DOCS='Off'",
+            "-DLLVM_BUILD_DOCS='Off'",
+            "-DLLVM_BUILD_UTILS='Off'",
             "-DLLVM_INCLUDE_TESTS='Off'",
+            "-DLLVM_INCLUDE_DOCS='Off'",
+            "-DLLVM_INCLUDE_BENCHMARKS='Off'",
+            "-DLLVM_INCLUDE_EXAMPLES='Off'",
+            "-DLLVM_INCLUDE_UTILS='Off'",
             "-DLLVM_ENABLE_PROJECTS='clang;lld'",
             "-DLLVM_ENABLE_RUNTIMES='compiler-rt;libcxx;libcxxabi;libunwind'",
             "-DLLVM_ENABLE_ASSERTIONS='Off'",
+            "-DLLVM_ENABLE_TERMINFO='Off'",
             "-DLLVM_ENABLE_DOXYGEN='Off'",
             "-DLLVM_ENABLE_SPHINX='Off'",
             "-DLLVM_ENABLE_OCAMLDOC='Off'",
@@ -285,6 +302,8 @@ fn build_host(
             "-DLLVM_ENABLE_LIBXML2='Off'",
             "-DLLVM_ENABLE_BINDINGS='Off'",
             "-DLLVM_ENABLE_TERMINFO='Off'",
+            "-DLLVM_ENABLE_LIBEDIT='Off'",
+            "-DLLVM_ENABLE_LIBPFM='Off'",
             "-DLLVM_ENABLE_PIC='Off'",
             "-DLIBCXX_CXX_ABI='libcxxabi'",
             "-DLIBCXX_HAS_MUSL_LIBC='On'",
@@ -340,6 +359,7 @@ fn build_host(
 /// The target toolchain building sequence.
 ///
 fn build_target(
+    build_type: BuildType,
     source_directory: &Path,
     build_directory: &Path,
     target_directory: &Path,
@@ -369,7 +389,7 @@ fn build_target(
                 target_directory.to_string_lossy()
             )
             .as_str(),
-            "-DCMAKE_BUILD_TYPE='Release'",
+            format!("-DCMAKE_BUILD_TYPE='{}'", build_type).as_str(),
             format!("-DCMAKE_C_COMPILER='{}'", clang_path.to_string_lossy()).as_str(),
             format!(
                 "-DCMAKE_CXX_COMPILER='{}'",
@@ -380,12 +400,20 @@ fn build_target(
             "-DCMAKE_EXE_LINKER_FLAGS='-fuse-ld=lld -static'",
             "-DLLVM_DEFAULT_TARGET_TRIPLE='x86_64-pc-linux-musl'",
             "-DLLVM_TARGETS_TO_BUILD='SyncVM'",
-            "-DLLVM_BUILD_DOCS='Off'",
             "-DLLVM_BUILD_TESTS='Off'",
-            "-DLLVM_INCLUDE_DOCS='Off'",
+            "-DLLVM_BUILD_DOCS='Off'",
+            "-DLLVM_BUILD_RUNTIME='Off'",
+            "-DLLVM_BUILD_RUNTIMES='Off'",
+            "-DLLVM_BUILD_UTILS='Off'",
             "-DLLVM_INCLUDE_TESTS='Off'",
-            "-DLLVM_ENABLE_PROJECTS='llvm'",
+            "-DLLVM_INCLUDE_DOCS='Off'",
+            "-DLLVM_INCLUDE_BENCHMARKS='Off'",
+            "-DLLVM_INCLUDE_EXAMPLES='Off'",
+            "-DLLVM_INCLUDE_RUNTIMES='Off'",
+            "-DLLVM_INCLUDE_UTILS='Off'",
+            "-DLLVM_ENABLE_RUNTIMES='Off'",
             "-DLLVM_ENABLE_ASSERTIONS='Off'",
+            "-DLLVM_ENABLE_TERMINFO='Off'",
             "-DLLVM_ENABLE_DOXYGEN='Off'",
             "-DLLVM_ENABLE_SPHINX='Off'",
             "-DLLVM_ENABLE_OCAMLDOC='Off'",
@@ -394,6 +422,8 @@ fn build_target(
             "-DLLVM_ENABLE_LIBXML2='Off'",
             "-DLLVM_ENABLE_BINDINGS='Off'",
             "-DLLVM_ENABLE_TERMINFO='Off'",
+            "-DLLVM_ENABLE_LIBEDIT='Off'",
+            "-DLLVM_ENABLE_LIBPFM='Off'",
             "-DLLVM_ENABLE_PIC='Off'",
         ]),
         "LLVM target building cmake",

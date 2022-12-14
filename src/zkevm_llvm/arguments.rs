@@ -9,14 +9,23 @@ use structopt::StructOpt;
 ///
 #[derive(Debug, StructOpt)]
 #[structopt(name = "llvm-builder", about = "The zkEVM LLVM framework builder")]
-pub struct Arguments {
-    /// Whether to build the 'Release' version.
-    #[structopt(long = "release")]
-    pub release: bool,
-
-    /// Clean the build artifacts and exit.
-    #[structopt(long = "clean")]
-    pub clean: bool,
+pub enum Arguments {
+    /// Clone the branch specified in `LLVM.lock`.
+    Clone,
+    /// Build the LLVM framework.
+    Build {
+        /// Whether to build the 'Debug' version.
+        #[structopt(long = "debug")]
+        debug: bool,
+    },
+    /// Checkout the branch specified in `LLVM.lock`.
+    Checkout {
+        /// Remove all artifacts preventing the checkout (removes all local changes!).
+        #[structopt(long = "force")]
+        force: bool,
+    },
+    /// Clean the build artifacts.
+    Clean,
 }
 
 impl Arguments {
