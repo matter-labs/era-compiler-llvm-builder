@@ -62,7 +62,6 @@ pub fn build(build_type: BuildType) -> anyhow::Result<()> {
             "-DLLVM_ENABLE_TERMINFO='Off'",
             "-DLLVM_ENABLE_LIBEDIT='Off'",
             "-DLLVM_ENABLE_LIBPFM='Off'",
-            "-DLLVM_ENABLE_PIC='Off'",
         ]),
         "LLVM building cmake",
     )?;

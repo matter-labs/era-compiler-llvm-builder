@@ -220,7 +220,6 @@ fn build_crt(
             "-DLLVM_ENABLE_TERMINFO='Off'",
             "-DLLVM_ENABLE_LIBEDIT='Off'",
             "-DLLVM_ENABLE_LIBPFM='Off'",
-            "-DLLVM_ENABLE_PIC='Off'",
             "-DCOMPILER_RT_DEFAULT_TARGET_ARCH='x86_64'",
             "-DCOMPILER_RT_BUILD_CRT='On'",
             "-DCOMPILER_RT_BUILD_SANITIZERS='Off'",
@@ -304,7 +303,6 @@ fn build_host(
             "-DLLVM_ENABLE_TERMINFO='Off'",
             "-DLLVM_ENABLE_LIBEDIT='Off'",
             "-DLLVM_ENABLE_LIBPFM='Off'",
-            "-DLLVM_ENABLE_PIC='Off'",
             "-DLIBCXX_CXX_ABI='libcxxabi'",
             "-DLIBCXX_HAS_MUSL_LIBC='On'",
             "-DLIBCXX_ENABLE_SHARED='Off'",
@@ -424,7 +422,6 @@ fn build_target(
             "-DLLVM_ENABLE_TERMINFO='Off'",
             "-DLLVM_ENABLE_LIBEDIT='Off'",
             "-DLLVM_ENABLE_LIBPFM='Off'",
-            "-DLLVM_ENABLE_PIC='Off'",
         ]),
         "LLVM target building cmake",
     )?;
