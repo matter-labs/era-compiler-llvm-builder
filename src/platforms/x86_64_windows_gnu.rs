@@ -44,6 +44,7 @@ pub fn build(build_type: BuildType) -> anyhow::Result<()> {
             format!("-DCMAKE_BUILD_TYPE='{}'", build_type).as_str(),
             "-DCMAKE_C_COMPILER='clang'",
             "-DCMAKE_CXX_COMPILER='clang++'",
+            "-DCMAKE_COLOR_DIAGNOSTICS='Off'",
             "-DLLVM_TARGETS_TO_BUILD='SyncVM'",
             "-DLLVM_OPTIMIZED_TABLEGEN='On'",
             "-DLLVM_USE_LINKER='lld'",

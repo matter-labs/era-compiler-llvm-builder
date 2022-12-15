@@ -36,6 +36,7 @@ pub fn build(build_type: BuildType) -> anyhow::Result<()> {
             .as_str(),
             format!("-DCMAKE_BUILD_TYPE='{}'", build_type).as_str(),
             "-DCMAKE_OSX_DEPLOYMENT_TARGET='11.0'",
+            "-DCMAKE_COLOR_DIAGNOSTICS='Off'",
             "-DLLVM_TARGETS_TO_BUILD='SyncVM'",
             "-DLLVM_OPTIMIZED_TABLEGEN='On'",
             "-DLLVM_BUILD_TESTS='Off'",

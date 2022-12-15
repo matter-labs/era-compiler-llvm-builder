@@ -194,6 +194,7 @@ fn build_crt(
             "-DCMAKE_BUILD_TYPE='Release'",
             "-DCMAKE_C_COMPILER='clang'",
             "-DCMAKE_CXX_COMPILER='clang++'",
+            "-DCMAKE_COLOR_DIAGNOSTICS='Off'",
             "-DLLVM_ENABLE_PROJECTS='compiler-rt'",
             "-DLLVM_TARGETS_TO_BUILD='X86'",
             "-DLLVM_DEFAULT_TARGET_TRIPLE='x86_64-pc-linux-musl'",
@@ -276,6 +277,7 @@ fn build_host(
             "-DCMAKE_BUILD_TYPE='Release'",
             "-DCMAKE_C_COMPILER='clang'",
             "-DCMAKE_CXX_COMPILER='clang++'",
+            "-DCMAKE_COLOR_DIAGNOSTICS='Off'",
             "-DCLANG_DEFAULT_CXX_STDLIB='libc++'",
             "-DCLANG_DEFAULT_RTLIB='compiler-rt'",
             "-DLLVM_DEFAULT_TARGET_TRIPLE='x86_64-pc-linux-musl'",
@@ -369,9 +371,6 @@ fn build_target(
     let mut clang_cxx_path = host_target_directory.to_path_buf();
     clang_cxx_path.push("bin/clang++");
 
-    let mut linker_path = host_target_directory.to_path_buf();
-    linker_path.push("bin/lld");
-
     crate::utils::command(
         Command::new("cmake").args([
             "-S",
@@ -396,7 +395,7 @@ fn build_target(
                 clang_cxx_path.to_string_lossy()
             )
             .as_str(),
-            format!("-DCMAKE_LINKER='{}'", linker_path.to_string_lossy()).as_str(),
+            "-DCMAKE_COLOR_DIAGNOSTICS='Off'",
             "-DCMAKE_FIND_LIBRARY_SUFFIXES='.a'",
             "-DCMAKE_EXE_LINKER_FLAGS='-fuse-ld=lld -static'",
             "-DLLVM_DEFAULT_TARGET_TRIPLE='x86_64-pc-linux-musl'",
