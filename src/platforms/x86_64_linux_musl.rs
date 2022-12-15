@@ -209,7 +209,6 @@ fn build_crt(
             "-DLLVM_INCLUDE_RUNTIMES='Off'",
             "-DLLVM_INCLUDE_UTILS='Off'",
             "-DLLVM_ENABLE_ASSERTIONS='Off'",
-            "-DLLVM_ENABLE_TERMINFO='Off'",
             "-DLLVM_ENABLE_DOXYGEN='Off'",
             "-DLLVM_ENABLE_SPHINX='Off'",
             "-DLLVM_ENABLE_OCAMLDOC='Off'",
@@ -269,6 +268,7 @@ fn build_host(
                 musl_target_directory.to_string_lossy()
             )
             .as_str(),
+            "-DLINKER_SUPPORTS_COLOR_DIAGNOSTICS=0",
             format!(
                 "-DCMAKE_INSTALL_PREFIX='{}'",
                 target_directory.to_string_lossy()
@@ -293,7 +293,6 @@ fn build_host(
             "-DLLVM_ENABLE_PROJECTS='clang;lld'",
             "-DLLVM_ENABLE_RUNTIMES='compiler-rt;libcxx;libcxxabi;libunwind'",
             "-DLLVM_ENABLE_ASSERTIONS='Off'",
-            "-DLLVM_ENABLE_TERMINFO='Off'",
             "-DLLVM_ENABLE_DOXYGEN='Off'",
             "-DLLVM_ENABLE_SPHINX='Off'",
             "-DLLVM_ENABLE_OCAMLDOC='Off'",
@@ -383,6 +382,7 @@ fn build_target(
             "-DCLANG_VENDOR='Matter Labs'",
             "-DCLANG_REPOSITORY_STRING='origin'",
             "-DBUILD_SHARED_LIBS='Off'",
+            "-DLINKER_SUPPORTS_COLOR_DIAGNOSTICS=0",
             format!(
                 "-DCMAKE_INSTALL_PREFIX='{}'",
                 target_directory.to_string_lossy()
@@ -413,7 +413,6 @@ fn build_target(
             "-DLLVM_INCLUDE_UTILS='Off'",
             "-DLLVM_ENABLE_PROJECTS='llvm'",
             "-DLLVM_ENABLE_ASSERTIONS='Off'",
-            "-DLLVM_ENABLE_TERMINFO='Off'",
             "-DLLVM_ENABLE_DOXYGEN='Off'",
             "-DLLVM_ENABLE_SPHINX='Off'",
             "-DLLVM_ENABLE_OCAMLDOC='Off'",
