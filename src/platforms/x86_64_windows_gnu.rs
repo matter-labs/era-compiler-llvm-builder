@@ -58,7 +58,6 @@ pub fn build(build_type: BuildType) -> anyhow::Result<()> {
             "-DLLVM_INCLUDE_EXAMPLES='Off'",
             "-DLLVM_INCLUDE_RUNTIMES='Off'",
             "-DLLVM_INCLUDE_UTILS='Off'",
-            "-DLLVM_ENABLE_RUNTIMES='Off'",
             "-DLLVM_ENABLE_ASSERTIONS='Off'",
             "-DLLVM_ENABLE_TERMINFO='Off'",
             "-DLLVM_ENABLE_DOXYGEN='Off'",

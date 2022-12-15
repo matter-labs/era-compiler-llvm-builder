@@ -207,7 +207,6 @@ fn build_crt(
             "-DLLVM_INCLUDE_EXAMPLES='Off'",
             "-DLLVM_INCLUDE_RUNTIMES='Off'",
             "-DLLVM_INCLUDE_UTILS='Off'",
-            "-DLLVM_ENABLE_RUNTIMES='Off'",
             "-DLLVM_ENABLE_ASSERTIONS='Off'",
             "-DLLVM_ENABLE_TERMINFO='Off'",
             "-DLLVM_ENABLE_DOXYGEN='Off'",
@@ -370,6 +369,9 @@ fn build_target(
     let mut clang_cxx_path = host_target_directory.to_path_buf();
     clang_cxx_path.push("bin/clang++");
 
+    let mut linker_path = host_target_directory.to_path_buf();
+    linker_path.push("bin/lld");
+
     crate::utils::command(
         Command::new("cmake").args([
             "-S",
@@ -394,6 +396,7 @@ fn build_target(
                 clang_cxx_path.to_string_lossy()
             )
             .as_str(),
+            format!("-DCMAKE_LINKER='{}'", linker_path.to_string_lossy()).as_str(),
             "-DCMAKE_FIND_LIBRARY_SUFFIXES='.a'",
             "-DCMAKE_EXE_LINKER_FLAGS='-fuse-ld=lld -static'",
             "-DLLVM_DEFAULT_TARGET_TRIPLE='x86_64-pc-linux-musl'",
@@ -409,7 +412,7 @@ fn build_target(
             "-DLLVM_INCLUDE_EXAMPLES='Off'",
             "-DLLVM_INCLUDE_RUNTIMES='Off'",
             "-DLLVM_INCLUDE_UTILS='Off'",
-            "-DLLVM_ENABLE_RUNTIMES='Off'",
+            "-DLLVM_ENABLE_PROJECTS='llvm'",
             "-DLLVM_ENABLE_ASSERTIONS='Off'",
             "-DLLVM_ENABLE_TERMINFO='Off'",
             "-DLLVM_ENABLE_DOXYGEN='Off'",
