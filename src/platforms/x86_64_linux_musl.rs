@@ -412,7 +412,7 @@ fn build_target(
             "-DLLVM_INCLUDE_RUNTIMES='Off'",
             "-DLLVM_INCLUDE_UTILS='Off'",
             "-DLLVM_ENABLE_PROJECTS='llvm'",
-            "-DLLVM_ENABLE_ASSERTIONS='Off'",
+            "-DLLVM_ENABLE_ASSERTIONS='On'",
             "-DLLVM_ENABLE_DOXYGEN='Off'",
             "-DLLVM_ENABLE_SPHINX='Off'",
             "-DLLVM_ENABLE_OCAMLDOC='Off'",
