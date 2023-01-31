@@ -34,7 +34,7 @@ pub fn build(build_type: BuildType) -> anyhow::Result<()> {
                 llvm_target_final.to_string_lossy().as_ref(),
             )
             .as_str(),
-            format!("-DCMAKE_BUILD_TYPE='{}'", build_type).as_str(),
+            format!("-DCMAKE_BUILD_TYPE='{build_type}'").as_str(),
             "-DCMAKE_OSX_DEPLOYMENT_TARGET='11.0'",
             "-DCMAKE_COLOR_DIAGNOSTICS='Off'",
             "-DLLVM_TARGETS_TO_BUILD='SyncVM'",

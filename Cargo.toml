@@ -1,6 +1,6 @@
 [package]
 name = "compiler-llvm-builder"
-version = "1.0.6"
+version = "1.0.7"
 authors = [
     "Alex Zarudnyy <a.zarudnyy@matterlabs.dev>",
 ]
@@ -21,7 +21,7 @@ structopt = { version = "0.3", default-features = false }
 anyhow = "1.0"
 
 serde = { version = "1.0", features = [ "derive" ] }
-toml = "0.5"
-num_cpus = "1.14"
+toml = "0.7"
+num_cpus = "1.15"
 fs_extra = "1.2"
 path-slash = "0.2"

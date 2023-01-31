@@ -40,6 +40,13 @@ pub fn clone(lock: Lock) -> anyhow::Result<()> {
         "LLVM repository cloning",
     )?;
 
+    if let Some(r#ref) = lock.r#ref {
+        utils::command(
+            Command::new("git").args(["checkout", r#ref.as_str()]),
+            "LLVM repository commit checking out",
+        )?;
+    }
+
     Ok(())
 }
 
@@ -55,6 +62,7 @@ pub fn checkout(lock: Lock, force: bool) -> anyhow::Result<()> {
             .args(["fetch", "--all", "--tags"]),
         "LLVM repository data fetching",
     )?;
+
     if force {
         utils::command(
             Command::new("git")
@@ -62,19 +70,24 @@ pub fn checkout(lock: Lock, force: bool) -> anyhow::Result<()> {
                 .args(["clean", "-d", "-x", "--force"]),
             "LLVM repository cleaning",
         )?;
-        utils::command(
-            Command::new("git")
-                .current_dir(destination_path.as_path())
-                .args(["checkout", "--force", lock.branch.as_str()]),
-            "LLVM repository checking out",
-        )?;
-    } else {
-        utils::command(
-            Command::new("git")
-                .current_dir(destination_path.as_path())
-                .args(["checkout", lock.branch.as_str()]),
-            "LLVM repository checking out",
-        )?;
+    }
+
+    utils::command(
+        Command::new("git")
+            .current_dir(destination_path.as_path())
+            .args(["checkout", "--force", lock.branch.as_str()]),
+        "LLVM repository data pulling",
+    )?;
+
+    if let Some(r#ref) = lock.r#ref {
+        let mut checkout_command = Command::new("git");
+        checkout_command.current_dir(destination_path.as_path());
+        checkout_command.arg("checkout");
+        if force {
+            checkout_command.arg("--force");
+        }
+        checkout_command.arg(r#ref);
+        utils::command(&mut checkout_command, "LLVM repository checking out")?;
     }
 
     Ok(())

@@ -41,7 +41,7 @@ pub fn build(build_type: BuildType) -> anyhow::Result<()> {
                 llvm_target_final.to_string_lossy().as_ref(),
             )
             .as_str(),
-            format!("-DCMAKE_BUILD_TYPE='{}'", build_type).as_str(),
+            format!("-DCMAKE_BUILD_TYPE='{build_type}'").as_str(),
             "-DCMAKE_C_COMPILER='clang'",
             "-DCMAKE_CXX_COMPILER='clang++'",
             "-DCMAKE_COLOR_DIAGNOSTICS='Off'",

@@ -65,11 +65,8 @@ pub fn build(build_type: BuildType) -> anyhow::Result<()> {
 /// The `musl` downloading sequence.
 ///
 fn download_musl(name: &str) -> anyhow::Result<()> {
-    let tar_file_name = format!("{}.tar.gz", name);
-    let url = format!(
-        "https://git.musl-libc.org/cgit/musl/snapshot/{}",
-        tar_file_name
-    );
+    let tar_file_name = format!("{name}.tar.gz");
+    let url = format!("https://git.musl-libc.org/cgit/musl/snapshot/{tar_file_name}");
 
     crate::utils::command(
         Command::new("wget")
@@ -388,7 +385,7 @@ fn build_target(
                 target_directory.to_string_lossy()
             )
             .as_str(),
-            format!("-DCMAKE_BUILD_TYPE='{}'", build_type).as_str(),
+            format!("-DCMAKE_BUILD_TYPE='{build_type}'").as_str(),
             format!("-DCMAKE_C_COMPILER='{}'", clang_path.to_string_lossy()).as_str(),
             format!(
                 "-DCMAKE_CXX_COMPILER='{}'",

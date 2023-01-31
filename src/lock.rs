@@ -19,6 +19,8 @@ pub struct Lock {
     pub url: String,
     /// The LLVM repository branch.
     pub branch: String,
+    /// The LLVM repository commit reference.
+    pub r#ref: Option<String>,
 }
 
 impl TryFrom<&PathBuf> for Lock {
