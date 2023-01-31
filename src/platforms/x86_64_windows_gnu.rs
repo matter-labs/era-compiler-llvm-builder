@@ -11,7 +11,7 @@ use crate::llvm_path::LLVMPath;
 ///
 /// The building sequence.
 ///
-pub fn build(build_type: BuildType) -> anyhow::Result<()> {
+pub fn build(build_type: BuildType, enable_tests: bool) -> anyhow::Result<()> {
     crate::utils::check_presence("cmake")?;
     crate::utils::check_presence("clang")?;
     crate::utils::check_presence("clang++")?;
@@ -53,7 +53,11 @@ pub fn build(build_type: BuildType) -> anyhow::Result<()> {
             "-DLLVM_BUILD_RUNTIME='Off'",
             "-DLLVM_BUILD_RUNTIMES='Off'",
             "-DLLVM_BUILD_UTILS='Off'",
-            "-DLLVM_INCLUDE_TESTS='Off'",
+            format!(
+                "-DLLVM_INCLUDE_TESTS='{}'",
+                if enable_tests { "On" } else { "Off" },
+            )
+            .as_str(),
             "-DLLVM_INCLUDE_DOCS='Off'",
             "-DLLVM_INCLUDE_BENCHMARKS='Off'",
             "-DLLVM_INCLUDE_EXAMPLES='Off'",

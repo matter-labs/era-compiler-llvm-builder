@@ -11,7 +11,7 @@ use crate::llvm_path::LLVMPath;
 ///
 /// The building sequence.
 ///
-pub fn build(build_type: BuildType) -> anyhow::Result<()> {
+pub fn build(build_type: BuildType, enable_tests: bool) -> anyhow::Result<()> {
     crate::utils::check_presence("wget")?;
     crate::utils::check_presence("tar")?;
     crate::utils::check_presence("cmake")?;
@@ -56,6 +56,7 @@ pub fn build(build_type: BuildType) -> anyhow::Result<()> {
         llvm_target_final.as_path(),
         musl_target.as_path(),
         llvm_target_host.as_path(),
+        enable_tests,
     )?;
 
     Ok(())
@@ -360,6 +361,7 @@ fn build_target(
     target_directory: &Path,
     musl_target_directory: &Path,
     host_target_directory: &Path,
+    enable_tests: bool,
 ) -> anyhow::Result<()> {
     let mut clang_path = host_target_directory.to_path_buf();
     clang_path.push("bin/clang");
@@ -402,7 +404,11 @@ fn build_target(
             "-DLLVM_BUILD_RUNTIME='Off'",
             "-DLLVM_BUILD_RUNTIMES='Off'",
             "-DLLVM_BUILD_UTILS='Off'",
-            "-DLLVM_INCLUDE_TESTS='Off'",
+            format!(
+                "-DLLVM_INCLUDE_TESTS='{}'",
+                if enable_tests { "On" } else { "Off" },
+            )
+            .as_str(),
             "-DLLVM_INCLUDE_DOCS='Off'",
             "-DLLVM_INCLUDE_BENCHMARKS='Off'",
             "-DLLVM_INCLUDE_EXAMPLES='Off'",

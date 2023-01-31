@@ -17,6 +17,9 @@ pub enum Arguments {
         /// Whether to build the 'Debug' version.
         #[structopt(long = "debug")]
         debug: bool,
+        /// Whether to build the LLVM tests.
+        #[structopt(long = "enable-tests")]
+        enable_tests: bool,
     },
     /// Checkout the branch specified in `LLVM.lock`.
     Checkout {
