@@ -44,11 +44,24 @@ pub fn build(build_type: BuildType, enable_tests: bool) -> anyhow::Result<()> {
             "-DLLVM_TARGETS_TO_BUILD='SyncVM'",
             "-DLLVM_OPTIMIZED_TABLEGEN='On'",
             "-DLLVM_USE_LINKER='lld'",
-            "-DLLVM_BUILD_TESTS='Off'",
+            format!(
+                "-DLLVM_BUILD_UTILS='{}'",
+                if enable_tests { "On" } else { "Off" },
+            )
+            .as_str(),
+            format!(
+                "-DLLVM_BUILD_TESTS='{}'",
+                if enable_tests { "On" } else { "Off" },
+            )
+            .as_str(),
             "-DLLVM_BUILD_DOCS='Off'",
             "-DLLVM_BUILD_RUNTIME='Off'",
             "-DLLVM_BUILD_RUNTIMES='Off'",
-            "-DLLVM_BUILD_UTILS='Off'",
+            format!(
+                "-DLLVM_INCLUDE_UTILS='{}'",
+                if enable_tests { "On" } else { "Off" },
+            )
+            .as_str(),
             format!(
                 "-DLLVM_INCLUDE_TESTS='{}'",
                 if enable_tests { "On" } else { "Off" },
@@ -58,7 +71,6 @@ pub fn build(build_type: BuildType, enable_tests: bool) -> anyhow::Result<()> {
             "-DLLVM_INCLUDE_BENCHMARKS='Off'",
             "-DLLVM_INCLUDE_EXAMPLES='Off'",
             "-DLLVM_INCLUDE_RUNTIMES='Off'",
-            "-DLLVM_INCLUDE_UTILS='Off'",
             "-DLLVM_ENABLE_ASSERTIONS='On'",
             "-DLLVM_ENABLE_DOXYGEN='Off'",
             "-DLLVM_ENABLE_SPHINX='Off'",

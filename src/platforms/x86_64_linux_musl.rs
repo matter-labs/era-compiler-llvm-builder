@@ -399,11 +399,24 @@ fn build_target(
             "-DCMAKE_EXE_LINKER_FLAGS='-fuse-ld=lld -static'",
             "-DLLVM_DEFAULT_TARGET_TRIPLE='x86_64-pc-linux-musl'",
             "-DLLVM_TARGETS_TO_BUILD='SyncVM'",
-            "-DLLVM_BUILD_TESTS='Off'",
+            format!(
+                "-DLLVM_BUILD_UTILS='{}'",
+                if enable_tests { "On" } else { "Off" },
+            )
+            .as_str(),
+            format!(
+                "-DLLVM_BUILD_TESTS='{}'",
+                if enable_tests { "On" } else { "Off" },
+            )
+            .as_str(),
             "-DLLVM_BUILD_DOCS='Off'",
             "-DLLVM_BUILD_RUNTIME='Off'",
             "-DLLVM_BUILD_RUNTIMES='Off'",
-            "-DLLVM_BUILD_UTILS='Off'",
+            format!(
+                "-DLLVM_INCLUDE_UTILS='{}'",
+                if enable_tests { "On" } else { "Off" },
+            )
+            .as_str(),
             format!(
                 "-DLLVM_INCLUDE_TESTS='{}'",
                 if enable_tests { "On" } else { "Off" },
@@ -413,7 +426,6 @@ fn build_target(
             "-DLLVM_INCLUDE_BENCHMARKS='Off'",
             "-DLLVM_INCLUDE_EXAMPLES='Off'",
             "-DLLVM_INCLUDE_RUNTIMES='Off'",
-            "-DLLVM_INCLUDE_UTILS='Off'",
             "-DLLVM_ENABLE_PROJECTS='llvm'",
             "-DLLVM_ENABLE_ASSERTIONS='On'",
             "-DLLVM_ENABLE_DOXYGEN='Off'",
