@@ -1,6 +1,6 @@
 [package]
 name = "compiler-llvm-builder"
-version = "1.0.10"
+version = "1.0.11"
 authors = [
     "Alex Zarudnyy <a.zarudnyy@matterlabs.dev>",
 ]
