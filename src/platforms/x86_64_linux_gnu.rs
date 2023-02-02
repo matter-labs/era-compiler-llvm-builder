@@ -42,6 +42,7 @@ pub fn build(build_type: BuildType, enable_tests: bool) -> anyhow::Result<()> {
             "-DCMAKE_CXX_COMPILER='clang++'",
             "-DCMAKE_COLOR_DIAGNOSTICS='Off'",
             "-DLLVM_TARGETS_TO_BUILD='SyncVM'",
+            "-DLLVM_DEFAULT_TARGET_TRIPLE='syncvm'",
             "-DLLVM_OPTIMIZED_TABLEGEN='On'",
             "-DLLVM_USE_LINKER='lld'",
             format!(
@@ -55,6 +56,8 @@ pub fn build(build_type: BuildType, enable_tests: bool) -> anyhow::Result<()> {
             )
             .as_str(),
             "-DLLVM_BUILD_DOCS='Off'",
+            "-DLLVM_BUILD_RUNTIME='Off'",
+            "-DLLVM_BUILD_RUNTIMES='Off'",
             format!(
                 "-DLLVM_INCLUDE_UTILS='{}'",
                 if enable_tests { "On" } else { "Off" },
@@ -68,6 +71,7 @@ pub fn build(build_type: BuildType, enable_tests: bool) -> anyhow::Result<()> {
             "-DLLVM_INCLUDE_DOCS='Off'",
             "-DLLVM_INCLUDE_BENCHMARKS='Off'",
             "-DLLVM_INCLUDE_EXAMPLES='Off'",
+            "-DLLVM_INCLUDE_RUNTIMES='Off'",
             "-DLLVM_ENABLE_ASSERTIONS='On'",
             "-DLLVM_ENABLE_DOXYGEN='Off'",
             "-DLLVM_ENABLE_SPHINX='Off'",
