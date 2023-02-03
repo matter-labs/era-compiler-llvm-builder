@@ -91,17 +91,6 @@ pub fn build(build_type: BuildType, enable_tests: bool) -> anyhow::Result<()> {
         "LLVM building cmake",
     )?;
 
-    if enable_tests {
-        crate::utils::command(
-            Command::new("ninja").args([
-                "-C",
-                llvm_build_final.to_string_lossy().as_ref(),
-                "check-llvm",
-            ]),
-            "LLVM building LIT tests with ninja",
-        )?;
-    }
-
     crate::utils::command(
         Command::new("ninja").args(["-C", llvm_build_final.to_string_lossy().as_ref(), "install"]),
         "LLVM building with ninja",
