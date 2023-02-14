@@ -194,7 +194,7 @@ fn build_crt(
             "-DCMAKE_CXX_COMPILER='clang++'",
             "-DCMAKE_COLOR_DIAGNOSTICS='Off'",
             "-DLLVM_ENABLE_PROJECTS='compiler-rt'",
-            "-DLLVM_TARGETS_TO_BUILD='X86'",
+            "-DLLVM_TARGETS_TO_BUILD='X86;SyncVM'",
             "-DLLVM_DEFAULT_TARGET_TRIPLE='x86_64-pc-linux-musl'",
             "-DLLVM_BUILD_TESTS='Off'",
             "-DLLVM_BUILD_DOCS='Off'",
