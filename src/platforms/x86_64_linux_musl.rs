@@ -377,7 +377,6 @@ fn build_target(
             build_directory.to_string_lossy().as_ref(),
             "-G",
             "Ninja",
-            "-DPACKAGE_VENDOR='Matter Labs'",
             "-DCLANG_VENDOR='Matter Labs'",
             "-DCLANG_REPOSITORY_STRING='origin'",
             "-DBUILD_SHARED_LIBS='Off'",
@@ -439,7 +438,7 @@ fn build_target(
             "-DLLVM_ENABLE_TERMINFO='Off'",
             "-DLLVM_ENABLE_LIBEDIT='Off'",
             "-DLLVM_ENABLE_LIBPFM='Off'",
-        ]),
+        ]).args(crate::platforms::SHARED_BUILD_OPTS),
         "LLVM target building cmake",
     )?;
 

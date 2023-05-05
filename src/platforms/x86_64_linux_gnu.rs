@@ -29,7 +29,6 @@ pub fn build(build_type: BuildType, enable_tests: bool) -> anyhow::Result<()> {
             llvm_build_final.to_string_lossy().as_ref(),
             "-G",
             "Ninja",
-            "-DPACKAGE_VENDOR='Matter Labs'",
             "-DCLANG_VENDOR='Matter Labs'",
             "-DCLANG_REPOSITORY_STRING='origin'",
             format!(
@@ -83,7 +82,7 @@ pub fn build(build_type: BuildType, enable_tests: bool) -> anyhow::Result<()> {
             "-DLLVM_ENABLE_TERMINFO='Off'",
             "-DLLVM_ENABLE_LIBEDIT='Off'",
             "-DLLVM_ENABLE_LIBPFM='Off'",
-        ]),
+        ]).args(crate::platforms::SHARED_BUILD_OPTS),
         "LLVM building cmake",
     )?;
 
