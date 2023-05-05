@@ -14,12 +14,13 @@ use path_slash::PathBufExt;
 /// Checks the status and prints `stderr`.
 ///
 pub fn command(command: &mut Command, description: &str) -> anyhow::Result<()> {
-    let status = command
-        .status()
-        .map_err(|error| anyhow::anyhow!("{} process: {}", description, error))?;
-    if !status.success() {
-        anyhow::bail!("{} failed", description);
-    }
+    println!("description: {}; command {:?}", description, command);
+    // let status = command
+    //     .status()
+    //     .map_err(|error| anyhow::anyhow!("{} process: {}", description, error))?;
+    // if !status.success() {
+    //     anyhow::bail!("{} failed", description);
+    // }
     Ok(())
 }
 
