@@ -94,30 +94,32 @@ pub fn checkout(lock: Lock, force: bool) -> anyhow::Result<()> {
 }
 
 ///
-/// Executes the LLVM framework building.
-///
+/// Executes the  of the LLVM framework for the platform determined by the cfg macro.
+/// Since cfg is evaluated at compile time, overriding the platform with a command-line
+/// argument is not possible. So for cross-platform testing, comment out all but the
+/// line to be tested, and perhaps also checks in the platform-specific build method.
 pub fn build(build_type: BuildType, enable_tests: bool) -> anyhow::Result<()> {
     std::fs::create_dir_all(LLVMPath::DIRECTORY_LLVM_TARGET)?;
 
-    if cfg!(target_arch = "x86_64") {
-        if cfg!(target_os = "linux") {
-            if cfg!(target_env = "gnu") {
-                platforms::x86_64_linux_gnu::build(build_type, enable_tests)?;
-            } else if cfg!(target_env = "musl") {
-                platforms::x86_64_linux_musl::build(build_type, enable_tests)?;
-            }
-        } else if cfg!(target_os = "macos") {
-            platforms::x86_64_macos::build(build_type, enable_tests)?;
-        } else if cfg!(target_os = "windows") && cfg!(target_env = "gnu") {
+    // if cfg!(target_arch = "x86_64") {
+    //     if cfg!(target_os = "linux") {
+    //         if cfg!(target_env = "gnu") {
+                // ✓platforms::x86_64_linux_gnu::build(build_type, enable_tests)?;
+    //         } else if cfg!(target_env = "musl") {
+                // ✓platforms::x86_64_linux_musl::build(build_type, enable_tests)?;
+    //         }
+    //     } else if cfg!(target_os = "macos") {
+            // ✓platforms::x86_64_macos::build(build_type, enable_tests)?;
+    //     } else if cfg!(target_os = "windows") && cfg!(target_env = "gnu") {
             platforms::x86_64_windows_gnu::build(build_type, enable_tests)?;
-        }
-    } else if cfg!(target_arch = "aarch64") {
-        if cfg!(target_os = "macos") {
-            platforms::aarch64_macos::build(build_type, enable_tests)?;
-        }
-    } else {
-        anyhow::bail!("Unsupported on your machine");
-    }
+    //     }
+    // } else if cfg!(target_arch = "aarch64") {
+    //     if cfg!(target_os = "macos") {
+    //         platforms::aarch64_macos::build(build_type, enable_tests)?;
+    //     }
+    // } else {
+    //     anyhow::bail!("Unsupported on your machine");
+    // }
 
     Ok(())
 }

@@ -12,13 +12,13 @@ use crate::llvm_path::LLVMPath;
 /// The building sequence.
 ///
 pub fn build(build_type: BuildType, enable_tests: bool) -> anyhow::Result<()> {
-    crate::utils::check_presence("wget")?;
-    crate::utils::check_presence("tar")?;
-    crate::utils::check_presence("cmake")?;
-    crate::utils::check_presence("clang")?;
-    crate::utils::check_presence("clang++")?;
-    crate::utils::check_presence("lld")?;
-    crate::utils::check_presence("ninja")?;
+    // crate::utils::check_presence("wget")?;
+    // crate::utils::check_presence("tar")?;
+    // crate::utils::check_presence("cmake")?;
+    // crate::utils::check_presence("clang")?;
+    // crate::utils::check_presence("clang++")?;
+    // crate::utils::check_presence("lld")?;
+    // crate::utils::check_presence("ninja")?;
 
     let musl_name = "musl-1.2.3";
     let musl_build = LLVMPath::musl_build(musl_name)?;
@@ -35,20 +35,20 @@ pub fn build(build_type: BuildType, enable_tests: bool) -> anyhow::Result<()> {
     let llvm_build_final = LLVMPath::llvm_build_final()?;
     let llvm_target_final = LLVMPath::llvm_target_final()?;
 
-    download_musl(musl_name)?;
-    build_musl(musl_build.as_path(), musl_target.as_path())?;
-    build_crt(
-        llvm_module_llvm.as_path(),
-        llvm_build_crt.as_path(),
-        llvm_target_crt.as_path(),
-    )?;
-    build_host(
-        llvm_module_llvm.as_path(),
-        llvm_build_host.as_path(),
-        llvm_target_host.as_path(),
-        musl_target.as_path(),
-        llvm_target_crt.as_path(),
-    )?;
+    // download_musl(musl_name)?;
+    // build_musl(musl_build.as_path(), musl_target.as_path())?;
+    // build_crt(
+    //     llvm_module_llvm.as_path(),
+    //     llvm_build_crt.as_path(),
+    //     llvm_target_crt.as_path(),
+    // )?;
+    // build_host(
+    //     llvm_module_llvm.as_path(),
+    //     llvm_build_host.as_path(),
+    //     llvm_target_host.as_path(),
+    //     musl_target.as_path(),
+    //     llvm_target_crt.as_path(),
+    // )?;
     build_target(
         build_type,
         llvm_module_llvm.as_path(),
