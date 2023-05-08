@@ -377,8 +377,6 @@ fn build_target(
             build_directory.to_string_lossy().as_ref(),
             "-G",
             "Ninja",
-            "-DCLANG_VENDOR='Matter Labs'",
-            "-DCLANG_REPOSITORY_STRING='origin'",
             "-DBUILD_SHARED_LIBS='Off'",
             "-DLINKER_SUPPORTS_COLOR_DIAGNOSTICS=0",
             format!(
