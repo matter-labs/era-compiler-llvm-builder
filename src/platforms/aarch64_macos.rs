@@ -54,16 +54,6 @@ pub fn build(build_type: BuildType, enable_tests: bool) -> anyhow::Result<()> {
                 if enable_tests { "On" } else { "Off" },
             )
             .as_str(),
-            "-DLLVM_ENABLE_DOXYGEN='Off'",
-            "-DLLVM_ENABLE_SPHINX='Off'",
-            "-DLLVM_ENABLE_OCAMLDOC='Off'",
-            "-DLLVM_ENABLE_ZLIB='Off'",
-            "-DLLVM_ENABLE_ZSTD='Off'",
-            "-DLLVM_ENABLE_LIBXML2='Off'",
-            "-DLLVM_ENABLE_BINDINGS='Off'",
-            "-DLLVM_ENABLE_TERMINFO='Off'",
-            "-DLLVM_ENABLE_LIBEDIT='Off'",
-            "-DLLVM_ENABLE_LIBPFM='Off'",
         ])
         .args(crate::platforms::SHARED_BUILD_OPTS)
         .args(crate::platforms::SHARED_BUILD_OPTS_NOT_MUSL),
