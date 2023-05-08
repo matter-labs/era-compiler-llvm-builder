@@ -15,6 +15,8 @@ use path_slash::PathBufExt;
 ///
 pub fn command(command: &mut Command, description: &str) -> anyhow::Result<()> {
     println!("description: {}; command {:?}", description, command);
+    // FIXME For now I have also disabled the actual build, replaced by just outputting
+    // the options, so that I could test other platforms.
     // let status = command
     //     .status()
     //     .map_err(|error| anyhow::anyhow!("{} process: {}", description, error))?;
