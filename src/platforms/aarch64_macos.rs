@@ -54,7 +54,6 @@ pub fn build(build_type: BuildType, enable_tests: bool) -> anyhow::Result<()> {
                 if enable_tests { "On" } else { "Off" },
             )
             .as_str(),
-            "-DLLVM_ENABLE_ASSERTIONS='On'",
             "-DLLVM_ENABLE_DOXYGEN='Off'",
             "-DLLVM_ENABLE_SPHINX='Off'",
             "-DLLVM_ENABLE_OCAMLDOC='Off'",

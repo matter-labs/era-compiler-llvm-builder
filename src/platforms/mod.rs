@@ -26,4 +26,5 @@ pub const SHARED_BUILD_OPTS_NOT_MUSL: [&'static str; 1] = [
     "-DLLVM_BUILD_RUNTIME='Off'",
     "-DLLVM_BUILD_RUNTIMES='Off'",
     "-DLLVM_INCLUDE_RUNTIMES='Off'",
+    "-DLLVM_ENABLE_ASSERTIONS='On'",
     ];
