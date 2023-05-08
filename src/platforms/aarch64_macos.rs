@@ -33,7 +33,7 @@ pub fn build(build_type: BuildType, enable_tests: bool) -> anyhow::Result<()> {
             .as_str(),
             format!("-DCMAKE_BUILD_TYPE='{build_type}'").as_str(),
             "-DCMAKE_OSX_DEPLOYMENT_TARGET='11.0'",
-            "-DLLVM_TARGETS_TO_BUILD='SyncVM'",
+
             format!(
                 "-DLLVM_BUILD_UTILS='{}'",
                 if enable_tests { "On" } else { "Off" },
