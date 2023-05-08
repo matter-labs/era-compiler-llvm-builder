@@ -16,6 +16,7 @@ pub const SHARED_BUILD_OPTS: [&'static str; 4] = [
     "-DLLVM_BUILD_DOCS='Off'",
     "-DLLVM_INCLUDE_DOCS='Off'",
     "-DLLVM_INCLUDE_BENCHMARKS='Off'",
+    "-DLLVM_INCLUDE_EXAMPLES='Off'",
     ];
 
 pub const SHARED_BUILD_OPTS_NOT_MUSL: [&'static str; 1] = [
