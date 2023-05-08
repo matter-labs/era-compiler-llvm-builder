@@ -12,11 +12,11 @@ use crate::llvm_path::LLVMPath;
 /// The building sequence.
 ///
 pub fn build(build_type: BuildType, enable_tests: bool) -> anyhow::Result<()> {
-    crate::utils::check_presence("cmake")?;
-    crate::utils::check_presence("clang")?;
-    crate::utils::check_presence("clang++")?;
-    crate::utils::check_presence("lld")?;
-    crate::utils::check_presence("ninja")?;
+    // crate::utils::check_presence("cmake")?;
+    // crate::utils::check_presence("clang")?;
+    // crate::utils::check_presence("clang++")?;
+    // crate::utils::check_presence("lld")?;
+    // crate::utils::check_presence("ninja")?;
 
     let llvm_module_llvm =
         LLVMPath::llvm_module_llvm().and_then(crate::utils::path_windows_to_unix)?;
