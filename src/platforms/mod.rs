@@ -12,9 +12,11 @@ pub const SHARED_BUILD_OPTS: [&'static str; 4] = [
     "-DPACKAGE_VENDOR='Matter Labs'",
     "-DCLANG_VENDOR='Matter Labs'",
     "-DCLANG_REPOSITORY_STRING='origin'",
-    "-DLLVM_INCLUDE_TESTS=\'Maybe\'"
+    "-DCMAKE_COLOR_DIAGNOSTICS='Off'",
     ];
 
 pub const SHARED_BUILD_OPTS_NOT_MUSL: [&'static str; 1] = [
     "-DLLVM_TARGETS_TO_BUILD=\'SyncVM\'",
+    "-DLLVM_DEFAULT_TARGET_TRIPLE='syncvm'",
+    "-DLLVM_OPTIMIZED_TABLEGEN='On'",
     ];
