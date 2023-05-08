@@ -193,7 +193,6 @@ fn build_crt(
             "-DLLVM_TARGETS_TO_BUILD='X86;SyncVM'",
             "-DLLVM_DEFAULT_TARGET_TRIPLE='x86_64-pc-linux-musl'",
             "-DLLVM_BUILD_TESTS='Off'",
-            "-DLLVM_BUILD_DOCS='Off'",
             "-DLLVM_BUILD_RUNTIMES='Off'",
             "-DLLVM_BUILD_UTILS='Off'",
             "-DLLVM_INCLUDE_TESTS='Off'",
@@ -274,7 +273,6 @@ fn build_host(
             "-DLLVM_DEFAULT_TARGET_TRIPLE='x86_64-pc-linux-musl'",
             "-DLLVM_TARGETS_TO_BUILD='X86'",
             "-DLLVM_BUILD_TESTS='Off'",
-            "-DLLVM_BUILD_DOCS='Off'",
             "-DLLVM_BUILD_UTILS='Off'",
             "-DLLVM_INCLUDE_TESTS='Off'",
             "-DLLVM_INCLUDE_DOCS='Off'",
@@ -400,7 +398,6 @@ fn build_target(
                 if enable_tests { "On" } else { "Off" },
             )
             .as_str(),
-            "-DLLVM_BUILD_DOCS='Off'",
             "-DLLVM_BUILD_RUNTIME='Off'",
             "-DLLVM_BUILD_RUNTIMES='Off'",
             format!(
