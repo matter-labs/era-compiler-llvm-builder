@@ -436,7 +436,8 @@ fn build_target(
             "-DLLVM_ENABLE_TERMINFO='Off'",
             "-DLLVM_ENABLE_LIBEDIT='Off'",
             "-DLLVM_ENABLE_LIBPFM='Off'",
-        ]).args(crate::platforms::SHARED_BUILD_OPTS),
+        ])
+        .args(crate::platforms::SHARED_BUILD_OPTS),
         "LLVM target building cmake",
     )?;
 
