@@ -76,8 +76,8 @@ pub fn build(build_type: BuildType, enable_tests: bool) -> anyhow::Result<()> {
             "-DLLVM_ENABLE_LIBEDIT='Off'",
             "-DLLVM_ENABLE_LIBPFM='Off'",
         ])
-        .args(crate::platforms::SHARED_BUILD_OPTS),
-
+        .args(crate::platforms::SHARED_BUILD_OPTS)
+        .args(crate::platforms::SHARED_BUILD_OPTS_NOT_MUSL),
         "LLVM building cmake",
     )?;
 

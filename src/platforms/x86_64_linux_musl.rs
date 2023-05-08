@@ -181,9 +181,6 @@ fn build_crt(
             build_directory.to_string_lossy().as_ref(),
             "-G",
             "Ninja",
-            "-DPACKAGE_VENDOR='Matter Labs'",
-            "-DCLANG_VENDOR='Matter Labs'",
-            "-DCLANG_REPOSITORY_STRING='origin'",
             format!(
                 "-DCMAKE_INSTALL_PREFIX='{}'",
                 target_directory.to_string_lossy()
@@ -225,7 +222,8 @@ fn build_crt(
             "-DCOMPILER_RT_BUILD_PROFILE='Off'",
             "-DCOMPILER_RT_BUILD_MEMPROF='Off'",
             "-DCOMPILER_RT_BUILD_ORC='Off'",
-        ]),
+        ])
+        .args(crate::platforms::SHARED_BUILD_OPTS),
         "CRT building cmake",
     )?;
 
@@ -258,9 +256,6 @@ fn build_host(
             build_directory.to_string_lossy().as_ref(),
             "-G",
             "Ninja",
-            "-DPACKAGE_VENDOR='Matter Labs'",
-            "-DCLANG_VENDOR='Matter Labs'",
-            "-DCLANG_REPOSITORY_STRING='origin'",
             format!(
                 "-DDEFAULT_SYSROOT='{}'",
                 musl_target_directory.to_string_lossy()
@@ -322,7 +317,8 @@ fn build_host(
             "-DCOMPILER_RT_BUILD_ORC='Off'",
             "-DCOMPILER_RT_DEFAULT_TARGET_ARCH='x86_64'",
             "-DCOMPILER_RT_DEFAULT_TARGET_ONLY='On'",
-        ]),
+        ])
+        .args(crate::platforms::SHARED_BUILD_OPTS),
         "LLVM host building cmake",
     )?;
 
