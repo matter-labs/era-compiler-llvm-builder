@@ -8,6 +8,8 @@ use std::process::Command;
 
 use path_slash::PathBufExt;
 
+const DRY_RUN: bool = true;
+
 ///
 /// The subprocess runner.
 ///
@@ -17,12 +19,15 @@ pub fn command(command: &mut Command, description: &str) -> anyhow::Result<()> {
     println!("description: {}; command {:?}", description, command);
     // FIXME For now I have also disabled the actual build, replaced by just outputting
     // the options, so that I could test other platforms.
-    // let status = command
-    //     .status()
-    //     .map_err(|error| anyhow::anyhow!("{} process: {}", description, error))?;
-    // if !status.success() {
-    //     anyhow::bail!("{} failed", description);
-    // }
+    
+    if !DRY_RUN {
+        let status = command
+            .status()
+            .map_err(|error| anyhow::anyhow!("{} process: {}", description, error))?;
+        if !status.success() {
+            anyhow::bail!("{} failed", description);
+        }
+    }
     Ok(())
 }
 
