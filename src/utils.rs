@@ -9,6 +9,7 @@ use std::process::Command;
 use path_slash::PathBufExt;
 
 const DRY_RUN: bool = true;
+const VERBOSE: bool = true;
 
 ///
 /// The subprocess runner.
@@ -16,10 +17,9 @@ const DRY_RUN: bool = true;
 /// Checks the status and prints `stderr`.
 ///
 pub fn command(command: &mut Command, description: &str) -> anyhow::Result<()> {
-    println!("description: {}; command {:?}", description, command);
-    // FIXME For now I have also disabled the actual build, replaced by just outputting
-    // the options, so that I could test other platforms.
-    
+    if VERBOSE {
+        println!("description: {}; command: {:?}", description, command);
+    }    
     if !DRY_RUN {
         let status = command
             .status()
