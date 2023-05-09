@@ -8,8 +8,8 @@ use std::process::Command;
 
 use path_slash::PathBufExt;
 
-const DRY_RUN: bool = true;
-const VERBOSE: bool = true;
+const DRY_RUN: bool = false;
+const VERBOSE: bool = false;
 
 ///
 /// The subprocess runner.
