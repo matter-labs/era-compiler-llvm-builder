@@ -94,7 +94,10 @@ pub fn checkout(lock: Lock, force: bool) -> anyhow::Result<()> {
 }
 
 ///
-/// Executes the LLVM framework building.
+/// Executes the building of the LLVM framework for the platform determined by the cfg macro.
+/// Since cfg is evaluated at compile time, overriding the platform with a command-line
+/// argument is not possible. So for cross-platform testing, comment out all but the
+/// line to be tested, and perhaps also checks in the platform-specific build method.
 ///
 pub fn build(build_type: BuildType, enable_tests: bool) -> anyhow::Result<()> {
     std::fs::create_dir_all(LLVMPath::DIRECTORY_LLVM_TARGET)?;

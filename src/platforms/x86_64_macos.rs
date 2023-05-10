@@ -26,9 +26,6 @@ pub fn build(build_type: BuildType, enable_tests: bool) -> anyhow::Result<()> {
             llvm_build_final.to_string_lossy().as_ref(),
             "-G",
             "Ninja",
-            "-DPACKAGE_VENDOR='Matter Labs'",
-            "-DCLANG_VENDOR='Matter Labs'",
-            "-DCLANG_REPOSITORY_STRING='origin'",
             format!(
                 "-DCMAKE_INSTALL_PREFIX='{}'",
                 llvm_target_final.to_string_lossy().as_ref(),
@@ -36,10 +33,7 @@ pub fn build(build_type: BuildType, enable_tests: bool) -> anyhow::Result<()> {
             .as_str(),
             format!("-DCMAKE_BUILD_TYPE='{build_type}'").as_str(),
             "-DCMAKE_OSX_DEPLOYMENT_TARGET='11.0'",
-            "-DCMAKE_COLOR_DIAGNOSTICS='Off'",
-            "-DLLVM_TARGETS_TO_BUILD='SyncVM'",
-            "-DLLVM_DEFAULT_TARGET_TRIPLE='syncvm'",
-            "-DLLVM_OPTIMIZED_TABLEGEN='On'",
+
             format!(
                 "-DLLVM_BUILD_UTILS='{}'",
                 if enable_tests { "On" } else { "Off" },
@@ -50,9 +44,6 @@ pub fn build(build_type: BuildType, enable_tests: bool) -> anyhow::Result<()> {
                 if enable_tests { "On" } else { "Off" },
             )
             .as_str(),
-            "-DLLVM_BUILD_DOCS='Off'",
-            "-DLLVM_BUILD_RUNTIME='Off'",
-            "-DLLVM_BUILD_RUNTIMES='Off'",
             format!(
                 "-DLLVM_INCLUDE_UTILS='{}'",
                 if enable_tests { "On" } else { "Off" },
@@ -63,22 +54,9 @@ pub fn build(build_type: BuildType, enable_tests: bool) -> anyhow::Result<()> {
                 if enable_tests { "On" } else { "Off" },
             )
             .as_str(),
-            "-DLLVM_INCLUDE_DOCS='Off'",
-            "-DLLVM_INCLUDE_BENCHMARKS='Off'",
-            "-DLLVM_INCLUDE_EXAMPLES='Off'",
-            "-DLLVM_INCLUDE_RUNTIMES='Off'",
-            "-DLLVM_ENABLE_ASSERTIONS='On'",
-            "-DLLVM_ENABLE_DOXYGEN='Off'",
-            "-DLLVM_ENABLE_SPHINX='Off'",
-            "-DLLVM_ENABLE_OCAMLDOC='Off'",
-            "-DLLVM_ENABLE_ZLIB='Off'",
-            "-DLLVM_ENABLE_ZSTD='Off'",
-            "-DLLVM_ENABLE_LIBXML2='Off'",
-            "-DLLVM_ENABLE_BINDINGS='Off'",
-            "-DLLVM_ENABLE_TERMINFO='Off'",
-            "-DLLVM_ENABLE_LIBEDIT='Off'",
-            "-DLLVM_ENABLE_LIBPFM='Off'",
-        ]),
+        ])
+        .args(crate::platforms::SHARED_BUILD_OPTS)
+        .args(crate::platforms::SHARED_BUILD_OPTS_NOT_MUSL),
         "LLVM building cmake",
     )?;
 

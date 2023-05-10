@@ -8,17 +8,25 @@ use std::process::Command;
 
 use path_slash::PathBufExt;
 
+const DRY_RUN: bool = false;
+const VERBOSE: bool = false;
+
 ///
 /// The subprocess runner.
 ///
 /// Checks the status and prints `stderr`.
 ///
 pub fn command(command: &mut Command, description: &str) -> anyhow::Result<()> {
-    let status = command
-        .status()
-        .map_err(|error| anyhow::anyhow!("{} process: {}", description, error))?;
-    if !status.success() {
-        anyhow::bail!("{} failed", description);
+    if VERBOSE {
+        println!("description: {}; command: {:?}", description, command);
+    }    
+    if !DRY_RUN {
+        let status = command
+            .status()
+            .map_err(|error| anyhow::anyhow!("{} process: {}", description, error))?;
+        if !status.success() {
+            anyhow::bail!("{} failed", description);
+        }
     }
     Ok(())
 }
