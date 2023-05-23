@@ -18,10 +18,10 @@ const VERBOSE: bool = true;
 ///
 pub fn command(command: &mut Command, description: &str) -> anyhow::Result<()> {
     if VERBOSE {
-        println!("description: {}; command: {:?}", description, command);
+        println!("\ndescription: {}; command: {:?}", description, command);
     }
     if DRY_RUN {
-        println!("Only a dry run; not executing the command.");
+        println!("\tOnly a dry run; not executing the command.");
     } else {
         let status = command
             .status()
