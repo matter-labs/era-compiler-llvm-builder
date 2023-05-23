@@ -102,25 +102,25 @@ pub fn checkout(lock: Lock, force: bool) -> anyhow::Result<()> {
 pub fn build(build_type: BuildType, enable_tests: bool, extra_args: Vec<String>) -> anyhow::Result<()> {
     std::fs::create_dir_all(LLVMPath::DIRECTORY_LLVM_TARGET)?;
 
-    if cfg!(target_arch = "x86_64") {
-        if cfg!(target_os = "linux") {
-            if cfg!(target_env = "gnu") {
-                platforms::x86_64_linux_gnu::build(build_type, enable_tests, extra_args)?;
-            } else if cfg!(target_env = "musl") {
+    // if cfg!(target_arch = "x86_64") {
+    //     if cfg!(target_os = "linux") {
+    //         if cfg!(target_env = "gnu") {
+    //             platforms::x86_64_linux_gnu::build(build_type, enable_tests, extra_args)?;
+    //         } else if cfg!(target_env = "musl") {
                 platforms::x86_64_linux_musl::build(build_type, enable_tests, extra_args)?;
-            }
-        } else if cfg!(target_os = "macos") {
-            platforms::x86_64_macos::build(build_type, enable_tests, extra_args)?;
-        } else if cfg!(target_os = "windows") && cfg!(target_env = "gnu") {
-            platforms::x86_64_windows_gnu::build(build_type, enable_tests, extra_args)?;
-        }
-    } else if cfg!(target_arch = "aarch64") {
-        if cfg!(target_os = "macos") {
-            platforms::aarch64_macos::build(build_type, enable_tests, extra_args)?;
-        }
-    } else {
-        anyhow::bail!("Unsupported on your machine");
-    }
+    //         }
+    //     } else if cfg!(target_os = "macos") {
+    //         platforms::x86_64_macos::build(build_type, enable_tests, extra_args)?;
+    //     } else if cfg!(target_os = "windows") && cfg!(target_env = "gnu") {
+    //         platforms::x86_64_windows_gnu::build(build_type, enable_tests, extra_args)?;
+    //     }
+    // } else if cfg!(target_arch = "aarch64") {
+    //     if cfg!(target_os = "macos") {
+    //         platforms::aarch64_macos::build(build_type, enable_tests, extra_args)?;
+    //     }
+    // } else {
+    //     anyhow::bail!("Unsupported on your machine");
+    // }
 
     Ok(())
 }

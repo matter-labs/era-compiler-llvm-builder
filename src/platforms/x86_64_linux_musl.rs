@@ -17,7 +17,7 @@ pub fn build(build_type: BuildType, enable_tests: bool, extra_args: Vec<String>)
     crate::utils::check_presence("cmake")?;
     crate::utils::check_presence("clang")?;
     crate::utils::check_presence("clang++")?;
-    crate::utils::check_presence("lld")?;
+    // crate::utils::check_presence("lld")?;
     crate::utils::check_presence("ninja")?;
 
     let musl_name = "musl-1.2.3";
@@ -141,7 +141,7 @@ fn build_musl(build_directory: &Path, target_directory: &Path) -> anyhow::Result
         copy_inside: true,
         ..Default::default()
     };
-    fs_extra::dir::copy("/usr/include/linux", include_directory, &copy_options)?;
+    // fs_extra::dir::copy("/usr/include/linux", include_directory, &copy_options)?;
 
     let copy_options = fs_extra::dir::CopyOptions {
         overwrite: true,
@@ -149,11 +149,11 @@ fn build_musl(build_directory: &Path, target_directory: &Path) -> anyhow::Result
         content_only: true,
         ..Default::default()
     };
-    fs_extra::dir::copy(
-        "/usr/include/asm-generic",
-        asm_include_directory,
-        &copy_options,
-    )?;
+    // fs_extra::dir::copy(
+    //     "/usr/include/asm-generic",
+    //     asm_include_directory,
+    //     &copy_options,
+    // )?;
 
     crate::utils::command(
         Command::new("sed")
