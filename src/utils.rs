@@ -19,8 +19,10 @@ const VERBOSE: bool = true;
 pub fn command(command: &mut Command, description: &str) -> anyhow::Result<()> {
     if VERBOSE {
         println!("description: {}; command: {:?}", description, command);
-    }    
-    if !DRY_RUN {
+    }
+    if DRY_RUN {
+        println!("Only a dry run; not executing the command.");
+    } else {
         let status = command
             .status()
             .map_err(|error| anyhow::anyhow!("{} process: {}", description, error))?;
