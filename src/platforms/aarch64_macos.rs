@@ -56,7 +56,8 @@ pub fn build(build_type: BuildType, enable_tests: bool, extra_args: Vec<String>)
             .as_str(),
         ])
         .args(crate::platforms::SHARED_BUILD_OPTS)
-        .args(crate::platforms::SHARED_BUILD_OPTS_NOT_MUSL),
+        .args(crate::platforms::SHARED_BUILD_OPTS_NOT_MUSL)
+        .args(extra_args),
         "LLVM building cmake",
     )?;
 
