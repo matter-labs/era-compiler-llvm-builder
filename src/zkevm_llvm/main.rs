@@ -41,7 +41,7 @@ fn main_inner() -> anyhow::Result<()> {
             extra_args, 
         } => {
             let build_type = compiler_llvm_builder::BuildType::from(debug);
-            compiler_llvm_builder::build(build_type, enable_tests)?;
+            compiler_llvm_builder::build(build_type, enable_tests, extra_args)?;
         }
         Arguments::Checkout { force } => {
             let lock = compiler_llvm_builder::Lock::try_from(&PathBuf::from("LLVM.lock"))?;

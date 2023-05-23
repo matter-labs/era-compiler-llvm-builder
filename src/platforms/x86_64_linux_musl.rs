@@ -11,7 +11,7 @@ use crate::llvm_path::LLVMPath;
 ///
 /// The building sequence.
 ///
-pub fn build(build_type: BuildType, enable_tests: bool) -> anyhow::Result<()> {
+pub fn build(build_type: BuildType, enable_tests: bool, extra_args: Vec<String>) -> anyhow::Result<()> {
     crate::utils::check_presence("wget")?;
     crate::utils::check_presence("tar")?;
     crate::utils::check_presence("cmake")?;
