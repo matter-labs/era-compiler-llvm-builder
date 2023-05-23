@@ -5,6 +5,8 @@
 pub(crate) mod arguments;
 
 use std::path::PathBuf;
+use snailquote::unescape;
+
 
 use self::arguments::Arguments;
 
@@ -40,8 +42,12 @@ fn main_inner() -> anyhow::Result<()> {
             enable_tests,
             extra_args, 
         } => {
+            let extra_args_unescaped:Vec<_> = extra_args.iter()
+                .map(|s| unescape(s))
+                .collect::<Result<_, _>>()
+                .unwrap();
             let build_type = compiler_llvm_builder::BuildType::from(debug);
-            compiler_llvm_builder::build(build_type, enable_tests, extra_args)?;
+            compiler_llvm_builder::build(build_type, enable_tests, extra_args_unescaped)?;
         }
         Arguments::Checkout { force } => {
             let lock = compiler_llvm_builder::Lock::try_from(&PathBuf::from("LLVM.lock"))?;
