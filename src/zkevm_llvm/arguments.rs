@@ -20,6 +20,9 @@ pub enum Arguments {
         /// Whether to build the LLVM tests.
         #[structopt(long = "enable-tests")]
         enable_tests: bool,
+        /// Extra arguments to pass to the LLVM build system.
+        #[structopt(long = "extra-args", multiple = true, help = "Extra arguments to pass to the LLVM build system")]
+        extra_args: Vec<String>,
     },
     /// Checkout the branch specified in `LLVM.lock`.
     Checkout {

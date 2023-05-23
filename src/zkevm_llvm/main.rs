@@ -38,6 +38,7 @@ fn main_inner() -> anyhow::Result<()> {
         Arguments::Build {
             debug,
             enable_tests,
+            extra_args, 
         } => {
             let build_type = compiler_llvm_builder::BuildType::from(debug);
             compiler_llvm_builder::build(build_type, enable_tests)?;
