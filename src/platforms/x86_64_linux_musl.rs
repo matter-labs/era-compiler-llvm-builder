@@ -57,6 +57,7 @@ pub fn build(build_type: BuildType, enable_tests: bool, extra_args: Vec<String>)
         musl_target.as_path(),
         llvm_target_host.as_path(),
         enable_tests,
+        extra_args,
     )?;
 
     Ok(())
@@ -320,6 +321,7 @@ fn build_host(
 ///
 /// The target toolchain building sequence.
 ///
+#[allow(clippy::too_many_arguments)]
 fn build_target(
     build_type: BuildType,
     source_directory: &Path,
@@ -328,6 +330,7 @@ fn build_target(
     musl_target_directory: &Path,
     host_target_directory: &Path,
     enable_tests: bool,
+    extra_args: Vec<String>
 ) -> anyhow::Result<()> {
     let mut clang_path = host_target_directory.to_path_buf();
     clang_path.push("bin/clang");
@@ -388,7 +391,8 @@ fn build_target(
             "-DLLVM_ENABLE_PROJECTS='llvm'",
             "-DLLVM_ENABLE_ASSERTIONS='On'",
         ])
-        .args(crate::platforms::SHARED_BUILD_OPTS),
+        .args(crate::platforms::SHARED_BUILD_OPTS)
+        .args(extra_args),
         "LLVM target building cmake",
     )?;
 
