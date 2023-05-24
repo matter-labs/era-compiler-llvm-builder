@@ -30,6 +30,8 @@ fn main() {
 /// The entry result wrapper.
 ///
 fn main_inner() -> anyhow::Result<()> {
+    println!("\nstd::env::args() collected: {}", std::env::args().collect::<Vec<_>>().join(" "));
+    println!("std::env::args(): {:#?}", std::env::args());
     let arguments = Arguments::new();
 
     match arguments {
@@ -42,10 +44,12 @@ fn main_inner() -> anyhow::Result<()> {
             enable_tests,
             extra_args, 
         } => {
+            println!("\nextra_args: {:#?}", extra_args);
             let extra_args_unescaped:Vec<_> = extra_args.iter()
                 .map(|s| unescape(s))
                 .collect::<Result<_, _>>()
                 .unwrap();
+            println!("\nextra_args_unescaped: {:#?}", extra_args_unescaped);
             let build_type = compiler_llvm_builder::BuildType::from(debug);
             compiler_llvm_builder::build(build_type, enable_tests, extra_args_unescaped)?;
         }
