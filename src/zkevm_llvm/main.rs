@@ -46,9 +46,8 @@ fn main_inner() -> anyhow::Result<()> {
         } => {
             println!("\nextra_args: {:#?}", extra_args);
             let extra_args_unescaped:Vec<_> = extra_args.iter()
-                .map(|s| unescape(s))
-                .collect::<Result<_, _>>()
-                .unwrap();
+                .map(|s| unescape(s).unwrap())
+                .collect::<Vec<_>>();
             println!("\nextra_args_unescaped: {:#?}", extra_args_unescaped);
             let build_type = compiler_llvm_builder::BuildType::from(debug);
             compiler_llvm_builder::build(build_type, enable_tests, extra_args_unescaped)?;
