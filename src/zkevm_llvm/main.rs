@@ -5,8 +5,6 @@
 pub(crate) mod arguments;
 
 use std::path::PathBuf;
-use snailquote::unescape;
-
 
 use self::arguments::Arguments;
 
@@ -23,6 +21,15 @@ fn main() {
             eprintln!("Error: {error:?}");
             std::process::exit(1)
         }
+    }
+}
+
+
+fn strip_leading_backslash(s: String) -> String {
+    if s.starts_with('\\')  {
+        s.strip_prefix('\\').unwrap().to_string() 
+    } else {
+        s
     }
 }
 
@@ -46,7 +53,7 @@ fn main_inner() -> anyhow::Result<()> {
         } => {
             println!("\nextra_args: {:#?}", extra_args);
             let extra_args_unescaped:Vec<_> = extra_args.iter()
-                .map(|s| unescape(s).unwrap())
+                .map(|s| strip_leading_backslash(s.to_string()))
                 .collect::<Vec<_>>();
             println!("\nextra_args_unescaped: {:#?}", extra_args_unescaped);
             let build_type = compiler_llvm_builder::BuildType::from(debug);
