@@ -141,7 +141,7 @@ fn build_musl(build_directory: &Path, target_directory: &Path) -> anyhow::Result
         copy_inside: true,
         ..Default::default()
     };
-    // fs_extra::dir::copy("/usr/include/linux", include_directory, &copy_options)?;
+    fs_extra::dir::copy("/usr/include/linux", include_directory, &copy_options)?;
 
     let copy_options = fs_extra::dir::CopyOptions {
         overwrite: true,
@@ -149,11 +149,11 @@ fn build_musl(build_directory: &Path, target_directory: &Path) -> anyhow::Result
         content_only: true,
         ..Default::default()
     };
-    // fs_extra::dir::copy(
-    //     "/usr/include/asm-generic",
-    //     asm_include_directory,
-    //     &copy_options,
-    // )?;
+    fs_extra::dir::copy(
+        "/usr/include/asm-generic",
+        asm_include_directory,
+        &copy_options,
+    )?;
 
     crate::utils::command(
         Command::new("sed")
