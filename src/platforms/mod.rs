@@ -8,7 +8,7 @@ pub mod x86_64_linux_musl;
 pub mod x86_64_macos;
 pub mod x86_64_windows_gnu;
 
-pub const SHARED_BUILD_OPTS: [&'static str; 18] = [
+pub const SHARED_BUILD_OPTS: [&str; 18] = [
     "-DPACKAGE_VENDOR='Matter Labs'",
     "-DCLANG_VENDOR='Matter Labs'",
     "-DCLANG_REPOSITORY_STRING='origin'",
@@ -30,7 +30,7 @@ pub const SHARED_BUILD_OPTS: [&'static str; 18] = [
 
     ];
 
-pub const SHARED_BUILD_OPTS_NOT_MUSL: [&'static str; 7] = [
+pub const SHARED_BUILD_OPTS_NOT_MUSL: [&str; 7] = [
     "-DLLVM_TARGETS_TO_BUILD=\'SyncVM\'",
     "-DLLVM_DEFAULT_TARGET_TRIPLE='syncvm'",
     "-DLLVM_OPTIMIZED_TABLEGEN='On'",
