@@ -17,7 +17,7 @@ pub fn build(build_type: BuildType, enable_tests: bool, extra_args: Vec<String>)
     crate::utils::check_presence("cmake")?;
     crate::utils::check_presence("clang")?;
     crate::utils::check_presence("clang++")?;
-    // crate::utils::check_presence("lld")?;
+    crate::utils::check_presence("lld")?;
     crate::utils::check_presence("ninja")?;
 
     let musl_name = "musl-1.2.3";
