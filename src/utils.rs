@@ -9,6 +9,7 @@ use std::process::Command;
 use path_slash::PathBufExt;
 
 const DRY_RUN: bool = false;
+/// Enable verbose output.
 pub const VERBOSE: bool = true;
 
 ///

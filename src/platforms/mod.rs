@@ -8,6 +8,7 @@ pub mod x86_64_linux_musl;
 pub mod x86_64_macos;
 pub mod x86_64_windows_gnu;
 
+/// The build options shared by all platforms.
 pub const SHARED_BUILD_OPTS: [&str; 18] = [
     "-DPACKAGE_VENDOR='Matter Labs'",
     "-DCLANG_VENDOR='Matter Labs'",
@@ -30,6 +31,7 @@ pub const SHARED_BUILD_OPTS: [&str; 18] = [
 
     ];
 
+/// The build options shared by all platforms except MUSL.
 pub const SHARED_BUILD_OPTS_NOT_MUSL: [&str; 7] = [
     "-DLLVM_TARGETS_TO_BUILD=\'SyncVM\'",
     "-DLLVM_DEFAULT_TARGET_TRIPLE='syncvm'",
