@@ -28,8 +28,7 @@ pub const SHARED_BUILD_OPTS: [&str; 18] = [
     "-DLLVM_ENABLE_TERMINFO='Off'",
     "-DLLVM_ENABLE_LIBEDIT='Off'",
     "-DLLVM_ENABLE_LIBPFM='Off'",
-
-    ];
+];
 
 /// The build options shared by all platforms except MUSL.
 pub const SHARED_BUILD_OPTS_NOT_MUSL: [&str; 7] = [
@@ -40,4 +39,4 @@ pub const SHARED_BUILD_OPTS_NOT_MUSL: [&str; 7] = [
     "-DLLVM_BUILD_RUNTIMES='Off'",
     "-DLLVM_INCLUDE_RUNTIMES='Off'",
     "-DLLVM_ENABLE_ASSERTIONS='On'",
-    ];
+];

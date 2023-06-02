@@ -111,7 +111,7 @@ pub fn build(
             if cfg!(target_env = "gnu") {
                 platforms::x86_64_linux_gnu::build(build_type, enable_tests, extra_args)?;
             } else if cfg!(target_env = "musl") {
-    platforms::x86_64_linux_musl::build(build_type, enable_tests, extra_args)?;
+                platforms::x86_64_linux_musl::build(build_type, enable_tests, extra_args)?;
             }
         } else if cfg!(target_os = "macos") {
             platforms::x86_64_macos::build(build_type, enable_tests, extra_args)?;
@@ -120,7 +120,7 @@ pub fn build(
         }
     } else if cfg!(target_arch = "aarch64") {
         if cfg!(target_os = "macos") {
-    platforms::aarch64_macos::build(build_type, enable_tests, extra_args)?;
+            platforms::aarch64_macos::build(build_type, enable_tests, extra_args)?;
         }
     } else {
         anyhow::bail!("Unsupported on your machine");
