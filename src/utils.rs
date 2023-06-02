@@ -9,7 +9,7 @@ use std::process::Command;
 use path_slash::PathBufExt;
 
 const DRY_RUN: bool = false;
-const VERBOSE: bool = true;
+pub const VERBOSE: bool = true;
 
 ///
 /// The subprocess runner.

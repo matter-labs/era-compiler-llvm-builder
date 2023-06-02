@@ -5,8 +5,8 @@
 pub(crate) mod arguments;
 
 use std::path::PathBuf;
-
 use self::arguments::Arguments;
+use compiler_llvm_builder::utils::VERBOSE;
 
 /// The default path to the LLVM lock file.
 pub const LLVM_LOCK_DEFAULT_PATH: &str = "LLVM.lock";
@@ -37,8 +37,10 @@ fn strip_leading_backslash(s: String) -> String {
 /// The entry result wrapper.
 ///
 fn main_inner() -> anyhow::Result<()> {
-    println!("\nstd::env::args() collected: {}", std::env::args().collect::<Vec<_>>().join(" "));
-    println!("std::env::args(): {:#?}", std::env::args());
+    if VERBOSE {
+        println!("std::env::args(): {:#?}", std::env::args());
+        println!("\nstd::env::args() collected: {}", std::env::args().collect::<Vec<_>>().join(" "));
+    }
     let arguments = Arguments::new();
 
     match arguments {
@@ -51,11 +53,13 @@ fn main_inner() -> anyhow::Result<()> {
             enable_tests,
             extra_args, 
         } => {
-            println!("\nextra_args: {:#?}", extra_args);
             let extra_args_unescaped:Vec<_> = extra_args.iter()
                 .map(|s| strip_leading_backslash(s.to_string()))
                 .collect::<Vec<_>>();
-            println!("\nextra_args_unescaped: {:#?}", extra_args_unescaped);
+            if VERBOSE {
+                println!("\nextra_args: {:#?}", extra_args);
+                println!("\nextra_args_unescaped: {:#?}", extra_args_unescaped);
+            }
             let build_type = compiler_llvm_builder::BuildType::from(debug);
             compiler_llvm_builder::build(build_type, enable_tests, extra_args_unescaped)?;
         }
