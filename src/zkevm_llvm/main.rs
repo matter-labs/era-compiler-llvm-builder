@@ -56,13 +56,19 @@ fn main_inner() -> anyhow::Result<()> {
             extra_args,
             enable_coverage,
         } => {
-            let extra_args_unescaped: Vec<_> = extra_args
+            let mut extra_args_unescaped: Vec<_> = extra_args
                 .iter()
                 .map(|s| strip_leading_backslash(s.to_string()))
                 .collect::<Vec<_>>();
             if VERBOSE {
                 println!("\nextra_args: {:#?}", extra_args);
                 println!("\nextra_args_unescaped: {:#?}", extra_args_unescaped);
+            }
+            if enable_coverage {
+                extra_args_unescaped.push(r"-DLLVM_BUILD_INSTRUMENTED_COVERAGE='On'".to_string());
+                if VERBOSE {
+                    println!("\nargs with coverage: {:#?}", extra_args_unescaped);
+                }
             }
             let build_type = compiler_llvm_builder::BuildType::from(debug);
             compiler_llvm_builder::build(build_type, enable_tests, extra_args_unescaped)?;
