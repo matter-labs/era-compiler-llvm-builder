@@ -54,6 +54,7 @@ fn main_inner() -> anyhow::Result<()> {
             debug,
             enable_tests,
             extra_args,
+            enable_coverage,
         } => {
             let extra_args_unescaped: Vec<_> = extra_args
                 .iter()
