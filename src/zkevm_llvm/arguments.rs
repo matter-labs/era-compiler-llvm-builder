@@ -20,6 +20,9 @@ pub enum Arguments {
         /// Whether to build the LLVM tests.
         #[structopt(long = "enable-tests")]
         enable_tests: bool,
+        /// Whether to build LLVM for source-based code coverage.
+        #[structopt(long = "enable-coverage")]
+        enable_coverage: bool,
         /// Extra arguments to pass to CMake.  
         /// A leading backslash will be unescaped.
         #[structopt(long = "extra-args", multiple = true)]
