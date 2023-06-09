@@ -8,7 +8,8 @@ pub mod x86_64_linux_musl;
 pub mod x86_64_macos;
 pub mod x86_64_windows_gnu;
 
-pub const SHARED_BUILD_OPTS: [&'static str; 18] = [
+/// The build options shared by all platforms.
+pub const SHARED_BUILD_OPTS: [&str; 18] = [
     "-DPACKAGE_VENDOR='Matter Labs'",
     "-DCLANG_VENDOR='Matter Labs'",
     "-DCLANG_REPOSITORY_STRING='origin'",
@@ -27,10 +28,10 @@ pub const SHARED_BUILD_OPTS: [&'static str; 18] = [
     "-DLLVM_ENABLE_TERMINFO='Off'",
     "-DLLVM_ENABLE_LIBEDIT='Off'",
     "-DLLVM_ENABLE_LIBPFM='Off'",
+];
 
-    ];
-
-pub const SHARED_BUILD_OPTS_NOT_MUSL: [&'static str; 7] = [
+/// The build options shared by all platforms except MUSL.
+pub const SHARED_BUILD_OPTS_NOT_MUSL: [&str; 7] = [
     "-DLLVM_TARGETS_TO_BUILD=\'SyncVM\'",
     "-DLLVM_DEFAULT_TARGET_TRIPLE='syncvm'",
     "-DLLVM_OPTIMIZED_TABLEGEN='On'",
@@ -38,4 +39,34 @@ pub const SHARED_BUILD_OPTS_NOT_MUSL: [&'static str; 7] = [
     "-DLLVM_BUILD_RUNTIMES='Off'",
     "-DLLVM_INCLUDE_RUNTIMES='Off'",
     "-DLLVM_ENABLE_ASSERTIONS='On'",
-    ];
+];
+
+/// The LLVM tests build options shared by all platforms.
+pub fn shared_build_opts_tests(enabled: bool) -> Vec<String> {
+    vec![
+        format!(
+            "-DLLVM_BUILD_UTILS='{}'",
+            if enabled { "On" } else { "Off" },
+        ),
+        format!(
+            "-DLLVM_BUILD_TESTS='{}'",
+            if enabled { "On" } else { "Off" },
+        ),
+        format!(
+            "-DLLVM_INCLUDE_UTILS='{}'",
+            if enabled { "On" } else { "Off" },
+        ),
+        format!(
+            "-DLLVM_INCLUDE_TESTS='{}'",
+            if enabled { "On" } else { "Off" },
+        ),
+    ]
+}
+
+/// The code coverage build options shared by all platforms.
+pub fn shared_build_opts_coverage(enabled: bool) -> Vec<String> {
+    vec![format!(
+        "-DLLVM_BUILD_INSTRUMENTED_COVERAGE='{}'",
+        if enabled { "On" } else { "Off" },
+    )]
+}

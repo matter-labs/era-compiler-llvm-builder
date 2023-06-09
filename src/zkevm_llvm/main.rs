@@ -24,10 +24,25 @@ fn main() {
     }
 }
 
+fn strip_leading_backslash(s: String) -> String {
+    if s.starts_with('\\') {
+        s.strip_prefix('\\').unwrap().to_string()
+    } else {
+        s
+    }
+}
+
 ///
 /// The entry result wrapper.
 ///
 fn main_inner() -> anyhow::Result<()> {
+    if compiler_llvm_builder::utils::VERBOSE {
+        println!("std::env::args(): {:#?}", std::env::args());
+        println!(
+            "\nstd::env::args() collected: {}",
+            std::env::args().collect::<Vec<_>>().join(" ")
+        );
+    }
     let arguments = Arguments::new();
 
     match arguments {
@@ -38,9 +53,24 @@ fn main_inner() -> anyhow::Result<()> {
         Arguments::Build {
             debug,
             enable_tests,
+            enable_coverage,
+            extra_args,
         } => {
+            let extra_args_unescaped: Vec<_> = extra_args
+                .iter()
+                .map(|s| strip_leading_backslash(s.to_string()))
+                .collect::<Vec<_>>();
+            if compiler_llvm_builder::utils::VERBOSE {
+                println!("\nextra_args: {:#?}", extra_args);
+                println!("\nextra_args_unescaped: {:#?}", extra_args_unescaped);
+            }
             let build_type = compiler_llvm_builder::BuildType::from(debug);
-            compiler_llvm_builder::build(build_type, enable_tests)?;
+            compiler_llvm_builder::build(
+                build_type,
+                enable_tests,
+                enable_coverage,
+                extra_args_unescaped,
+            )?;
         }
         Arguments::Checkout { force } => {
             let lock = compiler_llvm_builder::Lock::try_from(&PathBuf::from("LLVM.lock"))?;

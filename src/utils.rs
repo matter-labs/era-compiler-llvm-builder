@@ -9,7 +9,8 @@ use std::process::Command;
 use path_slash::PathBufExt;
 
 const DRY_RUN: bool = false;
-const VERBOSE: bool = false;
+/// Enable verbose output.
+pub const VERBOSE: bool = false;
 
 ///
 /// The subprocess runner.
@@ -18,9 +19,11 @@ const VERBOSE: bool = false;
 ///
 pub fn command(command: &mut Command, description: &str) -> anyhow::Result<()> {
     if VERBOSE {
-        println!("description: {}; command: {:?}", description, command);
-    }    
-    if !DRY_RUN {
+        println!("\ndescription: {}; command: {:?}", description, command);
+    }
+    if DRY_RUN {
+        println!("\tOnly a dry run; not executing the command.");
+    } else {
         let status = command
             .status()
             .map_err(|error| anyhow::anyhow!("{} process: {}", description, error))?;
