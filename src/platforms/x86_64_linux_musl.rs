@@ -14,6 +14,7 @@ use crate::llvm_path::LLVMPath;
 pub fn build(
     build_type: BuildType,
     enable_tests: bool,
+    enable_coverage: bool,
     extra_args: Vec<String>,
 ) -> anyhow::Result<()> {
     crate::utils::check_presence("wget")?;
@@ -61,6 +62,7 @@ pub fn build(
         musl_target.as_path(),
         llvm_target_host.as_path(),
         enable_tests,
+        enable_coverage,
         extra_args,
     )?;
 
@@ -336,6 +338,7 @@ fn build_target(
     musl_target_directory: &Path,
     host_target_directory: &Path,
     enable_tests: bool,
+    enable_coverage: bool,
     extra_args: Vec<String>,
 ) -> anyhow::Result<()> {
     let mut clang_path = host_target_directory.to_path_buf();
@@ -372,32 +375,16 @@ fn build_target(
                 "-DLLVM_TARGETS_TO_BUILD='SyncVM'",
                 "-DLLVM_DEFAULT_TARGET_TRIPLE='syncvm'",
                 "-DLLVM_OPTIMIZED_TABLEGEN='On'",
-                format!(
-                    "-DLLVM_BUILD_UTILS='{}'",
-                    if enable_tests { "On" } else { "Off" },
-                )
-                .as_str(),
-                format!(
-                    "-DLLVM_BUILD_TESTS='{}'",
-                    if enable_tests { "On" } else { "Off" },
-                )
-                .as_str(),
                 "-DLLVM_BUILD_RUNTIME='Off'",
                 "-DLLVM_BUILD_RUNTIMES='Off'",
-                format!(
-                    "-DLLVM_INCLUDE_UTILS='{}'",
-                    if enable_tests { "On" } else { "Off" },
-                )
-                .as_str(),
-                format!(
-                    "-DLLVM_INCLUDE_TESTS='{}'",
-                    if enable_tests { "On" } else { "Off" },
-                )
-                .as_str(),
                 "-DLLVM_INCLUDE_RUNTIMES='Off'",
                 "-DLLVM_ENABLE_PROJECTS='llvm'",
                 "-DLLVM_ENABLE_ASSERTIONS='On'",
             ])
+            .args(crate::platforms::shared_build_opts_tests(enable_tests))
+            .args(crate::platforms::shared_build_opts_coverage(
+                enable_coverage,
+            ))
             .args(crate::platforms::SHARED_BUILD_OPTS)
             .args(extra_args),
         "LLVM target building cmake",

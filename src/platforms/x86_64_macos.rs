@@ -13,6 +13,7 @@ use crate::llvm_path::LLVMPath;
 pub fn build(
     build_type: BuildType,
     enable_tests: bool,
+    enable_coverage: bool,
     extra_args: Vec<String>,
 ) -> anyhow::Result<()> {
     crate::utils::check_presence("cmake")?;
@@ -38,27 +39,11 @@ pub fn build(
                 .as_str(),
                 format!("-DCMAKE_BUILD_TYPE='{build_type}'").as_str(),
                 "-DCMAKE_OSX_DEPLOYMENT_TARGET='11.0'",
-                format!(
-                    "-DLLVM_BUILD_UTILS='{}'",
-                    if enable_tests { "On" } else { "Off" },
-                )
-                .as_str(),
-                format!(
-                    "-DLLVM_BUILD_TESTS='{}'",
-                    if enable_tests { "On" } else { "Off" },
-                )
-                .as_str(),
-                format!(
-                    "-DLLVM_INCLUDE_UTILS='{}'",
-                    if enable_tests { "On" } else { "Off" },
-                )
-                .as_str(),
-                format!(
-                    "-DLLVM_INCLUDE_TESTS='{}'",
-                    if enable_tests { "On" } else { "Off" },
-                )
-                .as_str(),
             ])
+            .args(crate::platforms::shared_build_opts_tests(enable_tests))
+            .args(crate::platforms::shared_build_opts_coverage(
+                enable_coverage,
+            ))
             .args(crate::platforms::SHARED_BUILD_OPTS)
             .args(crate::platforms::SHARED_BUILD_OPTS_NOT_MUSL)
             .args(extra_args),

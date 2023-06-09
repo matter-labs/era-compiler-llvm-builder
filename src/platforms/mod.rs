@@ -40,3 +40,33 @@ pub const SHARED_BUILD_OPTS_NOT_MUSL: [&str; 7] = [
     "-DLLVM_INCLUDE_RUNTIMES='Off'",
     "-DLLVM_ENABLE_ASSERTIONS='On'",
 ];
+
+/// The LLVM tests build options shared by all platforms.
+pub fn shared_build_opts_tests(enabled: bool) -> Vec<String> {
+    vec![
+        format!(
+            "-DLLVM_BUILD_UTILS='{}'",
+            if enabled { "On" } else { "Off" },
+        ),
+        format!(
+            "-DLLVM_BUILD_TESTS='{}'",
+            if enabled { "On" } else { "Off" },
+        ),
+        format!(
+            "-DLLVM_INCLUDE_UTILS='{}'",
+            if enabled { "On" } else { "Off" },
+        ),
+        format!(
+            "-DLLVM_INCLUDE_TESTS='{}'",
+            if enabled { "On" } else { "Off" },
+        ),
+    ]
+}
+
+/// The code coverage build options shared by all platforms.
+pub fn shared_build_opts_coverage(enabled: bool) -> Vec<String> {
+    vec![format!(
+        "-DLLVM_BUILD_INSTRUMENTED_COVERAGE='{}'",
+        if enabled { "On" } else { "Off" },
+    )]
+}
