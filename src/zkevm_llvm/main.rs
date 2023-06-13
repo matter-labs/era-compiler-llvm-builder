@@ -24,14 +24,6 @@ fn main() {
     }
 }
 
-fn strip_leading_backslash(s: String) -> String {
-    if s.starts_with('\\') {
-        s.strip_prefix('\\').unwrap().to_string()
-    } else {
-        s
-    }
-}
-
 ///
 /// The entry result wrapper.
 ///
@@ -56,10 +48,15 @@ fn main_inner() -> anyhow::Result<()> {
             enable_coverage,
             extra_args,
         } => {
-            let extra_args_unescaped: Vec<_> = extra_args
+            let extra_args_unescaped: Vec<String> = extra_args
                 .iter()
-                .map(|s| strip_leading_backslash(s.to_string()))
-                .collect::<Vec<_>>();
+                .map(|argument| {
+                    argument
+                        .strip_prefix('\\')
+                        .unwrap_or(argument.as_str())
+                        .to_owned()
+                })
+                .collect();
             if compiler_llvm_builder::utils::VERBOSE {
                 println!("\nextra_args: {:#?}", extra_args);
                 println!("\nextra_args_unescaped: {:#?}", extra_args_unescaped);
