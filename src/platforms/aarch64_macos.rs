@@ -7,6 +7,9 @@ use std::process::Command;
 use crate::build_type::BuildType;
 use crate::llvm_path::LLVMPath;
 
+const XCODE_PROJ: bool = true;
+
+
 ///
 /// The building sequence.
 ///
@@ -31,7 +34,7 @@ pub fn build(
                 "-B",
                 llvm_build_final.to_string_lossy().as_ref(),
                 "-G",
-                "Ninja",
+                if XCODE_PROJ {"Xcode"} else {"Ninja"},
                 format!(
                     "-DCMAKE_INSTALL_PREFIX='{}'",
                     llvm_target_final.to_string_lossy().as_ref(),
@@ -50,10 +53,13 @@ pub fn build(
         "LLVM building cmake",
     )?;
 
+    if !XCODE_PROJ {
+
     crate::utils::command(
         Command::new("ninja").args(["-C", llvm_build_final.to_string_lossy().as_ref(), "install"]),
         "LLVM building with ninja",
     )?;
+    } else {print!("Xcode project is generated, please open it and build manually")}
 
     Ok(())
 }
