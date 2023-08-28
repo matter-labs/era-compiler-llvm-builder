@@ -14,6 +14,7 @@ pub const SHARED_BUILD_OPTS: [&str; 18] = [
     "-DCLANG_VENDOR='Matter Labs'",
     "-DCLANG_REPOSITORY_STRING='origin'",
     "-DCMAKE_COLOR_DIAGNOSTICS='Off'",
+    "-DCMAKE_CXX_FLAGS='-Werror'",
     "-DLLVM_BUILD_DOCS='Off'",
     "-DLLVM_INCLUDE_DOCS='Off'",
     "-DLLVM_INCLUDE_BENCHMARKS='Off'",
