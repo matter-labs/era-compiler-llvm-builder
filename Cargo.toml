@@ -4,7 +4,7 @@ version = "1.0.17"
 authors = [
     "Oleksandr Zarudnyi <a.zarudnyy@matterlabs.dev>",
 ]
-license = "Apache-2.0"
+license = "MIT OR Apache-2.0"
 edition = "2021"
 description = "EraVM LLVM Framework Builder"
 repository = "https://github.com/matter-labs/era-compiler-llvm-builder"
