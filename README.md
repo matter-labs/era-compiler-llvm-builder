@@ -1,6 +1,8 @@
 # zkSync Era: LLVM Framework Builder
 
-[![Logo](eraLogo.svg)](https://zksync.io/)
+<p align="center"><a href="https://zksync.io" target="_blank"><img alt="zkSync Era zkEVM is Ethereum’s most user-centric ZK-rollup" title="zkSync Era zkEVM is Ethereum’s most user-centric ZK-rollup" src="https://raw.githubusercontent.com/matter-labs/.github/main/header-image.png" width="100%">
+</a>
+</p>
 
 zkSync Era is a layer 2 rollup that uses zero-knowledge proofs to scale Ethereum without compromising on security
 or decentralization. As it's EVM-compatible (with Solidity/Vyper), 99% of Ethereum projects can redeploy without
