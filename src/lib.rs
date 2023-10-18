@@ -135,7 +135,23 @@ pub fn build(
             )?;
         }
     } else if cfg!(target_arch = "aarch64") {
-        if cfg!(target_os = "macos") {
+        if cfg!(target_os = "linux") {
+            if cfg!(target_env = "gnu") {
+                platforms::aarch64_linux_gnu::build(
+                    build_type,
+                    enable_tests,
+                    enable_coverage,
+                    extra_args,
+                )?;
+            } else if cfg!(target_env = "musl") {
+                platforms::aarch64_linux_musl::build(
+                    build_type,
+                    enable_tests,
+                    enable_coverage,
+                    extra_args,
+                )?;
+            }
+        } else if cfg!(target_os = "macos") {
             platforms::aarch64_macos::build(build_type, enable_tests, enable_coverage, extra_args)?;
         }
     } else {
