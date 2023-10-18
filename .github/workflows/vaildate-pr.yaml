@@ -1,0 +1,23 @@
+name: "Tests"
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  tests:
+    name: Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+        id: setup-rust
+        with:
+          rustflags: ""
+      - name: Print used Rust versions
+        run: |
+          echo "Rustc version: ${{ steps.setup-rust.outputs.rustc-version }}"
+          echo "Cargo version: ${{ steps.setup-rust.outputs.cargo-version }}"
+          echo "Rustup version: ${{ steps.setup-rust.outputs.rustup-version }}"
+      - run: cargo fmt --check
+      - run: cargo clippy
