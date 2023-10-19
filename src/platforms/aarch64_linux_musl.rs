@@ -1,5 +1,5 @@
 //!
-//! The zkEVM LLVM `linux-musl` builder.
+//! The zkEVM LLVM arm64 `linux-musl` builder.
 //!
 
 use std::path::Path;

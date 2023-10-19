@@ -1,6 +1,6 @@
 //!
-//! The zkEVM LLVM `linux-gnu` builder.
-//! Exact copy of x86_64_linux_gnu
+//! The zkEVM LLVM arm64 `linux-gnu` builder.
+//!
 
 use std::process::Command;
 
