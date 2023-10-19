@@ -1,4 +1,4 @@
-name: "Tests"
+name: Pull Request validation
 on:
   pull_request:
     branches:
