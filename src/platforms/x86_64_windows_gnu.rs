@@ -1,5 +1,5 @@
 //!
-//! The zkEVM LLVM `windows-gnu` builder.
+//! The zkEVM LLVM amd64 `windows-gnu` builder.
 //!
 
 use std::path::PathBuf;

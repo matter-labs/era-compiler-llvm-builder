@@ -1,5 +1,5 @@
 //!
-//! The zkEVM LLVM amd64 `linux-musl` builder.
+//! The zkEVM LLVM arm64 `linux-musl` builder.
 //!
 
 use std::path::Path;
@@ -198,8 +198,8 @@ fn build_crt(
                 "-DCMAKE_C_COMPILER='clang'",
                 "-DCMAKE_CXX_COMPILER='clang++'",
                 "-DLLVM_ENABLE_PROJECTS='compiler-rt'",
-                "-DLLVM_TARGETS_TO_BUILD='X86;EraVM'",
-                "-DLLVM_DEFAULT_TARGET_TRIPLE='x86_64-pc-linux-musl'",
+                "-DLLVM_TARGETS_TO_BUILD='AArch64;EraVM'",
+                "-DLLVM_DEFAULT_TARGET_TRIPLE='aarch64-unknown-linux-musl'",
                 "-DLLVM_BUILD_TESTS='Off'",
                 "-DLLVM_BUILD_RUNTIMES='Off'",
                 "-DLLVM_BUILD_UTILS='Off'",
@@ -207,7 +207,7 @@ fn build_crt(
                 "-DLLVM_INCLUDE_RUNTIMES='Off'",
                 "-DLLVM_INCLUDE_UTILS='Off'",
                 "-DLLVM_ENABLE_ASSERTIONS='Off'",
-                "-DCOMPILER_RT_DEFAULT_TARGET_ARCH='x86_64'",
+                "-DCOMPILER_RT_DEFAULT_TARGET_ARCH='aarch64'",
                 "-DCOMPILER_RT_BUILD_CRT='On'",
                 "-DCOMPILER_RT_BUILD_SANITIZERS='Off'",
                 "-DCOMPILER_RT_BUILD_XRAY='Off'",
@@ -266,8 +266,8 @@ fn build_host(
                 "-DCMAKE_CXX_COMPILER='clang++'",
                 "-DCLANG_DEFAULT_CXX_STDLIB='libc++'",
                 "-DCLANG_DEFAULT_RTLIB='compiler-rt'",
-                "-DLLVM_DEFAULT_TARGET_TRIPLE='x86_64-pc-linux-musl'",
-                "-DLLVM_TARGETS_TO_BUILD='X86'",
+                "-DLLVM_DEFAULT_TARGET_TRIPLE='aarch64-unknown-linux-musl'",
+                "-DLLVM_TARGETS_TO_BUILD='AArch64'",
                 "-DLLVM_BUILD_TESTS='Off'",
                 "-DLLVM_BUILD_UTILS='Off'",
                 "-DLLVM_INCLUDE_TESTS='Off'",
@@ -294,7 +294,7 @@ fn build_host(
                 "-DCOMPILER_RT_BUILD_PROFILE='Off'",
                 "-DCOMPILER_RT_BUILD_MEMPROF='Off'",
                 "-DCOMPILER_RT_BUILD_ORC='Off'",
-                "-DCOMPILER_RT_DEFAULT_TARGET_ARCH='x86_64'",
+                "-DCOMPILER_RT_DEFAULT_TARGET_ARCH='aarch64'",
                 "-DCOMPILER_RT_DEFAULT_TARGET_ONLY='On'",
             ])
             .args(crate::platforms::SHARED_BUILD_OPTS),
@@ -402,7 +402,7 @@ fn build_target(
     musl_lib_directory.push("lib/");
 
     let mut host_lib_directory = host_target_directory.to_path_buf();
-    host_lib_directory.push("lib/x86_64-pc-linux-musl/");
+    host_lib_directory.push("lib/aarch64-unknown-linux-musl/");
 
     let mut target_lib_directory = target_directory.to_path_buf();
     target_lib_directory.push("lib/");

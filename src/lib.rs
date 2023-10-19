@@ -123,6 +123,8 @@ pub fn build(
                     enable_coverage,
                     extra_args,
                 )?;
+            } else {
+                anyhow::bail!("Unsupported target environment for x86_64 and Linux");
             }
         } else if cfg!(target_os = "macos") {
             platforms::x86_64_macos::build(build_type, enable_tests, enable_coverage, extra_args)?;
@@ -133,13 +135,35 @@ pub fn build(
                 enable_coverage,
                 extra_args,
             )?;
+        } else {
+            anyhow::bail!("Unsupported target OS for x86_64");
         }
     } else if cfg!(target_arch = "aarch64") {
-        if cfg!(target_os = "macos") {
+        if cfg!(target_os = "linux") {
+            if cfg!(target_env = "gnu") {
+                platforms::aarch64_linux_gnu::build(
+                    build_type,
+                    enable_tests,
+                    enable_coverage,
+                    extra_args,
+                )?;
+            } else if cfg!(target_env = "musl") {
+                platforms::aarch64_linux_musl::build(
+                    build_type,
+                    enable_tests,
+                    enable_coverage,
+                    extra_args,
+                )?;
+            } else {
+                anyhow::bail!("Unsupported target environment for aarch64 and Linux");
+            }
+        } else if cfg!(target_os = "macos") {
             platforms::aarch64_macos::build(build_type, enable_tests, enable_coverage, extra_args)?;
+        } else {
+            anyhow::bail!("Unsupported target OS for aarch64");
         }
     } else {
-        anyhow::bail!("Unsupported on your machine");
+        anyhow::bail!("Unsupported target architecture");
     }
 
     Ok(())
