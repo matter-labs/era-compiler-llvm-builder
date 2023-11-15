@@ -33,7 +33,7 @@ dependencies = [
 
 [[package]]
 name = "compiler-llvm-builder"
-version = "1.0.16"
+version = "1.0.18"
 dependencies = [
  "anyhow",
  "fs_extra",

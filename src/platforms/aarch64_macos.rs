@@ -1,5 +1,5 @@
 //!
-//! The zkEVM LLVM `macos aarch64` builder.
+//! The zkEVM LLVM arm64 `macos-aarch64` builder.
 //!
 
 use std::process::Command;

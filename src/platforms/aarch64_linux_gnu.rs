@@ -1,5 +1,5 @@
 //!
-//! The zkEVM LLVM amd64 `linux-gnu` builder.
+//! The zkEVM LLVM arm64 `linux-gnu` builder.
 //!
 
 use std::process::Command;

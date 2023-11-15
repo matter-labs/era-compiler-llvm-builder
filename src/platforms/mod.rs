@@ -2,6 +2,8 @@
 //! The zkEVM LLVM builder platforms.
 //!
 
+pub mod aarch64_linux_gnu;
+pub mod aarch64_linux_musl;
 pub mod aarch64_macos;
 pub mod x86_64_linux_gnu;
 pub mod x86_64_linux_musl;
@@ -32,8 +34,8 @@ pub const SHARED_BUILD_OPTS: [&str; 18] = [
 
 /// The build options shared by all platforms except MUSL.
 pub const SHARED_BUILD_OPTS_NOT_MUSL: [&str; 7] = [
-    "-DLLVM_TARGETS_TO_BUILD=\'SyncVM;EVM\'",
-    "-DLLVM_DEFAULT_TARGET_TRIPLE='syncvm'",
+    "-DLLVM_TARGETS_TO_BUILD=\'EraVM;EVM\'",
+    "-DLLVM_DEFAULT_TARGET_TRIPLE='eravm'",
     "-DLLVM_OPTIMIZED_TABLEGEN='On'",
     "-DLLVM_BUILD_RUNTIME='Off'",
     "-DLLVM_BUILD_RUNTIMES='Off'",
