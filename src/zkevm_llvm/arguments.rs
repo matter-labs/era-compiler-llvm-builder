@@ -27,6 +27,9 @@ pub enum Arguments {
         /// A leading backslash will be unescaped.
         #[structopt(long = "extra-args", multiple = true)]
         extra_args: Vec<String>,
+        /// Whether to use compiler cache (ccache) to speed-up builds
+        #[structopt(long = "use-ccache")]
+        use_ccache: bool,
     },
     /// Checkout the branch specified in `LLVM.lock`.
     Checkout {

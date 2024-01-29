@@ -16,6 +16,7 @@ pub fn build(
     enable_tests: bool,
     enable_coverage: bool,
     extra_args: Vec<String>,
+    use_ccache: bool
 ) -> anyhow::Result<()> {
     crate::utils::check_presence("wget")?;
     crate::utils::check_presence("tar")?;
@@ -46,6 +47,7 @@ pub fn build(
         llvm_module_llvm.as_path(),
         llvm_build_crt.as_path(),
         llvm_target_crt.as_path(),
+        use_ccache,
     )?;
     build_host(
         llvm_module_llvm.as_path(),
@@ -53,6 +55,7 @@ pub fn build(
         llvm_target_host.as_path(),
         musl_target.as_path(),
         llvm_target_crt.as_path(),
+        use_ccache,
     )?;
     build_target(
         build_type,
@@ -64,6 +67,7 @@ pub fn build(
         enable_tests,
         enable_coverage,
         extra_args,
+        use_ccache,
     )?;
 
     Ok(())
@@ -179,6 +183,7 @@ fn build_crt(
     source_directory: &Path,
     build_directory: &Path,
     target_directory: &Path,
+    use_ccache: bool,
 ) -> anyhow::Result<()> {
     crate::utils::command(
         Command::new("cmake")
@@ -216,7 +221,10 @@ fn build_crt(
                 "-DCOMPILER_RT_BUILD_MEMPROF='Off'",
                 "-DCOMPILER_RT_BUILD_ORC='Off'",
             ])
-            .args(crate::platforms::SHARED_BUILD_OPTS),
+            .args(crate::platforms::SHARED_BUILD_OPTS)
+            .args(crate::platforms::shared_build_opts_ccache(
+                use_ccache
+            )),
         "CRT building cmake",
     )?;
 
@@ -240,6 +248,7 @@ fn build_host(
     target_directory: &Path,
     musl_target_directory: &Path,
     crt_target_directory: &Path,
+    use_ccache: bool,
 ) -> anyhow::Result<()> {
     crate::utils::command(
         Command::new("cmake")
@@ -297,7 +306,10 @@ fn build_host(
                 "-DCOMPILER_RT_DEFAULT_TARGET_ARCH='aarch64'",
                 "-DCOMPILER_RT_DEFAULT_TARGET_ONLY='On'",
             ])
-            .args(crate::platforms::SHARED_BUILD_OPTS),
+            .args(crate::platforms::SHARED_BUILD_OPTS)
+            .args(crate::platforms::shared_build_opts_ccache(
+                use_ccache
+            )),
         "LLVM host building cmake",
     )?;
 
@@ -340,6 +352,7 @@ fn build_target(
     enable_tests: bool,
     enable_coverage: bool,
     extra_args: Vec<String>,
+    use_ccache: bool,
 ) -> anyhow::Result<()> {
     let mut clang_path = host_target_directory.to_path_buf();
     clang_path.push("bin/clang");
@@ -386,7 +399,10 @@ fn build_target(
                 enable_coverage,
             ))
             .args(crate::platforms::SHARED_BUILD_OPTS)
-            .args(extra_args),
+            .args(extra_args)
+            .args(crate::platforms::shared_build_opts_ccache(
+                use_ccache
+            )),
         "LLVM target building cmake",
     )?;
 
