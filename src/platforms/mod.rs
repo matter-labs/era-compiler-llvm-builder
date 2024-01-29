@@ -82,5 +82,5 @@ pub fn shared_build_opts_ccache(use_ccache: bool) -> Vec<String> {
         ]
     } else {
         vec![]
-    }
+    };
 }

@@ -82,8 +82,7 @@ fn main_inner() -> anyhow::Result<()> {
             compiler_llvm_builder::checkout(lock, force)?;
         }
         Arguments::Clean => {
-            compiler_llvm_builder::clean()
-                .with_context(|| "Unable to remove target LLVM directory")?;
+            compiler_llvm_builder::clean()?;
         }
     }
 

@@ -67,7 +67,7 @@ pub fn build(
         enable_tests,
         enable_coverage,
         extra_args,
-        use_ccache
+        use_ccache,
     )?;
 
     Ok(())
@@ -222,9 +222,7 @@ fn build_crt(
                 "-DCOMPILER_RT_BUILD_ORC='Off'",
             ])
             .args(crate::platforms::SHARED_BUILD_OPTS)
-            .args(crate::platforms::shared_build_opts_ccache(
-                use_ccache
-            )),
+            .args(crate::platforms::shared_build_opts_ccache(use_ccache)),
         "CRT building cmake",
     )?;
 
@@ -307,9 +305,7 @@ fn build_host(
                 "-DCOMPILER_RT_DEFAULT_TARGET_ONLY='On'",
             ])
             .args(crate::platforms::SHARED_BUILD_OPTS)
-            .args(crate::platforms::shared_build_opts_ccache(
-                use_ccache
-            )),
+            .args(crate::platforms::shared_build_opts_ccache(use_ccache)),
         "LLVM host building cmake",
     )?;
 
@@ -400,9 +396,7 @@ fn build_target(
             ))
             .args(crate::platforms::SHARED_BUILD_OPTS)
             .args(extra_args)
-            .args(crate::platforms::shared_build_opts_ccache(
-                use_ccache
-            )),
+            .args(crate::platforms::shared_build_opts_ccache(use_ccache)),
         "LLVM target building cmake",
     )?;
 

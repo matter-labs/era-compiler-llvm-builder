@@ -50,9 +50,7 @@ pub fn build(
             .args(crate::platforms::shared_build_opts_coverage(
                 enable_coverage,
             ))
-            .args(crate::platforms::shared_build_opts_ccache(
-                use_ccache
-            ))
+            .args(crate::platforms::shared_build_opts_ccache(use_ccache))
             .args(crate::platforms::SHARED_BUILD_OPTS)
             .args(crate::platforms::SHARED_BUILD_OPTS_NOT_MUSL)
             .args(extra_args),

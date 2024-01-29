@@ -132,7 +132,13 @@ pub fn build(
                 anyhow::bail!("Unsupported target environment for x86_64 and Linux");
             }
         } else if cfg!(target_os = "macos") {
-            platforms::x86_64_macos::build(build_type, enable_tests, enable_coverage, extra_args, use_ccache)?;
+            platforms::x86_64_macos::build(
+                build_type,
+                enable_tests,
+                enable_coverage,
+                extra_args,
+                use_ccache,
+            )?;
         } else if cfg!(target_os = "windows") && cfg!(target_env = "gnu") {
             platforms::x86_64_windows_gnu::build(
                 build_type,
@@ -166,7 +172,13 @@ pub fn build(
                 anyhow::bail!("Unsupported target environment for aarch64 and Linux");
             }
         } else if cfg!(target_os = "macos") {
-            platforms::aarch64_macos::build(build_type, enable_tests, enable_coverage, extra_args, use_ccache)?;
+            platforms::aarch64_macos::build(
+                build_type,
+                enable_tests,
+                enable_coverage,
+                extra_args,
+                use_ccache,
+            )?;
         } else {
             anyhow::bail!("Unsupported target OS for aarch64");
         }
