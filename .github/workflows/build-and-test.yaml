@@ -22,6 +22,9 @@ jobs:
         run: cargo clippy
 
   build-and-test:
+    env:
+      UNIT_TESTS_RESULTS_XML: unit-tests-results.xml
+      RUSTC_BOOTSTRAP: 1
     strategy:
       matrix:
         include:
@@ -32,14 +35,11 @@ jobs:
     name: ${{ matrix.name }}
     container:
       image: ghcr.io/matter-labs/compilers-ci-ubuntu-22-llvm15:latest
-    env:
-      UNIT_TESTS_RESULTS_XML: unit-tests-results.xml
-      RUSTC_BOOTSTRAP: 1
     steps:
       - name: Checkout source
         uses: actions/checkout@v4
       - name: Prepare environment
-        if: "${{ matrix.target }}" != ""
+        if: matrix.target != ""
         run: |
           rustup target add ${{ matrix.target }}
       - name: Build
