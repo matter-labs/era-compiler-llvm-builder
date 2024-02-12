@@ -34,7 +34,7 @@ jobs:
     runs-on: ${{ matrix.runner }}
     name: ${{ matrix.name }}
     container:
-      image: ghcr.io/matter-labs/compilers-ci-ubuntu-22-llvm15:latest
+      image: matterlabs/llvm_runner:ubuntu22-llvm15-latest
     steps:
       - name: Checkout source
         uses: actions/checkout@v4
