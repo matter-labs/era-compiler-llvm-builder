@@ -38,12 +38,9 @@ jobs:
     steps:
       - name: Checkout source
         uses: actions/checkout@v4
-      - name: Prepare environment
-        if: matrix.target != ""
-        run: |
-          rustup target add ${{ matrix.target }}
       - name: Build
         run: |
+          rustup target add ${{ matrix.target }}
           cargo build --release
       - name: Test
         run: |
