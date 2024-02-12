@@ -29,20 +29,22 @@ pub fn clone(lock: Lock) -> anyhow::Result<()> {
         );
     }
 
+    let mut cmd = Command::new("git");
+    cmd.arg("clone");
+    if lock.branch.is_some() {
+        cmd.arg(format!("--branch={}", lock.branch.unwrap()));
+    }
     utils::command(
-        Command::new("git").args([
-            "clone",
-            "--branch",
-            lock.branch.as_str(),
-            lock.url.as_str(),
-            destination_path.to_string_lossy().as_ref(),
-        ]),
+        cmd.arg(lock.url.as_str())
+            .arg(destination_path.to_string_lossy().as_ref()),
         "LLVM repository cloning",
     )?;
 
     if let Some(r#ref) = lock.r#ref {
         utils::command(
-            Command::new("git").args(["checkout", r#ref.as_str()]),
+            Command::new("git")
+                .args(["checkout", r#ref.as_str()])
+                .current_dir(destination_path.to_string_lossy().as_ref()),
             "LLVM repository commit checking out",
         )?;
     }
@@ -75,7 +77,7 @@ pub fn checkout(lock: Lock, force: bool) -> anyhow::Result<()> {
     utils::command(
         Command::new("git")
             .current_dir(destination_path.as_path())
-            .args(["checkout", "--force", lock.branch.as_str()]),
+            .args(["checkout", "--force", lock.branch.unwrap().as_str()]),
         "LLVM repository data pulling",
     )?;
 
@@ -173,7 +175,10 @@ pub fn build(
 /// Executes the build artifacts cleaning.
 ///
 pub fn clean() -> anyhow::Result<()> {
-    Ok(std::fs::remove_dir_all(PathBuf::from(
-        LLVMPath::DIRECTORY_LLVM_TARGET,
-    ))?)
+    match std::fs::remove_dir_all(PathBuf::from(LLVMPath::DIRECTORY_LLVM_TARGET)) {
+        Ok(_) => Ok(()),
+        Err(err) => {
+            anyhow::bail!("unable to remove LLVM directory: {}", err);
+        }
+    }
 }

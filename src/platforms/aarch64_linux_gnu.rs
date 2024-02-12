@@ -2,6 +2,7 @@
 //! The zkEVM LLVM arm64 `linux-gnu` builder.
 //!
 
+use std::env;
 use std::process::Command;
 
 use crate::build_type::BuildType;
@@ -55,10 +56,12 @@ pub fn build(
         "LLVM building cmake",
     )?;
 
-    crate::utils::command(
-        Command::new("ninja").args(["-C", llvm_build_final.to_string_lossy().as_ref(), "install"]),
-        "LLVM building with ninja",
-    )?;
+    let mut ninja = Command::new("ninja");
+    ninja.args(["-C", llvm_build_final.to_string_lossy().as_ref()]);
+    if env::var("DRY_RUN").is_ok() {
+        ninja.arg("-n");
+    }
+    crate::utils::command(ninja.arg("install"), "LLVM building ninja")?;
 
     Ok(())
 }

@@ -19,9 +19,14 @@ doctest = false
 [dependencies]
 structopt = { version = "0.3", default-features = false }
 anyhow = "1.0"
-
 serde = { version = "1.0", features = [ "derive" ] }
 toml = "0.7"
 num_cpus = "1.15"
 fs_extra = "1.2"
 path-slash = "0.2"
+rstest = "0.18.2"
+
+[dev-dependencies]
+assert_cmd = "2.0.13"
+predicates = "3.1.0"
+assert_fs = "1.1.1"
