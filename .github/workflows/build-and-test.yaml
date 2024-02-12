@@ -45,7 +45,7 @@ jobs:
       - name: Test
         run: |
           cargo install cargo2junit
-          cargo test --verbose -- -Z unstable-options --format json | cargo2junit | tee "${UNIT_TESTS_RESULTS_XML}"
+          cargo test --no-fail-fast -- -Z unstable-options --format json | cargo2junit | tee "${UNIT_TESTS_RESULTS_XML}"
       - name: Upload test results
         if: always()
         uses: EnricoMi/publish-unit-test-result-action@v2

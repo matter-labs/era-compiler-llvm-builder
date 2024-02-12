@@ -44,7 +44,7 @@ fn build() -> Result<(), Box<dyn std::error::Error>> {
 }
 
 #[rstest]
-fn debug_build_with_cache_tests_coverage() -> Result<(), Box<dyn std::error::Error>> {
+fn debug_build_with_tests_coverage() -> Result<(), Box<dyn std::error::Error>> {
     let mut cmd = Command::cargo_bin(constants::ZKEVM_LLVM)?;
     let file = assert_fs::NamedTempFile::new(constants::LLVM_LOCK_FILE)?;
     let path = file.parent().unwrap();
@@ -58,7 +58,6 @@ fn debug_build_with_cache_tests_coverage() -> Result<(), Box<dyn std::error::Err
     build_cmd.current_dir(path);
     build_cmd
         .arg("build")
-        .arg("--use-ccache")
         .arg("--enable-coverage")
         .arg("--enable-tests")
         .arg("--debug")
