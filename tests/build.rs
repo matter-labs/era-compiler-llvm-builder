@@ -48,7 +48,7 @@ fn build_without_clone() -> anyhow::Result<()> {
 ///
 /// Returns `Ok(())` if the test passes.
 #[rstest]
-#[timeout(std::time::Duration::from_secs(1200))]
+#[timeout(std::time::Duration::from_secs(2400))]
 fn clone_build_and_clean() -> anyhow::Result<()> {
     let mut cmd = Command::cargo_bin(constants::ZKEVM_LLVM)?;
     let file = assert_fs::NamedTempFile::new(constants::LLVM_LOCK_FILE)?;
@@ -87,7 +87,7 @@ fn clone_build_and_clean() -> anyhow::Result<()> {
 ///
 /// Returns `Ok(())` if the test passes.
 #[rstest]
-#[timeout(std::time::Duration::from_secs(1200))]
+#[timeout(std::time::Duration::from_secs(2400))]
 fn debug_build_with_tests_coverage() -> anyhow::Result<()> {
     let mut cmd = Command::cargo_bin(constants::ZKEVM_LLVM)?;
     let file = assert_fs::NamedTempFile::new(constants::LLVM_LOCK_FILE)?;

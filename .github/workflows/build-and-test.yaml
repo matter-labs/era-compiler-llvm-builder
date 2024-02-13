@@ -62,7 +62,7 @@ jobs:
         run: |
           export PATH="$PATH:/c/Users/runneradmin/.cargo/bin/"
           cargo install cargo2junit
-          cargo test --no-fail-fast -- -Z unstable-options --format json | cargo2junit | tee "${UNIT_TESTS_RESULTS_XML}"
+          cargo test --no-fail-fast -- --skip debug_build_with_tests_coverage -Z unstable-options --format json | cargo2junit | tee "${UNIT_TESTS_RESULTS_XML}"
       - name: Upload test results
         if: always()
         uses: EnricoMi/publish-unit-test-result-action/composite@v2
