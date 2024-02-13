@@ -25,7 +25,11 @@ fn checkout_after_clone() -> anyhow::Result<()> {
     let file = assert_fs::NamedTempFile::new(constants::LLVM_LOCK_FILE)?;
     let path = file.parent().unwrap();
     cmd.current_dir(path);
-    file.write_str(&*format!("url = \"{}\"", constants::ERA_LLVM_REPO_URL))?;
+    file.write_str(&*format!(
+        "url = \"{}\"\nbranch = \"{}\"",
+        constants::ERA_LLVM_REPO_URL,
+        constants::ERA_LLVM_REPO_TEST_BRANCH,
+    ))?;
     cmd.arg("clone");
     cmd.assert()
         .success()
@@ -68,7 +72,11 @@ fn force_checkout() -> anyhow::Result<()> {
     let file = assert_fs::NamedTempFile::new(constants::LLVM_LOCK_FILE)?;
     let path = file.parent().unwrap();
     cmd.current_dir(path);
-    file.write_str(&*format!("url = \"{}\"", constants::ERA_LLVM_REPO_URL))?;
+    file.write_str(&*format!(
+        "url = \"{}\"\nbranch = \"{}\"",
+        constants::ERA_LLVM_REPO_URL,
+        constants::ERA_LLVM_REPO_TEST_BRANCH,
+    ))?;
     cmd.arg("clone");
     cmd.assert()
         .success()

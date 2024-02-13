@@ -54,7 +54,11 @@ fn clone_build_and_clean() -> anyhow::Result<()> {
     let file = assert_fs::NamedTempFile::new(constants::LLVM_LOCK_FILE)?;
     let path = file.parent().unwrap();
     cmd.current_dir(path);
-    file.write_str(&*format!("url = \"{}\"", constants::ERA_LLVM_REPO_URL))?;
+    file.write_str(&*format!(
+        "url = \"{}\"\nbranch = \"{}\"",
+        constants::ERA_LLVM_REPO_URL,
+        constants::ERA_LLVM_REPO_TEST_BRANCH,
+    ))?;
     cmd.arg("clone");
     cmd.assert()
         .success()
@@ -93,7 +97,11 @@ fn debug_build_with_tests_coverage() -> anyhow::Result<()> {
     let file = assert_fs::NamedTempFile::new(constants::LLVM_LOCK_FILE)?;
     let path = file.parent().unwrap();
     cmd.current_dir(path);
-    file.write_str(&*format!("url = \"{}\"", constants::ERA_LLVM_REPO_URL))?;
+    file.write_str(&*format!(
+        "url = \"{}\"\nbranch = \"{}\"",
+        constants::ERA_LLVM_REPO_URL,
+        constants::ERA_LLVM_REPO_TEST_BRANCH,
+    ))?;
     cmd.arg("clone");
     cmd.assert()
         .success()
