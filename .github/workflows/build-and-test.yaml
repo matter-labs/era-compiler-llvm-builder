@@ -8,6 +8,10 @@ on:
       - main
   workflow_dispatch:
 
+env:
+  UNIT_TESTS_RESULTS_XML: unit-tests-results.xml
+  RUSTC_BOOTSTRAP: 1
+
 jobs:
   check-formatting:
     name: Check formatting
@@ -21,20 +25,111 @@ jobs:
       - name: Run clippy
         run: cargo clippy
 
-  build-and-test:
+  build-and-test-windows:
+    needs: check-formatting
+    name: "Windows"
+    runs-on: windows-2022-github-hosted-16core
     env:
-      UNIT_TESTS_RESULTS_XML: unit-tests-results.xml
-      RUSTC_BOOTSTRAP: 1
+      LIBSTDCPP_SOURCE_PATH: "C:/a/_temp/msys64/mingw64/lib/libstdc++.a"
+    defaults:
+      run:
+        shell: msys2 {0}
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+      - name: Prepare msys2
+        uses: msys2/setup-msys2@v2
+      - name: Prepare env
+        run: |
+          pacman-key --refresh
+          pacman -Sy
+          curl -LO https://repo.msys2.org/mingw/mingw64/mingw-w64-x86_64-cmake-3.27.7-3-any.pkg.tar.zst
+          pacman --noconfirm -U mingw-w64-x86_64-cmake-3.27.7-3-any.pkg.tar.zst
+          pacman --noconfirm -S --needed --overwrite \
+          base-devel \
+          git \
+          ninja \
+          mingw-w64-x86_64-clang \
+          mingw-w64-x86_64-lld \
+          mingw-w64-x86_64-rust \
+          mingw-w64-x86_64-gcc-libs \
+          mingw-w64-x86_64-gcc
+      - name: Build
+        run: |
+          export PATH="${PATH}:/c/Users/runneradmin/.cargo/bin/"
+          cargo build --release
+      - name: Test
+        run: |
+          export PATH="$PATH:/c/Users/runneradmin/.cargo/bin/"
+          cargo install cargo2junit
+          cargo test --no-fail-fast -- -Z unstable-options --format json | cargo2junit | tee "${UNIT_TESTS_RESULTS_XML}"
+      - name: Upload test results
+        if: always()
+        uses: EnricoMi/publish-unit-test-result-action/composite@v2
+        with:
+          check_name: Windows Unit Tests Results
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          files: ${{ env.UNIT_TESTS_RESULTS_XML }}
+          action_fail_on_inconclusive: true
+
+  build-and-test-macos:
+    strategy:
+      matrix:
+        include:
+          - name: "MacOS x86"
+            runner: macos-12-large
+            solc-name: "solc-macosx-amd64"
+          - name: "MacOS arm64"
+            runner: [ self-hosted, macOS, ARM64 ]
+            solc-name: "solc-macosx-arm64"
+    runs-on: ${{ matrix.runner }}
+    name: ${{ matrix.name }}
+    defaults:
+      run:
+        shell: zsh {0} # For MacOS hosts, .zprofile is pre-configured
+    steps:
+      - name: Cleanup workspace
+        if: ${{ matrix.name }} == "MacOS ARM64"
+        run: |
+          setopt rmstarsilent
+          setopt +o nomatch
+          rm -rf ${{ github.workspace }}/*
+      - name: Checkout source
+        uses: actions/checkout@v4
+      - name: Build
+        run: cargo build --release
+      - name: Test
+        run: |
+          cargo install cargo2junit
+          cargo test --no-fail-fast -- -Z unstable-options --format json | cargo2junit | tee "${UNIT_TESTS_RESULTS_XML}"
+      - name: Upload test results
+        if: always()
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        with:
+          check_name: ${{ matrix.name }} Unit Tests Results
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          files: ${{ env.UNIT_TESTS_RESULTS_XML }}
+          action_fail_on_inconclusive: true
+
+  build-and-test-linux:
+    needs: check-formatting
     strategy:
       matrix:
         include:
           - name: "Linux x86 gnu"
             runner: matterlabs-ci-runner
             target: "x86_64-unknown-linux-gnu"
+          - name: "Linux arm64"
+            runner: matterlabs-ci-runner-arm
+            solc-name: "solc-linux-arm64"
+            target: "aarch64-unknown-linux-musl"
+            rustflags: "-C link-arg=-Wl,-Bstatic -C link-arg=-lc -C link-arg=-L/usr/lib/llvm-15/lib/clang/15.0.7/lib/linux/ -C link-arg=-lclang_rt.builtins-aarch64"
     runs-on: ${{ matrix.runner }}
     name: ${{ matrix.name }}
     container:
       image: matterlabs/llvm_runner:ubuntu22-llvm15-latest
+    env:
+      RUSTFLAGS: ${{ matrix.rustflags }}
     steps:
       - name: Checkout source
         uses: actions/checkout@v4

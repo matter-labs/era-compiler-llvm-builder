@@ -27,10 +27,7 @@ mod constants;
 #[case("clean", "--invalid-clean-option")]
 #[case("clone", "--invalid-clone-option")]
 #[case("checkout", "--invalid-checkout-option")]
-fn invalid_option(
-    #[case] subcommand: &str,
-    #[case] option: &str,
-) -> anyhow::Result<()> {
+fn invalid_option(#[case] subcommand: &str, #[case] option: &str) -> anyhow::Result<()> {
     let mut cmd = Command::cargo_bin(constants::ZKEVM_LLVM)?;
     if subcommand != "" {
         cmd.arg(subcommand);

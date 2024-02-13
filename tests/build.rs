@@ -61,7 +61,8 @@ fn build() -> anyhow::Result<()> {
         .stderr(predicate::str::is_match(".*Updating files:.*100%.*done").unwrap());
     let mut build_cmd = Command::cargo_bin(constants::ZKEVM_LLVM)?;
     build_cmd.current_dir(path);
-    build_cmd.arg("build")
+    build_cmd
+        .arg("build")
         .assert()
         .success()
         .stdout(predicate::str::is_match("Installing:.*").unwrap());
