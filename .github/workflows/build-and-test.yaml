@@ -73,6 +73,7 @@ jobs:
           action_fail_on_inconclusive: true
 
   build-and-test-macos:
+    needs: check-formatting
     strategy:
       matrix:
         include:
@@ -96,6 +97,8 @@ jobs:
           rm -rf ${{ github.workspace }}/*
       - name: Checkout source
         uses: actions/checkout@v4
+      - name: Prepare environment
+        run: brew install cmake ninja
       - name: Build
         run: cargo build --release
       - name: Test
@@ -104,7 +107,7 @@ jobs:
           cargo test --no-fail-fast -- -Z unstable-options --format json | cargo2junit | tee "${UNIT_TESTS_RESULTS_XML}"
       - name: Upload test results
         if: always()
-        uses: EnricoMi/publish-unit-test-result-action@v2
+        uses: EnricoMi/publish-unit-test-result-action/composite@v2
         with:
           check_name: ${{ matrix.name }} Unit Tests Results
           github_token: ${{ secrets.GITHUB_TOKEN }}

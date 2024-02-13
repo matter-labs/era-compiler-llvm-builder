@@ -112,8 +112,8 @@ fn checkout_without_lockfile() -> anyhow::Result<()> {
     let path = file.parent().unwrap();
     cmd.current_dir(path);
     cmd.arg("checkout");
-    cmd.assert()
-        .failure()
-        .stderr(predicate::str::contains("No such file or directory"));
+    cmd.assert().failure().stderr(predicate::str::contains(
+        "Error: Error opening \"LLVM.lock\" file",
+    ));
     Ok(())
 }

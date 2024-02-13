@@ -35,21 +35,21 @@ fn build_without_clone() -> anyhow::Result<()> {
     Ok(())
 }
 
-/// Tests the build process of the LLVM repository.
+/// Tests the clone, build, and clean process of the LLVM repository.
 ///
-/// This test verifies that the LLVM repository can be successfully cloned and built.
+/// This test verifies that the LLVM repository can be successfully cloned, built, and cleaned.
 ///
 /// # Errors
 ///
 /// Returns an error if any of the test assertions fail or if there is an error while executing
-/// the build commands.
+/// the build or clean commands.
 ///
 /// # Returns
 ///
 /// Returns `Ok(())` if the test passes.
 #[rstest]
 #[timeout(std::time::Duration::from_secs(1200))]
-fn build() -> anyhow::Result<()> {
+fn clone_build_and_clean() -> anyhow::Result<()> {
     let mut cmd = Command::cargo_bin(constants::ZKEVM_LLVM)?;
     let file = assert_fs::NamedTempFile::new(constants::LLVM_LOCK_FILE)?;
     let path = file.parent().unwrap();
@@ -66,6 +66,10 @@ fn build() -> anyhow::Result<()> {
         .assert()
         .success()
         .stdout(predicate::str::is_match("Installing:.*").unwrap());
+    let mut clean_cmd = Command::cargo_bin(constants::ZKEVM_LLVM)?;
+    clean_cmd.current_dir(path);
+    clean_cmd.arg("clean");
+    clean_cmd.assert().success();
     Ok(())
 }
 
