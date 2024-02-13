@@ -2,7 +2,6 @@
 //! The zkEVM LLVM amd64 `windows-gnu` builder.
 //!
 
-use std::env;
 use std::path::PathBuf;
 use std::process::Command;
 
@@ -60,12 +59,7 @@ pub fn build(
         "LLVM building cmake",
     )?;
 
-    let mut ninja = Command::new("ninja");
-    ninja.args(["-C", llvm_build_final.to_string_lossy().as_ref()]);
-    if env::var("DRY_RUN").is_ok() {
-        ninja.arg("-n");
-    }
-    crate::utils::command(ninja.arg("install"), "LLVM building ninja")?;
+    crate::utils::ninja(llvm_build_final.as_ref())?;
 
     let libstdcpp_source_path = match std::env::var("LIBSTDCPP_SOURCE_PATH") {
         Ok(libstdcpp_source_path) => PathBuf::from(libstdcpp_source_path),

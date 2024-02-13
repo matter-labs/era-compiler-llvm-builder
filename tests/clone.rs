@@ -6,6 +6,18 @@ use std::process::Command;
 
 mod constants;
 
+/// Tests the cloning process of the LLVM repository using the default branch.
+///
+/// This test verifies that the LLVM repository can be successfully cloned using the default branch.
+///
+/// # Errors
+///
+/// Returns an error if any of the test assertions fail or if there is an error while executing
+/// the clone command.
+///
+/// # Returns
+///
+/// Returns `Ok(())` if the test passes.
 #[rstest]
 fn clone_default_branch() -> Result<(), Box<dyn std::error::Error>> {
     let mut cmd = Command::cargo_bin(constants::ZKEVM_LLVM)?;
@@ -20,6 +32,19 @@ fn clone_default_branch() -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 
+/// Tests the cloning process of the LLVM repository using a specific branch and reference.
+///
+/// This test verifies that the LLVM repository can be successfully cloned using a specific branch
+/// and reference.
+///
+/// # Errors
+///
+/// Returns an error if any of the test assertions fail or if there is an error while executing
+/// the clone command.
+///
+/// # Returns
+///
+/// Returns `Ok(())` if the test passes.
 #[rstest]
 fn clone_branch_and_ref() -> Result<(), Box<dyn std::error::Error>> {
     let mut cmd = Command::cargo_bin(constants::ZKEVM_LLVM)?;
@@ -42,6 +67,19 @@ fn clone_branch_and_ref() -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 
+/// Tests the cloning process of the LLVM repository using an invalid reference.
+///
+/// This test verifies that attempting to clone the LLVM repository using an invalid reference
+/// results in a failure.
+///
+/// # Errors
+///
+/// Returns an error if any of the test assertions fail or if there is an error while executing
+/// the clone command.
+///
+/// # Returns
+///
+/// Returns `Ok(())` if the test passes.
 #[rstest]
 fn clone_wrong_reference() -> Result<(), Box<dyn std::error::Error>> {
     let mut cmd = Command::cargo_bin(constants::ZKEVM_LLVM)?;
@@ -61,6 +99,19 @@ fn clone_wrong_reference() -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 
+/// Tests the cloning process of the LLVM repository without a lock file.
+///
+/// This test verifies that attempting to clone the LLVM repository without a lock file
+/// results in a failure.
+///
+/// # Errors
+///
+/// Returns an error if any of the test assertions fail or if there is an error while executing
+/// the clone command.
+///
+/// # Returns
+///
+/// Returns `Ok(())` if the test passes.
 #[rstest]
 fn clone_without_lockfile() -> Result<(), Box<dyn std::error::Error>> {
     let mut cmd = Command::cargo_bin(constants::ZKEVM_LLVM)?;

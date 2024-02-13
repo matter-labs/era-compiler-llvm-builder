@@ -4,6 +4,7 @@
 
 pub(crate) mod arguments;
 
+use anyhow::Context;
 use std::path::PathBuf;
 
 use self::arguments::Arguments;
@@ -74,7 +75,8 @@ fn main_inner() -> anyhow::Result<()> {
             compiler_llvm_builder::checkout(lock, force)?;
         }
         Arguments::Clean => {
-            compiler_llvm_builder::clean()?;
+            compiler_llvm_builder::clean()
+                .with_context(|| "Unable to remove target LLVM directory")?;
         }
     }
 

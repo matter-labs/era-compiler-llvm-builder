@@ -4,6 +4,23 @@ use rstest::rstest;
 use std::process::Command;
 mod constants;
 
+/// Tests invalid options for various subcommands.
+///
+/// This test verifies that providing invalid options for different subcommands results in a failure.
+///
+/// # Parameters
+///
+/// - `subcommand`: The subcommand being tested.
+/// - `option`: The invalid option being tested.
+///
+/// # Errors
+///
+/// Returns an error if any of the test assertions fail or if there is an error while executing
+/// the command.
+///
+/// # Returns
+///
+/// Returns `Ok(())` if the test passes.
 #[rstest]
 #[case("", "--invalid-option")]
 #[case("build", "--invalid-build-option")]
@@ -28,6 +45,22 @@ fn invalid_option(
     Ok(())
 }
 
+/// Tests invalid subcommands.
+///
+/// This test verifies that providing invalid subcommands results in a failure.
+///
+/// # Parameters
+///
+/// - `subcommand`: The invalid subcommand being tested.
+///
+/// # Errors
+///
+/// Returns an error if any of the test assertions fail or if there is an error while executing
+/// the command.
+///
+/// # Returns
+///
+/// Returns `Ok(())` if the test passes.
 #[rstest]
 #[case("invalid-subcommand")]
 #[case("123")]

@@ -6,6 +6,19 @@ use std::process::Command;
 
 mod constants;
 
+/// Tests the checkout process after cloning the LLVM repository.
+///
+/// This test verifies that after cloning the LLVM repository, checking out a specific branch
+/// or reference works as expected.
+///
+/// # Errors
+///
+/// Returns an error if any of the test assertions fail or if there is an error while executing
+/// the checkout command.
+///
+/// # Returns
+///
+/// Returns `Ok(())` if the test passes.
 #[rstest]
 fn checkout_after_clone() -> Result<(), Box<dyn std::error::Error>> {
     let mut cmd = Command::cargo_bin(constants::ZKEVM_LLVM)?;
@@ -36,6 +49,19 @@ fn checkout_after_clone() -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 
+/// Tests the force checkout process after cloning the LLVM repository.
+///
+/// This test verifies that after cloning the LLVM repository, checking out a specific branch
+/// or reference with the `--force` option works as expected.
+///
+/// # Errors
+///
+/// Returns an error if any of the test assertions fail or if there is an error while executing
+/// the checkout command.
+///
+/// # Returns
+///
+/// Returns `Ok(())` if the test passes.
 #[rstest]
 fn force_checkout() -> Result<(), Box<dyn std::error::Error>> {
     let mut cmd = Command::cargo_bin(constants::ZKEVM_LLVM)?;
@@ -66,6 +92,19 @@ fn force_checkout() -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 
+/// Tests the checkout process without a lock file in the LLVM repository.
+///
+/// This test verifies that attempting to checkout the LLVM repository without a lock file
+/// results in a failure.
+///
+/// # Errors
+///
+/// Returns an error if any of the test assertions fail or if there is an error while executing
+/// the checkout command.
+///
+/// # Returns
+///
+/// Returns `Ok(())` if the test passes.
 #[rstest]
 fn checkout_without_lockfile() -> Result<(), Box<dyn std::error::Error>> {
     let mut cmd = Command::cargo_bin(constants::ZKEVM_LLVM)?;

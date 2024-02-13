@@ -77,7 +77,13 @@ pub fn checkout(lock: Lock, force: bool) -> anyhow::Result<()> {
     utils::command(
         Command::new("git")
             .current_dir(destination_path.as_path())
-            .args(["checkout", "--force", lock.branch.unwrap().as_str()]),
+            .args([
+                "checkout",
+                "--force",
+                lock.branch
+                    .expect("Branch should be specified in the lock file")
+                    .as_str(),
+            ]),
         "LLVM repository data pulling",
     )?;
 
@@ -175,10 +181,6 @@ pub fn build(
 /// Executes the build artifacts cleaning.
 ///
 pub fn clean() -> anyhow::Result<()> {
-    match std::fs::remove_dir_all(PathBuf::from(LLVMPath::DIRECTORY_LLVM_TARGET)) {
-        Ok(_) => Ok(()),
-        Err(err) => {
-            anyhow::bail!("unable to remove LLVM directory: {}", err);
-        }
-    }
+    std::fs::remove_dir_all(PathBuf::from(LLVMPath::DIRECTORY_LLVM_TARGET))?;
+    Ok(())
 }

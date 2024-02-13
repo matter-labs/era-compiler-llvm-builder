@@ -2,7 +2,6 @@
 //! The zkEVM LLVM arm64 `linux-musl` builder.
 //!
 
-use std::env;
 use std::path::Path;
 use std::process::Command;
 
@@ -391,12 +390,7 @@ fn build_target(
         "LLVM target building cmake",
     )?;
 
-    let mut ninja = Command::new("ninja");
-    ninja.args(["-C", build_directory.to_string_lossy().as_ref()]);
-    if env::var("DRY_RUN").is_ok() {
-        ninja.arg("-n");
-    }
-    crate::utils::command(ninja.arg("install"), "LLVM building ninja")?;
+    crate::utils::ninja(build_directory)?;
 
     let mut musl_lib_directory = musl_target_directory.to_path_buf();
     musl_lib_directory.push("lib/");

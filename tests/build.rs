@@ -6,6 +6,19 @@ use std::process::Command;
 
 mod constants;
 
+/// Tests building without cloning LLVM repository.
+///
+/// This test verifies that the build process fails when attempting to build LLVM without
+/// cloning the repository first.
+///
+/// # Errors
+///
+/// Returns an error if any of the test assertions fail or if there is an error while executing
+/// the build command.
+///
+/// # Returns
+///
+/// Returns `Ok(())` if the test passes.
 #[rstest]
 fn build_without_clone() -> Result<(), Box<dyn std::error::Error>> {
     let mut cmd = Command::cargo_bin(constants::ZKEVM_LLVM)?;
@@ -22,6 +35,18 @@ fn build_without_clone() -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 
+/// Tests the build process of the LLVM repository.
+///
+/// This test verifies that the LLVM repository can be successfully cloned and built.
+///
+/// # Errors
+///
+/// Returns an error if any of the test assertions fail or if there is an error while executing
+/// the build commands.
+///
+/// # Returns
+///
+/// Returns `Ok(())` if the test passes.
 #[rstest]
 fn build() -> Result<(), Box<dyn std::error::Error>> {
     let mut cmd = Command::cargo_bin(constants::ZKEVM_LLVM)?;
@@ -43,6 +68,19 @@ fn build() -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 
+/// Tests the debug build process of the LLVM repository with tests and coverage enabled.
+///
+/// This test verifies that the LLVM repository can be successfully cloned and built in debug mode
+/// with tests and coverage enabled.
+///
+/// # Errors
+///
+/// Returns an error if any of the test assertions fail or if there is an error while executing
+/// the build commands.
+///
+/// # Returns
+///
+/// Returns `Ok(())` if the test passes.
 #[rstest]
 fn debug_build_with_tests_coverage() -> Result<(), Box<dyn std::error::Error>> {
     let mut cmd = Command::cargo_bin(constants::ZKEVM_LLVM)?;

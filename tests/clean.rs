@@ -6,6 +6,19 @@ use std::process::Command;
 
 mod constants;
 
+/// Tests the clean process without cloning the LLVM repository.
+///
+/// This test verifies that attempting to clean the LLVM directory without first cloning it
+/// results in a failure.
+///
+/// # Errors
+///
+/// Returns an error if any of the test assertions fail or if there is an error while executing
+/// the clean command.
+///
+/// # Returns
+///
+/// Returns `Ok(())` if the test passes.
 #[rstest]
 fn clean_without_clone() -> Result<(), Box<dyn std::error::Error>> {
     let mut cmd = Command::cargo_bin(constants::ZKEVM_LLVM)?;
@@ -14,11 +27,23 @@ fn clean_without_clone() -> Result<(), Box<dyn std::error::Error>> {
     cmd.current_dir(path);
     cmd.arg("clean");
     cmd.assert().failure().stderr(predicate::str::contains(
-        "Error: unable to remove LLVM directory",
+        "Unable to remove target LLVM directory",
     ));
     Ok(())
 }
 
+/// Tests the clone, build, and clean process of the LLVM repository.
+///
+/// This test verifies that the LLVM repository can be successfully cloned, built, and cleaned.
+///
+/// # Errors
+///
+/// Returns an error if any of the test assertions fail or if there is an error while executing
+/// the build or clean commands.
+///
+/// # Returns
+///
+/// Returns `Ok(())` if the test passes.
 #[rstest]
 fn clone_build_and_clean() -> Result<(), Box<dyn std::error::Error>> {
     let mut clone_cmd = Command::cargo_bin(constants::ZKEVM_LLVM)?;
