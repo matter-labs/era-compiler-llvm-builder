@@ -18,8 +18,8 @@ use serde::Deserialize;
 pub struct Lock {
     /// The LLVM repository URL.
     pub url: String,
-    /// The LLVM repository branch. Optional to allow the default branch clone and checkout.
-    pub branch: Option<String>,
+    /// The LLVM repository branch.
+    pub branch: String,
     /// The LLVM repository commit reference.
     pub r#ref: Option<String>,
 }

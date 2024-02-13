@@ -29,14 +29,14 @@ pub fn clone(lock: Lock) -> anyhow::Result<()> {
         );
     }
 
-    let mut cmd = Command::new("git");
-    cmd.arg("clone");
-    if lock.branch.is_some() {
-        cmd.arg(format!("--branch={}", lock.branch.unwrap()));
-    }
     utils::command(
-        cmd.arg(lock.url.as_str())
-            .arg(destination_path.to_string_lossy().as_ref()),
+        Command::new("git").args([
+            "clone",
+            "--branch",
+            lock.branch.as_str(),
+            lock.url.as_str(),
+            destination_path.to_string_lossy().as_ref(),
+        ]),
         "LLVM repository cloning",
     )?;
 
@@ -77,13 +77,7 @@ pub fn checkout(lock: Lock, force: bool) -> anyhow::Result<()> {
     utils::command(
         Command::new("git")
             .current_dir(destination_path.as_path())
-            .args([
-                "checkout",
-                "--force",
-                lock.branch
-                    .expect("Branch should be specified in the lock file")
-                    .as_str(),
-            ]),
+            .args(["checkout", "--force", lock.branch.as_str()]),
         "LLVM repository data pulling",
     )?;
 
