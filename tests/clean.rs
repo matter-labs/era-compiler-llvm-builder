@@ -20,7 +20,7 @@ mod constants;
 ///
 /// Returns `Ok(())` if the test passes.
 #[rstest]
-fn clean_without_clone() -> Result<(), Box<dyn std::error::Error>> {
+fn clean_without_clone() -> anyhow::Result<()> {
     let mut cmd = Command::cargo_bin(constants::ZKEVM_LLVM)?;
     let file = assert_fs::NamedTempFile::new(constants::LLVM_LOCK_FILE)?;
     let path = file.parent().unwrap();
@@ -45,7 +45,7 @@ fn clean_without_clone() -> Result<(), Box<dyn std::error::Error>> {
 ///
 /// Returns `Ok(())` if the test passes.
 #[rstest]
-fn clone_build_and_clean() -> Result<(), Box<dyn std::error::Error>> {
+fn clone_build_and_clean() -> anyhow::Result<()> {
     let mut clone_cmd = Command::cargo_bin(constants::ZKEVM_LLVM)?;
     let file = assert_fs::NamedTempFile::new(constants::LLVM_LOCK_FILE)?;
     let path = file.parent().unwrap();

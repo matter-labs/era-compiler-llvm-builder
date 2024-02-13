@@ -20,7 +20,7 @@ mod constants;
 ///
 /// Returns `Ok(())` if the test passes.
 #[rstest]
-fn checkout_after_clone() -> Result<(), Box<dyn std::error::Error>> {
+fn checkout_after_clone() -> anyhow::Result<()> {
     let mut cmd = Command::cargo_bin(constants::ZKEVM_LLVM)?;
     let file = assert_fs::NamedTempFile::new(constants::LLVM_LOCK_FILE)?;
     let path = file.parent().unwrap();
@@ -63,7 +63,7 @@ fn checkout_after_clone() -> Result<(), Box<dyn std::error::Error>> {
 ///
 /// Returns `Ok(())` if the test passes.
 #[rstest]
-fn force_checkout() -> Result<(), Box<dyn std::error::Error>> {
+fn force_checkout() -> anyhow::Result<()> {
     let mut cmd = Command::cargo_bin(constants::ZKEVM_LLVM)?;
     let file = assert_fs::NamedTempFile::new(constants::LLVM_LOCK_FILE)?;
     let path = file.parent().unwrap();
@@ -106,7 +106,7 @@ fn force_checkout() -> Result<(), Box<dyn std::error::Error>> {
 ///
 /// Returns `Ok(())` if the test passes.
 #[rstest]
-fn checkout_without_lockfile() -> Result<(), Box<dyn std::error::Error>> {
+fn checkout_without_lockfile() -> anyhow::Result<()> {
     let mut cmd = Command::cargo_bin(constants::ZKEVM_LLVM)?;
     let file = assert_fs::NamedTempFile::new(constants::LLVM_LOCK_FILE)?;
     let path = file.parent().unwrap();

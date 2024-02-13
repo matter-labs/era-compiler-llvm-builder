@@ -20,7 +20,7 @@ mod constants;
 ///
 /// Returns `Ok(())` if the test passes.
 #[rstest]
-fn build_without_clone() -> Result<(), Box<dyn std::error::Error>> {
+fn build_without_clone() -> anyhow::Result<()> {
     let mut cmd = Command::cargo_bin(constants::ZKEVM_LLVM)?;
     let file = assert_fs::NamedTempFile::new(constants::LLVM_LOCK_FILE)?;
     let path = file.parent().unwrap();
@@ -48,7 +48,8 @@ fn build_without_clone() -> Result<(), Box<dyn std::error::Error>> {
 ///
 /// Returns `Ok(())` if the test passes.
 #[rstest]
-fn build() -> Result<(), Box<dyn std::error::Error>> {
+#[timeout(std::time::Duration::from_secs(1200))]
+fn build() -> anyhow::Result<()> {
     let mut cmd = Command::cargo_bin(constants::ZKEVM_LLVM)?;
     let file = assert_fs::NamedTempFile::new(constants::LLVM_LOCK_FILE)?;
     let path = file.parent().unwrap();
@@ -60,11 +61,10 @@ fn build() -> Result<(), Box<dyn std::error::Error>> {
         .stderr(predicate::str::is_match(".*Updating files:.*100%.*done").unwrap());
     let mut build_cmd = Command::cargo_bin(constants::ZKEVM_LLVM)?;
     build_cmd.current_dir(path);
-    build_cmd.arg("build").env("DRY_RUN", "true");
-    build_cmd
+    build_cmd.arg("build")
         .assert()
         .success()
-        .stdout(predicate::str::contains("Install the project..."));
+        .stdout(predicate::str::is_match("Installing:.*").unwrap());
     Ok(())
 }
 
@@ -82,7 +82,8 @@ fn build() -> Result<(), Box<dyn std::error::Error>> {
 ///
 /// Returns `Ok(())` if the test passes.
 #[rstest]
-fn debug_build_with_tests_coverage() -> Result<(), Box<dyn std::error::Error>> {
+#[timeout(std::time::Duration::from_secs(1200))]
+fn debug_build_with_tests_coverage() -> anyhow::Result<()> {
     let mut cmd = Command::cargo_bin(constants::ZKEVM_LLVM)?;
     let file = assert_fs::NamedTempFile::new(constants::LLVM_LOCK_FILE)?;
     let path = file.parent().unwrap();
@@ -98,11 +99,10 @@ fn debug_build_with_tests_coverage() -> Result<(), Box<dyn std::error::Error>> {
         .arg("build")
         .arg("--enable-coverage")
         .arg("--enable-tests")
-        .arg("--debug")
-        .env("DRY_RUN", "true");
+        .arg("--debug");
     build_cmd
         .assert()
         .success()
-        .stdout(predicate::str::contains("Install the project..."));
+        .stdout(predicate::str::is_match("Installing:.*").unwrap());
     Ok(())
 }

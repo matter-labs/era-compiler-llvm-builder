@@ -27,7 +27,7 @@ use rstest::rstest;
 #[case("clean")]
 #[case("clone")]
 #[case("checkout")]
-fn version(#[case] subcommand: String) -> Result<(), Box<dyn std::error::Error>> {
+fn version(#[case] subcommand: String) -> anyhow::Result<()> {
     let mut cmd = Command::cargo_bin(constants::ZKEVM_LLVM)?;
     if subcommand != "" {
         cmd.arg(subcommand);

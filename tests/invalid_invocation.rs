@@ -30,7 +30,7 @@ mod constants;
 fn invalid_option(
     #[case] subcommand: &str,
     #[case] option: &str,
-) -> Result<(), Box<dyn std::error::Error>> {
+) -> anyhow::Result<()> {
     let mut cmd = Command::cargo_bin(constants::ZKEVM_LLVM)?;
     if subcommand != "" {
         cmd.arg(subcommand);
@@ -65,7 +65,7 @@ fn invalid_option(
 #[case("invalid-subcommand")]
 #[case("123")]
 #[case("$$.@!;-a3")]
-fn invalid_subcommand(#[case] subcommand: &str) -> Result<(), Box<dyn std::error::Error>> {
+fn invalid_subcommand(#[case] subcommand: &str) -> anyhow::Result<()> {
     let mut cmd = Command::cargo_bin(constants::ZKEVM_LLVM)?;
     cmd.arg(subcommand);
     cmd.assert()

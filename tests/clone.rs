@@ -19,7 +19,7 @@ mod constants;
 ///
 /// Returns `Ok(())` if the test passes.
 #[rstest]
-fn clone_default_branch() -> Result<(), Box<dyn std::error::Error>> {
+fn clone_default_branch() -> anyhow::Result<()> {
     let mut cmd = Command::cargo_bin(constants::ZKEVM_LLVM)?;
     let file = assert_fs::NamedTempFile::new(constants::LLVM_LOCK_FILE)?;
     let path = file.parent().unwrap();
@@ -46,7 +46,7 @@ fn clone_default_branch() -> Result<(), Box<dyn std::error::Error>> {
 ///
 /// Returns `Ok(())` if the test passes.
 #[rstest]
-fn clone_branch_and_ref() -> Result<(), Box<dyn std::error::Error>> {
+fn clone_branch_and_ref() -> anyhow::Result<()> {
     let mut cmd = Command::cargo_bin(constants::ZKEVM_LLVM)?;
     let file = assert_fs::NamedTempFile::new(constants::LLVM_LOCK_FILE)?;
     let path = file.parent().unwrap();
@@ -81,7 +81,7 @@ fn clone_branch_and_ref() -> Result<(), Box<dyn std::error::Error>> {
 ///
 /// Returns `Ok(())` if the test passes.
 #[rstest]
-fn clone_wrong_reference() -> Result<(), Box<dyn std::error::Error>> {
+fn clone_wrong_reference() -> anyhow::Result<()> {
     let mut cmd = Command::cargo_bin(constants::ZKEVM_LLVM)?;
     let file = assert_fs::NamedTempFile::new(constants::LLVM_LOCK_FILE)?;
     let path = file.parent().unwrap();
@@ -113,7 +113,7 @@ fn clone_wrong_reference() -> Result<(), Box<dyn std::error::Error>> {
 ///
 /// Returns `Ok(())` if the test passes.
 #[rstest]
-fn clone_without_lockfile() -> Result<(), Box<dyn std::error::Error>> {
+fn clone_without_lockfile() -> anyhow::Result<()> {
     let mut cmd = Command::cargo_bin(constants::ZKEVM_LLVM)?;
     let file = assert_fs::NamedTempFile::new(constants::LLVM_LOCK_FILE)?;
     let path = file.parent().unwrap();
