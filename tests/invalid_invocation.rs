@@ -2,7 +2,7 @@ use assert_cmd::prelude::*;
 use predicates::prelude::*;
 use rstest::rstest;
 use std::process::Command;
-mod constants;
+mod common;
 
 /// Tests invalid options for various subcommands.
 ///
@@ -28,7 +28,7 @@ mod constants;
 #[case("clone", "--invalid-clone-option")]
 #[case("checkout", "--invalid-checkout-option")]
 fn invalid_option(#[case] subcommand: &str, #[case] option: &str) -> anyhow::Result<()> {
-    let mut cmd = Command::cargo_bin(constants::ZKEVM_LLVM)?;
+    let mut cmd = Command::cargo_bin(common::ZKEVM_LLVM)?;
     if subcommand != "" {
         cmd.arg(subcommand);
     }
@@ -63,7 +63,7 @@ fn invalid_option(#[case] subcommand: &str, #[case] option: &str) -> anyhow::Res
 #[case("123")]
 #[case("$$.@!;-a3")]
 fn invalid_subcommand(#[case] subcommand: &str) -> anyhow::Result<()> {
-    let mut cmd = Command::cargo_bin(constants::ZKEVM_LLVM)?;
+    let mut cmd = Command::cargo_bin(common::ZKEVM_LLVM)?;
     cmd.arg(subcommand);
     cmd.assert()
         .failure()
