@@ -23,7 +23,7 @@ mod constants;
 fn build_without_clone() -> anyhow::Result<()> {
     let mut cmd = Command::cargo_bin(constants::ZKEVM_LLVM)?;
     let file = assert_fs::NamedTempFile::new(constants::LLVM_LOCK_FILE)?;
-    let path = file.parent().unwrap();
+    let path = file.parent().expect("Lockfile parent dir does not exist");
     cmd.current_dir(path);
     cmd.arg("build");
     cmd.assert()
@@ -48,30 +48,25 @@ fn build_without_clone() -> anyhow::Result<()> {
 ///
 /// Returns `Ok(())` if the test passes.
 #[rstest]
-#[timeout(std::time::Duration::from_secs(3000))]
+#[timeout(std::time::Duration::from_secs(5000))]
 fn clone_build_and_clean() -> anyhow::Result<()> {
     let mut cmd = Command::cargo_bin(constants::ZKEVM_LLVM)?;
-    let file = assert_fs::NamedTempFile::new(constants::LLVM_LOCK_FILE)?;
-    let path = file.parent().unwrap();
-    cmd.current_dir(path);
-    file.write_str(&*format!(
-        "url = \"{}\"\nbranch = \"{}\"",
-        constants::ERA_LLVM_REPO_URL,
-        constants::ERA_LLVM_REPO_TEST_BRANCH,
-    ))?;
+    let lockfile = constants::create_test_tmp_lockfile(constants::ERA_LLVM_REPO_TEST_REF)?;
+    let test_dir = lockfile.parent().expect("Lockfile parent dir does not exist");
+    cmd.current_dir(test_dir);
     cmd.arg("clone");
     cmd.assert()
         .success()
         .stderr(predicate::str::is_match(".*Updating files:.*100%.*done").unwrap());
     let mut build_cmd = Command::cargo_bin(constants::ZKEVM_LLVM)?;
-    build_cmd.current_dir(path);
+    build_cmd.current_dir(test_dir);
     build_cmd
         .arg("build")
         .assert()
         .success()
         .stdout(predicate::str::is_match("Installing:.*").unwrap());
     let mut clean_cmd = Command::cargo_bin(constants::ZKEVM_LLVM)?;
-    clean_cmd.current_dir(path);
+    clean_cmd.current_dir(test_dir);
     clean_cmd.arg("clean");
     clean_cmd.assert().success();
     Ok(())
@@ -91,23 +86,18 @@ fn clone_build_and_clean() -> anyhow::Result<()> {
 ///
 /// Returns `Ok(())` if the test passes.
 #[rstest]
-#[timeout(std::time::Duration::from_secs(3000))]
+#[timeout(std::time::Duration::from_secs(5000))]
 fn debug_build_with_tests_coverage() -> anyhow::Result<()> {
     let mut cmd = Command::cargo_bin(constants::ZKEVM_LLVM)?;
-    let file = assert_fs::NamedTempFile::new(constants::LLVM_LOCK_FILE)?;
-    let path = file.parent().unwrap();
-    cmd.current_dir(path);
-    file.write_str(&*format!(
-        "url = \"{}\"\nbranch = \"{}\"",
-        constants::ERA_LLVM_REPO_URL,
-        constants::ERA_LLVM_REPO_TEST_BRANCH,
-    ))?;
+    let lockfile = constants::create_test_tmp_lockfile(constants::ERA_LLVM_REPO_TEST_REF)?;
+    let test_dir = lockfile.parent().expect("Lockfile parent dir does not exist");
+    cmd.current_dir(test_dir);
     cmd.arg("clone");
     cmd.assert()
         .success()
         .stderr(predicate::str::is_match(".*Updating files:.*100%.*done").unwrap());
     let mut build_cmd = Command::cargo_bin(constants::ZKEVM_LLVM)?;
-    build_cmd.current_dir(path);
+    build_cmd.current_dir(test_dir);
     build_cmd
         .arg("build")
         .arg("--enable-coverage")

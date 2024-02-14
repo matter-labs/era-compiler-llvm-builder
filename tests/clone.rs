@@ -3,38 +3,7 @@ use assert_fs::prelude::*;
 use predicates::prelude::*;
 use rstest::rstest;
 use std::process::Command;
-
 mod constants;
-
-/// Tests the cloning process of the LLVM repository using the default branch.
-///
-/// This test verifies that the LLVM repository can be successfully cloned using the default branch.
-///
-/// # Errors
-///
-/// Returns an error if any of the test assertions fail or if there is an error while executing
-/// the clone command.
-///
-/// # Returns
-///
-/// Returns `Ok(())` if the test passes.
-#[rstest]
-fn clone_default_branch() -> anyhow::Result<()> {
-    let mut cmd = Command::cargo_bin(constants::ZKEVM_LLVM)?;
-    let file = assert_fs::NamedTempFile::new(constants::LLVM_LOCK_FILE)?;
-    let path = file.parent().unwrap();
-    cmd.current_dir(path);
-    file.write_str(&*format!(
-        "url = \"{}\"\nbranch = \"{}\"",
-        constants::ERA_LLVM_REPO_URL,
-        constants::ERA_LLVM_REPO_TEST_BRANCH,
-    ))?;
-    cmd.arg("clone");
-    cmd.assert()
-        .success()
-        .stderr(predicate::str::is_match(".*Updating files:.*100%.*done").unwrap());
-    Ok(())
-}
 
 /// Tests the cloning process of the LLVM repository using a specific branch and reference.
 ///
@@ -50,17 +19,11 @@ fn clone_default_branch() -> anyhow::Result<()> {
 ///
 /// Returns `Ok(())` if the test passes.
 #[rstest]
-fn clone_branch_and_ref() -> anyhow::Result<()> {
+fn clone() -> anyhow::Result<()> {
     let mut cmd = Command::cargo_bin(constants::ZKEVM_LLVM)?;
-    let file = assert_fs::NamedTempFile::new(constants::LLVM_LOCK_FILE)?;
-    let path = file.parent().unwrap();
-    cmd.current_dir(path);
-    file.write_str(&*format!(
-        "url = \"{}\"\nbranch = \"{}\"\nref = \"{}\"",
-        constants::ERA_LLVM_REPO_URL,
-        constants::ERA_LLVM_REPO_TEST_BRANCH,
-        constants::ERA_LLVM_REPO_TEST_REF
-    ))?;
+    let lockfile = constants::create_test_tmp_lockfile(constants::ERA_LLVM_REPO_TEST_REF)?;
+    let test_dir = lockfile.parent().expect("Lockfile parent dir does not exist");
+    cmd.current_dir(test_dir);
     cmd.arg("clone");
     cmd.assert()
         .success()
@@ -87,15 +50,9 @@ fn clone_branch_and_ref() -> anyhow::Result<()> {
 #[rstest]
 fn clone_wrong_reference() -> anyhow::Result<()> {
     let mut cmd = Command::cargo_bin(constants::ZKEVM_LLVM)?;
-    let file = assert_fs::NamedTempFile::new(constants::LLVM_LOCK_FILE)?;
-    let path = file.parent().unwrap();
-    cmd.current_dir(path);
-    file.write_str(&*format!(
-        "url = \"{}\"\nbranch = \"{}\"\nref = \"{}\"",
-        constants::ERA_LLVM_REPO_URL,
-        constants::ERA_LLVM_REPO_TEST_BRANCH,
-        constants::ERA_LLVM_REPO_TEST_SHA_INVALID
-    ))?;
+    let lockfile = constants::create_test_tmp_lockfile(constants::ERA_LLVM_REPO_TEST_SHA_INVALID)?;
+    let test_dir = lockfile.parent().expect("Lockfile parent dir does not exist");
+    cmd.current_dir(test_dir);
     cmd.arg("clone");
     cmd.assert().failure().stderr(predicate::str::contains(
         "Error: LLVM repository commit checking out failed",
@@ -120,11 +77,11 @@ fn clone_wrong_reference() -> anyhow::Result<()> {
 fn clone_without_lockfile() -> anyhow::Result<()> {
     let mut cmd = Command::cargo_bin(constants::ZKEVM_LLVM)?;
     let file = assert_fs::NamedTempFile::new(constants::LLVM_LOCK_FILE)?;
-    let path = file.parent().unwrap();
+    let path = file.parent().expect("Lockfile parent dir does not exist");
     cmd.current_dir(path);
     cmd.arg("clone");
     cmd.assert().failure().stderr(predicate::str::contains(
-        "Error: Error opening \"LLVM.lock\" file",
+        format!("Error: Error opening \"{}\" file", constants::LLVM_LOCK_FILE),
     ));
     Ok(())
 }

@@ -8,13 +8,14 @@ use std::io::Read;
 use std::path::PathBuf;
 
 use serde::Deserialize;
+use serde::Serialize;
 
 ///
 /// The lock file data.
 ///
 /// This file describes the exact reference of the LLVM framework.
 ///
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct Lock {
     /// The LLVM repository URL.
     pub url: String,

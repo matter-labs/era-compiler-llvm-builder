@@ -22,26 +22,15 @@ mod constants;
 #[rstest]
 fn checkout_after_clone() -> anyhow::Result<()> {
     let mut cmd = Command::cargo_bin(constants::ZKEVM_LLVM)?;
-    let file = assert_fs::NamedTempFile::new(constants::LLVM_LOCK_FILE)?;
-    let path = file.parent().unwrap();
-    cmd.current_dir(path);
-    file.write_str(&*format!(
-        "url = \"{}\"\nbranch = \"{}\"",
-        constants::ERA_LLVM_REPO_URL,
-        constants::ERA_LLVM_REPO_TEST_BRANCH,
-    ))?;
+    let lockfile = constants::create_test_tmp_lockfile(constants::ERA_LLVM_REPO_TEST_REF)?;
+    let test_dir = lockfile.parent().expect("Lockfile parent dir does not exist");
+    cmd.current_dir(test_dir);
     cmd.arg("clone");
     cmd.assert()
         .success()
         .stderr(predicate::str::is_match(".*Updating files:.*100%.*done").unwrap());
-    file.write_str(&*format!(
-        "url = \"{}\"\nbranch = \"{}\"\nref = \"{}\"",
-        constants::ERA_LLVM_REPO_URL,
-        constants::ERA_LLVM_REPO_TEST_BRANCH,
-        constants::ERA_LLVM_REPO_TEST_REF
-    ))?;
     let mut checkout_cmd = Command::cargo_bin(constants::ZKEVM_LLVM)?;
-    checkout_cmd.current_dir(path);
+    checkout_cmd.current_dir(test_dir);
     checkout_cmd.arg("checkout");
     checkout_cmd
         .assert()
@@ -69,26 +58,15 @@ fn checkout_after_clone() -> anyhow::Result<()> {
 #[rstest]
 fn force_checkout() -> anyhow::Result<()> {
     let mut cmd = Command::cargo_bin(constants::ZKEVM_LLVM)?;
-    let file = assert_fs::NamedTempFile::new(constants::LLVM_LOCK_FILE)?;
-    let path = file.parent().unwrap();
-    cmd.current_dir(path);
-    file.write_str(&*format!(
-        "url = \"{}\"\nbranch = \"{}\"",
-        constants::ERA_LLVM_REPO_URL,
-        constants::ERA_LLVM_REPO_TEST_BRANCH,
-    ))?;
+    let lockfile = constants::create_test_tmp_lockfile(constants::ERA_LLVM_REPO_TEST_REF)?;
+    let test_dir = lockfile.parent().expect("Lockfile parent dir does not exist");
+    cmd.current_dir(test_dir);
     cmd.arg("clone");
     cmd.assert()
         .success()
         .stderr(predicate::str::is_match(".*Updating files:.*100%.*done").unwrap());
-    file.write_str(&*format!(
-        "url = \"{}\"\nbranch = \"{}\"\nref = \"{}\"",
-        constants::ERA_LLVM_REPO_URL,
-        constants::ERA_LLVM_REPO_TEST_BRANCH,
-        constants::ERA_LLVM_REPO_TEST_REF
-    ))?;
     let mut checkout_cmd = Command::cargo_bin(constants::ZKEVM_LLVM)?;
-    checkout_cmd.current_dir(path);
+    checkout_cmd.current_dir(test_dir);
     checkout_cmd.arg("checkout").arg("--force");
     checkout_cmd
         .assert()
@@ -117,11 +95,11 @@ fn force_checkout() -> anyhow::Result<()> {
 fn checkout_without_lockfile() -> anyhow::Result<()> {
     let mut cmd = Command::cargo_bin(constants::ZKEVM_LLVM)?;
     let file = assert_fs::NamedTempFile::new(constants::LLVM_LOCK_FILE)?;
-    let path = file.parent().unwrap();
+    let path = file.parent().expect("Lockfile parent dir does not exist");
     cmd.current_dir(path);
     cmd.arg("checkout");
     cmd.assert().failure().stderr(predicate::str::contains(
-        "Error: Error opening \"LLVM.lock\" file",
+        format!("Error: Error opening \"{}\" file", constants::LLVM_LOCK_FILE),
     ));
     Ok(())
 }
