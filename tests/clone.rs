@@ -22,7 +22,9 @@ mod constants;
 fn clone() -> anyhow::Result<()> {
     let mut cmd = Command::cargo_bin(constants::ZKEVM_LLVM)?;
     let lockfile = constants::create_test_tmp_lockfile(constants::ERA_LLVM_REPO_TEST_REF)?;
-    let test_dir = lockfile.parent().expect("Lockfile parent dir does not exist");
+    let test_dir = lockfile
+        .parent()
+        .expect("Lockfile parent dir does not exist");
     cmd.current_dir(test_dir);
     cmd.arg("clone");
     cmd.assert()
@@ -51,7 +53,9 @@ fn clone() -> anyhow::Result<()> {
 fn clone_wrong_reference() -> anyhow::Result<()> {
     let mut cmd = Command::cargo_bin(constants::ZKEVM_LLVM)?;
     let lockfile = constants::create_test_tmp_lockfile(constants::ERA_LLVM_REPO_TEST_SHA_INVALID)?;
-    let test_dir = lockfile.parent().expect("Lockfile parent dir does not exist");
+    let test_dir = lockfile
+        .parent()
+        .expect("Lockfile parent dir does not exist");
     cmd.current_dir(test_dir);
     cmd.arg("clone");
     cmd.assert().failure().stderr(predicate::str::contains(
@@ -80,8 +84,11 @@ fn clone_without_lockfile() -> anyhow::Result<()> {
     let path = file.parent().expect("Lockfile parent dir does not exist");
     cmd.current_dir(path);
     cmd.arg("clone");
-    cmd.assert().failure().stderr(predicate::str::contains(
-        format!("Error: Error opening \"{}\" file", constants::LLVM_LOCK_FILE),
-    ));
+    cmd.assert()
+        .failure()
+        .stderr(predicate::str::contains(format!(
+            "Error: Error opening \"{}\" file",
+            constants::LLVM_LOCK_FILE
+        )));
     Ok(())
 }

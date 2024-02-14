@@ -52,7 +52,9 @@ fn build_without_clone() -> anyhow::Result<()> {
 fn clone_build_and_clean() -> anyhow::Result<()> {
     let mut cmd = Command::cargo_bin(constants::ZKEVM_LLVM)?;
     let lockfile = constants::create_test_tmp_lockfile(constants::ERA_LLVM_REPO_TEST_REF)?;
-    let test_dir = lockfile.parent().expect("Lockfile parent dir does not exist");
+    let test_dir = lockfile
+        .parent()
+        .expect("Lockfile parent dir does not exist");
     cmd.current_dir(test_dir);
     cmd.arg("clone");
     cmd.assert()
@@ -90,7 +92,9 @@ fn clone_build_and_clean() -> anyhow::Result<()> {
 fn debug_build_with_tests_coverage() -> anyhow::Result<()> {
     let mut cmd = Command::cargo_bin(constants::ZKEVM_LLVM)?;
     let lockfile = constants::create_test_tmp_lockfile(constants::ERA_LLVM_REPO_TEST_REF)?;
-    let test_dir = lockfile.parent().expect("Lockfile parent dir does not exist");
+    let test_dir = lockfile
+        .parent()
+        .expect("Lockfile parent dir does not exist");
     cmd.current_dir(test_dir);
     cmd.arg("clone");
     cmd.assert()
