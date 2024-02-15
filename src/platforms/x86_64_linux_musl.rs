@@ -390,13 +390,7 @@ fn build_target(
         "LLVM target building cmake",
     )?;
 
-    crate::utils::command(
-        Command::new("ninja")
-            .arg("-C")
-            .arg(build_directory)
-            .arg("install"),
-        "LLVM target building ninja",
-    )?;
+    crate::utils::ninja(build_directory)?;
 
     let mut musl_lib_directory = musl_target_directory.to_path_buf();
     musl_lib_directory.push("lib/");

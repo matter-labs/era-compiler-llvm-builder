@@ -42,7 +42,9 @@ pub fn clone(lock: Lock) -> anyhow::Result<()> {
 
     if let Some(r#ref) = lock.r#ref {
         utils::command(
-            Command::new("git").args(["checkout", r#ref.as_str()]),
+            Command::new("git")
+                .args(["checkout", r#ref.as_str()])
+                .current_dir(destination_path.to_string_lossy().as_ref()),
             "LLVM repository commit checking out",
         )?;
     }
@@ -173,7 +175,6 @@ pub fn build(
 /// Executes the build artifacts cleaning.
 ///
 pub fn clean() -> anyhow::Result<()> {
-    Ok(std::fs::remove_dir_all(PathBuf::from(
-        LLVMPath::DIRECTORY_LLVM_TARGET,
-    ))?)
+    std::fs::remove_dir_all(PathBuf::from(LLVMPath::DIRECTORY_LLVM_TARGET))?;
+    Ok(())
 }

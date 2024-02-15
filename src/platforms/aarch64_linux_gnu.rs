@@ -54,11 +54,6 @@ pub fn build(
             .args(extra_args),
         "LLVM building cmake",
     )?;
-
-    crate::utils::command(
-        Command::new("ninja").args(["-C", llvm_build_final.to_string_lossy().as_ref(), "install"]),
-        "LLVM building with ninja",
-    )?;
-
+    crate::utils::ninja(llvm_build_final.as_ref())?;
     Ok(())
 }

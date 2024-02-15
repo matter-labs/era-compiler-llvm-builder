@@ -2,18 +2,20 @@
 //! The zkEVM LLVM builder lock file.
 //!
 
+use anyhow::Context;
 use std::fs::File;
 use std::io::Read;
 use std::path::PathBuf;
 
 use serde::Deserialize;
+use serde::Serialize;
 
 ///
 /// The lock file data.
 ///
 /// This file describes the exact reference of the LLVM framework.
 ///
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct Lock {
     /// The LLVM repository URL.
     pub url: String,
@@ -28,7 +30,8 @@ impl TryFrom<&PathBuf> for Lock {
 
     fn try_from(path: &PathBuf) -> Result<Self, Self::Error> {
         let mut config_str = String::new();
-        let mut config_file = File::open(path)?;
+        let mut config_file =
+            File::open(path).with_context(|| format!("Error opening {:?} file", path))?;
         config_file.read_to_string(&mut config_str)?;
         Ok(toml::from_str(&config_str)?)
     }

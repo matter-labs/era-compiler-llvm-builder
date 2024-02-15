@@ -34,6 +34,17 @@ pub fn command(command: &mut Command, description: &str) -> anyhow::Result<()> {
     Ok(())
 }
 
+/// Call ninja to build the LLVM.
+pub fn ninja(build_dir: &Path) -> anyhow::Result<()> {
+    let mut ninja = Command::new("ninja");
+    ninja.args(["-C", build_dir.to_string_lossy().as_ref()]);
+    if std::env::var("DRY_RUN").is_ok() {
+        ninja.arg("-n");
+    }
+    command(ninja.arg("install"), "Running ninja install")?;
+    Ok(())
+}
+
 ///
 /// Create an absolute path, appending it to the current working directory.
 ///
