@@ -48,7 +48,11 @@ fn main_inner() -> anyhow::Result<()> {
             enable_tests,
             enable_coverage,
             extra_args,
+            use_ccache,
         } => {
+            if use_ccache {
+                compiler_llvm_builder::utils::check_presence("ccache")?;
+            }
             let extra_args_unescaped: Vec<String> = extra_args
                 .iter()
                 .map(|argument| {
@@ -68,6 +72,7 @@ fn main_inner() -> anyhow::Result<()> {
                 enable_tests,
                 enable_coverage,
                 extra_args_unescaped,
+                use_ccache,
             )?;
         }
         Arguments::Checkout { force } => {

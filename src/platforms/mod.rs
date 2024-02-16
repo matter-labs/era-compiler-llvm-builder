@@ -72,3 +72,15 @@ pub fn shared_build_opts_coverage(enabled: bool) -> Vec<String> {
         if enabled { "On" } else { "Off" },
     )]
 }
+
+/// Use of compiler cache (ccache) to speed up the build process
+pub fn shared_build_opts_ccache(use_ccache: bool) -> Vec<String> {
+    if use_ccache {
+        vec![
+            "-DCMAKE_C_COMPILER_LAUNCHER=ccache".to_string(),
+            "-DCMAKE_CXX_COMPILER_LAUNCHER=ccache".to_string(),
+        ]
+    } else {
+        vec![]
+    }
+}
