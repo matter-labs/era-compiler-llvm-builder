@@ -4,9 +4,8 @@
 
 pub(crate) mod arguments;
 
-use anyhow::Context;
-use std::path::PathBuf;
 use compiler_llvm_builder::utils;
+use std::path::PathBuf;
 use utils::check_presence;
 
 use self::arguments::Arguments;
