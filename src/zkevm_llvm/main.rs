@@ -5,9 +5,7 @@
 pub(crate) mod arguments;
 
 use anyhow::Context;
-use compiler_llvm_builder::utils;
 use std::path::PathBuf;
-use utils::check_presence;
 
 use self::arguments::Arguments;
 
@@ -53,7 +51,7 @@ fn main_inner() -> anyhow::Result<()> {
             use_ccache,
         } => {
             if use_ccache {
-                check_presence("ccache")?;
+                compiler_llvm_builder::utils::check_presence("ccache")?;
             }
             let extra_args_unescaped: Vec<String> = extra_args
                 .iter()
