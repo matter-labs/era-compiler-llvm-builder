@@ -42,7 +42,9 @@ pub fn clone(lock: Lock) -> anyhow::Result<()> {
 
     if let Some(r#ref) = lock.r#ref {
         utils::command(
-            Command::new("git").args(["checkout", r#ref.as_str()]),
+            Command::new("git")
+                .args(["checkout", r#ref.as_str()])
+                .current_dir(destination_path.to_string_lossy().as_ref()),
             "LLVM repository commit checking out",
         )?;
     }
@@ -104,6 +106,7 @@ pub fn build(
     enable_tests: bool,
     enable_coverage: bool,
     extra_args: Vec<String>,
+    use_ccache: bool,
 ) -> anyhow::Result<()> {
     std::fs::create_dir_all(LLVMPath::DIRECTORY_LLVM_TARGET)?;
 
@@ -115,6 +118,7 @@ pub fn build(
                     enable_tests,
                     enable_coverage,
                     extra_args,
+                    use_ccache,
                 )?;
             } else if cfg!(target_env = "musl") {
                 platforms::x86_64_linux_musl::build(
@@ -122,18 +126,26 @@ pub fn build(
                     enable_tests,
                     enable_coverage,
                     extra_args,
+                    use_ccache,
                 )?;
             } else {
                 anyhow::bail!("Unsupported target environment for x86_64 and Linux");
             }
         } else if cfg!(target_os = "macos") {
-            platforms::x86_64_macos::build(build_type, enable_tests, enable_coverage, extra_args)?;
+            platforms::x86_64_macos::build(
+                build_type,
+                enable_tests,
+                enable_coverage,
+                extra_args,
+                use_ccache,
+            )?;
         } else if cfg!(target_os = "windows") && cfg!(target_env = "gnu") {
             platforms::x86_64_windows_gnu::build(
                 build_type,
                 enable_tests,
                 enable_coverage,
                 extra_args,
+                use_ccache,
             )?;
         } else {
             anyhow::bail!("Unsupported target OS for x86_64");
@@ -146,6 +158,7 @@ pub fn build(
                     enable_tests,
                     enable_coverage,
                     extra_args,
+                    use_ccache,
                 )?;
             } else if cfg!(target_env = "musl") {
                 platforms::aarch64_linux_musl::build(
@@ -153,12 +166,19 @@ pub fn build(
                     enable_tests,
                     enable_coverage,
                     extra_args,
+                    use_ccache,
                 )?;
             } else {
                 anyhow::bail!("Unsupported target environment for aarch64 and Linux");
             }
         } else if cfg!(target_os = "macos") {
-            platforms::aarch64_macos::build(build_type, enable_tests, enable_coverage, extra_args)?;
+            platforms::aarch64_macos::build(
+                build_type,
+                enable_tests,
+                enable_coverage,
+                extra_args,
+                use_ccache,
+            )?;
         } else {
             anyhow::bail!("Unsupported target OS for aarch64");
         }
@@ -173,7 +193,6 @@ pub fn build(
 /// Executes the build artifacts cleaning.
 ///
 pub fn clean() -> anyhow::Result<()> {
-    Ok(std::fs::remove_dir_all(PathBuf::from(
-        LLVMPath::DIRECTORY_LLVM_TARGET,
-    ))?)
+    std::fs::remove_dir_all(PathBuf::from(LLVMPath::DIRECTORY_LLVM_TARGET))?;
+    Ok(())
 }

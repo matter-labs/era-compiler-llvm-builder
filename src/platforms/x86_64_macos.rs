@@ -15,6 +15,7 @@ pub fn build(
     enable_tests: bool,
     enable_coverage: bool,
     extra_args: Vec<String>,
+    use_ccache: bool,
 ) -> anyhow::Result<()> {
     crate::utils::check_presence("cmake")?;
     crate::utils::check_presence("ninja")?;
@@ -46,14 +47,12 @@ pub fn build(
             ))
             .args(crate::platforms::SHARED_BUILD_OPTS)
             .args(crate::platforms::SHARED_BUILD_OPTS_NOT_MUSL)
-            .args(extra_args),
+            .args(extra_args)
+            .args(crate::platforms::shared_build_opts_ccache(use_ccache)),
         "LLVM building cmake",
     )?;
 
-    crate::utils::command(
-        Command::new("ninja").args(["-C", llvm_build_final.to_string_lossy().as_ref(), "install"]),
-        "LLVM building with ninja",
-    )?;
+    crate::utils::ninja(llvm_build_final.as_ref())?;
 
     Ok(())
 }
