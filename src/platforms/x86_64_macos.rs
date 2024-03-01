@@ -12,6 +12,7 @@ use crate::llvm_path::LLVMPath;
 ///
 pub fn build(
     build_type: BuildType,
+    targets: Vec<String>,
     enable_tests: bool,
     enable_coverage: bool,
     extra_args: Vec<String>,
@@ -39,6 +40,7 @@ pub fn build(
                 )
                 .as_str(),
                 format!("-DCMAKE_BUILD_TYPE='{build_type}'").as_str(),
+                format!("-DLLVM_TARGETS_TO_BUILD='{}'", targets.join(";")).as_str(),
                 "-DCMAKE_OSX_DEPLOYMENT_TARGET='11.0'",
             ])
             .args(crate::platforms::shared_build_opts_tests(enable_tests))

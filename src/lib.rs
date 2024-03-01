@@ -2,6 +2,8 @@
 //! The zkEVM LLVM builder library.
 //!
 
+mod tests;
+
 pub mod build_type;
 pub mod llvm_path;
 pub mod lock;
@@ -103,6 +105,7 @@ pub fn checkout(lock: Lock, force: bool) -> anyhow::Result<()> {
 ///
 pub fn build(
     build_type: BuildType,
+    targets: Vec<String>,
     enable_tests: bool,
     enable_coverage: bool,
     extra_args: Vec<String>,
@@ -115,6 +118,7 @@ pub fn build(
             if cfg!(target_env = "gnu") {
                 platforms::x86_64_linux_gnu::build(
                     build_type,
+                    targets,
                     enable_tests,
                     enable_coverage,
                     extra_args,
@@ -123,6 +127,7 @@ pub fn build(
             } else if cfg!(target_env = "musl") {
                 platforms::x86_64_linux_musl::build(
                     build_type,
+                    targets,
                     enable_tests,
                     enable_coverage,
                     extra_args,
@@ -134,6 +139,7 @@ pub fn build(
         } else if cfg!(target_os = "macos") {
             platforms::x86_64_macos::build(
                 build_type,
+                targets,
                 enable_tests,
                 enable_coverage,
                 extra_args,
@@ -142,6 +148,7 @@ pub fn build(
         } else if cfg!(target_os = "windows") && cfg!(target_env = "gnu") {
             platforms::x86_64_windows_gnu::build(
                 build_type,
+                targets,
                 enable_tests,
                 enable_coverage,
                 extra_args,
@@ -155,6 +162,7 @@ pub fn build(
             if cfg!(target_env = "gnu") {
                 platforms::aarch64_linux_gnu::build(
                     build_type,
+                    targets,
                     enable_tests,
                     enable_coverage,
                     extra_args,
@@ -163,6 +171,7 @@ pub fn build(
             } else if cfg!(target_env = "musl") {
                 platforms::aarch64_linux_musl::build(
                     build_type,
+                    targets,
                     enable_tests,
                     enable_coverage,
                     extra_args,
@@ -174,6 +183,7 @@ pub fn build(
         } else if cfg!(target_os = "macos") {
             platforms::aarch64_macos::build(
                 build_type,
+                targets,
                 enable_tests,
                 enable_coverage,
                 extra_args,

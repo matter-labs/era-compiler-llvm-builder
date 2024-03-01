@@ -1,7 +1,7 @@
+use std::process::Command;
+
 use assert_cmd::prelude::*;
 use predicates::prelude::*;
-use std::process::Command;
-mod common;
 use rstest::rstest;
 
 /// Tests the version command for various subcommands.
@@ -28,13 +28,13 @@ use rstest::rstest;
 #[case("clone")]
 #[case("checkout")]
 fn version(#[case] subcommand: String) -> anyhow::Result<()> {
-    let mut cmd = Command::cargo_bin(common::ZKEVM_LLVM)?;
+    let mut cmd = Command::cargo_bin(super::common::ZKEVM_LLVM)?;
     if subcommand != "" {
         cmd.arg(subcommand);
     }
     cmd.arg("--version");
     cmd.assert()
         .success()
-        .stdout(predicate::str::contains(common::PACKAGE_VERSION));
+        .stdout(predicate::str::contains(super::common::PACKAGE_VERSION));
     Ok(())
 }

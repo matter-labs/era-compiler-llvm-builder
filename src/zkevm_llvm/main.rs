@@ -45,11 +45,13 @@ fn main_inner() -> anyhow::Result<()> {
         }
         Arguments::Build {
             debug,
+            mut targets,
             enable_tests,
             enable_coverage,
             extra_args,
             use_ccache,
         } => {
+            targets.insert(0, "EraVM".to_owned());
             if use_ccache {
                 compiler_llvm_builder::utils::check_presence("ccache")?;
             }
@@ -69,6 +71,7 @@ fn main_inner() -> anyhow::Result<()> {
             let build_type = compiler_llvm_builder::BuildType::from(debug);
             compiler_llvm_builder::build(
                 build_type,
+                targets,
                 enable_tests,
                 enable_coverage,
                 extra_args_unescaped,

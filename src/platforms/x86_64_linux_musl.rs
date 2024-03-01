@@ -13,6 +13,7 @@ use crate::llvm_path::LLVMPath;
 ///
 pub fn build(
     build_type: BuildType,
+    targets: Vec<String>,
     enable_tests: bool,
     enable_coverage: bool,
     extra_args: Vec<String>,
@@ -44,6 +45,7 @@ pub fn build(
     download_musl(musl_name)?;
     build_musl(musl_build.as_path(), musl_target.as_path())?;
     build_crt(
+        targets.clone(),
         llvm_module_llvm.as_path(),
         llvm_build_crt.as_path(),
         llvm_target_crt.as_path(),
@@ -59,6 +61,7 @@ pub fn build(
     )?;
     build_target(
         build_type,
+        targets,
         llvm_module_llvm.as_path(),
         llvm_build_final.as_path(),
         llvm_target_final.as_path(),
@@ -180,11 +183,14 @@ fn build_musl(build_directory: &Path, target_directory: &Path) -> anyhow::Result
 /// The `crt` building sequence.
 ///
 fn build_crt(
+    mut targets: Vec<String>,
     source_directory: &Path,
     build_directory: &Path,
     target_directory: &Path,
     use_ccache: bool,
 ) -> anyhow::Result<()> {
+    targets.push("X86".to_string());
+
     crate::utils::command(
         Command::new("cmake")
             .args([
@@ -203,7 +209,7 @@ fn build_crt(
                 "-DCMAKE_C_COMPILER='clang'",
                 "-DCMAKE_CXX_COMPILER='clang++'",
                 "-DLLVM_ENABLE_PROJECTS='compiler-rt'",
-                "-DLLVM_TARGETS_TO_BUILD='X86;EraVM;EVM'",
+                format!("-DLLVM_TARGETS_TO_BUILD='{}'", targets.join(";")).as_str(),
                 "-DLLVM_DEFAULT_TARGET_TRIPLE='x86_64-pc-linux-musl'",
                 "-DLLVM_BUILD_TESTS='Off'",
                 "-DLLVM_BUILD_RUNTIMES='Off'",
@@ -340,6 +346,7 @@ fn build_host(
 #[allow(clippy::too_many_arguments)]
 fn build_target(
     build_type: BuildType,
+    targets: Vec<String>,
     source_directory: &Path,
     build_directory: &Path,
     target_directory: &Path,
@@ -381,7 +388,7 @@ fn build_target(
                 .as_str(),
                 "-DCMAKE_FIND_LIBRARY_SUFFIXES='.a'",
                 "-DCMAKE_EXE_LINKER_FLAGS='-fuse-ld=lld -static'",
-                "-DLLVM_TARGETS_TO_BUILD='EraVM;EVM'",
+                format!("-DLLVM_TARGETS_TO_BUILD='{}'", targets.join(";")).as_str(),
                 "-DLLVM_DEFAULT_TARGET_TRIPLE='eravm'",
                 "-DLLVM_OPTIMIZED_TABLEGEN='On'",
                 "-DLLVM_BUILD_RUNTIME='Off'",

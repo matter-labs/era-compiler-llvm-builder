@@ -13,6 +13,7 @@ use crate::llvm_path::LLVMPath;
 ///
 pub fn build(
     build_type: BuildType,
+    targets: Vec<String>,
     enable_tests: bool,
     enable_coverage: bool,
     extra_args: Vec<String>,
@@ -48,6 +49,7 @@ pub fn build(
                 format!("-DCMAKE_BUILD_TYPE='{build_type}'").as_str(),
                 "-DCMAKE_C_COMPILER='clang'",
                 "-DCMAKE_CXX_COMPILER='clang++'",
+                format!("-DLLVM_TARGETS_TO_BUILD='{}'", targets.join(";")).as_str(),
                 "-DLLVM_USE_LINKER='lld'",
             ])
             .args(crate::platforms::shared_build_opts_tests(enable_tests))
