@@ -4,8 +4,10 @@
 
 pub(crate) mod arguments;
 
-use anyhow::Context;
 use std::path::PathBuf;
+use std::str::FromStr;
+
+use anyhow::Context;
 
 use self::arguments::Arguments;
 
@@ -45,16 +47,21 @@ fn main_inner() -> anyhow::Result<()> {
         }
         Arguments::Build {
             debug,
-            mut targets,
+            targets,
             enable_tests,
             enable_coverage,
             extra_args,
             use_ccache,
         } => {
-            targets.insert(0, "EraVM".to_owned());
-            if use_ccache {
-                compiler_llvm_builder::utils::check_presence("ccache")?;
-            }
+            let build_type = compiler_llvm_builder::BuildType::from(debug);
+
+            let mut targets = targets
+                .into_iter()
+                .map(|target| compiler_llvm_builder::Platform::from_str(target.as_str()))
+                .collect::<Result<Vec<compiler_llvm_builder::Platform>, String>>()
+                .map_err(|platform| anyhow::anyhow!("Unknown platform `{}`", platform))?;
+            targets.insert(0, compiler_llvm_builder::Platform::EraVM);
+
             let extra_args_unescaped: Vec<String> = extra_args
                 .iter()
                 .map(|argument| {
@@ -68,7 +75,11 @@ fn main_inner() -> anyhow::Result<()> {
                 println!("\nextra_args: {:#?}", extra_args);
                 println!("\nextra_args_unescaped: {:#?}", extra_args_unescaped);
             }
-            let build_type = compiler_llvm_builder::BuildType::from(debug);
+
+            if use_ccache {
+                compiler_llvm_builder::utils::check_presence("ccache")?;
+            }
+
             compiler_llvm_builder::build(
                 build_type,
                 targets,
