@@ -11,7 +11,7 @@ pub const LLVM_LOCK_FILE: &str = "LLVM.lock";
 /// Creates a temporary lock file for testing.
 pub fn create_test_tmp_lockfile(reference: &str) -> anyhow::Result<assert_fs::NamedTempFile> {
     let file = assert_fs::NamedTempFile::new(LLVM_LOCK_FILE)?;
-    let lock = crate::Lock {
+    let lock = compiler_llvm_builder::Lock {
         url: ERA_LLVM_REPO_URL.to_string(),
         branch: ERA_LLVM_REPO_TEST_BRANCH.to_string(),
         r#ref: Some(reference.to_string()),

@@ -410,21 +410,16 @@ fn build_target(
                         .join(";")
                 )
                 .as_str(),
-                "-DLLVM_DEFAULT_TARGET_TRIPLE='eravm'",
-                "-DLLVM_OPTIMIZED_TABLEGEN='On'",
-                "-DLLVM_BUILD_RUNTIME='Off'",
-                "-DLLVM_BUILD_RUNTIMES='Off'",
-                "-DLLVM_INCLUDE_RUNTIMES='Off'",
                 "-DLLVM_ENABLE_PROJECTS='llvm'",
-                "-DLLVM_ENABLE_ASSERTIONS='On'",
             ])
+            .args(crate::platforms::shared::SHARED_BUILD_OPTS)
+            .args(crate::platforms::shared::SHARED_BUILD_OPTS_NOT_MUSL)
             .args(crate::platforms::shared::shared_build_opts_tests(
                 enable_tests,
             ))
             .args(crate::platforms::shared::shared_build_opts_coverage(
                 enable_coverage,
             ))
-            .args(crate::platforms::shared::SHARED_BUILD_OPTS)
             .args(extra_args)
             .args(crate::platforms::shared::shared_build_opts_ccache(
                 use_ccache,

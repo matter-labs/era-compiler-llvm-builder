@@ -2,8 +2,6 @@
 //! The zkEVM LLVM builder library.
 //!
 
-mod tests;
-
 pub mod build_type;
 pub mod llvm_path;
 pub mod lock;
