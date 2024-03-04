@@ -3,7 +3,7 @@
 //!
 
 /// The build options shared by all platforms.
-pub const SHARED_BUILD_OPTS: [&str; 18] = [
+pub const SHARED_BUILD_OPTS: [&str; 19] = [
     "-DPACKAGE_VENDOR='Matter Labs'",
     "-DCLANG_VENDOR='Matter Labs'",
     "-DCLANG_REPOSITORY_STRING='origin'",
@@ -22,16 +22,16 @@ pub const SHARED_BUILD_OPTS: [&str; 18] = [
     "-DLLVM_ENABLE_TERMINFO='Off'",
     "-DLLVM_ENABLE_LIBEDIT='Off'",
     "-DLLVM_ENABLE_LIBPFM='Off'",
+    "-DLLVM_ENABLE_ASSERTIONS='On'",
 ];
 
 /// The build options shared by all platforms except MUSL.
-pub const SHARED_BUILD_OPTS_NOT_MUSL: [&str; 6] = [
+pub const SHARED_BUILD_OPTS_NOT_MUSL: [&str; 5] = [
     "-DLLVM_DEFAULT_TARGET_TRIPLE='eravm'",
     "-DLLVM_OPTIMIZED_TABLEGEN='On'",
     "-DLLVM_BUILD_RUNTIME='Off'",
     "-DLLVM_BUILD_RUNTIMES='Off'",
     "-DLLVM_INCLUDE_RUNTIMES='Off'",
-    "-DLLVM_ENABLE_ASSERTIONS='On'",
 ];
 
 /// The LLVM tests build options shared by all platforms.
