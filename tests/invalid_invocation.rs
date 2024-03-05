@@ -1,8 +1,10 @@
+pub mod common;
+
+use std::process::Command;
+
 use assert_cmd::prelude::*;
 use predicates::prelude::*;
 use rstest::rstest;
-use std::process::Command;
-mod common;
 
 /// Tests invalid options for various subcommands.
 ///

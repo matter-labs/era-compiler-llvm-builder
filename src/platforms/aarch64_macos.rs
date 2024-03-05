@@ -6,12 +6,14 @@ use std::process::Command;
 
 use crate::build_type::BuildType;
 use crate::llvm_path::LLVMPath;
+use crate::platforms::Platform;
 
 ///
 /// The building sequence.
 ///
 pub fn build(
     build_type: BuildType,
+    targets: Vec<Platform>,
     enable_tests: bool,
     enable_coverage: bool,
     extra_args: Vec<String>,
@@ -39,16 +41,29 @@ pub fn build(
                 )
                 .as_str(),
                 format!("-DCMAKE_BUILD_TYPE='{build_type}'").as_str(),
+                format!(
+                    "-DLLVM_TARGETS_TO_BUILD='{}'",
+                    targets
+                        .into_iter()
+                        .map(|platform| platform.to_string())
+                        .collect::<Vec<String>>()
+                        .join(";")
+                )
+                .as_str(),
                 "-DCMAKE_OSX_DEPLOYMENT_TARGET='11.0'",
             ])
-            .args(crate::platforms::shared_build_opts_tests(enable_tests))
-            .args(crate::platforms::shared_build_opts_coverage(
+            .args(crate::platforms::shared::shared_build_opts_tests(
+                enable_tests,
+            ))
+            .args(crate::platforms::shared::shared_build_opts_coverage(
                 enable_coverage,
             ))
-            .args(crate::platforms::SHARED_BUILD_OPTS)
-            .args(crate::platforms::SHARED_BUILD_OPTS_NOT_MUSL)
+            .args(crate::platforms::shared::SHARED_BUILD_OPTS)
+            .args(crate::platforms::shared::SHARED_BUILD_OPTS_NOT_MUSL)
             .args(extra_args)
-            .args(crate::platforms::shared_build_opts_ccache(use_ccache)),
+            .args(crate::platforms::shared::shared_build_opts_ccache(
+                use_ccache,
+            )),
         "LLVM building cmake",
     )?;
 

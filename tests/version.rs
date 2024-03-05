@@ -1,7 +1,9 @@
+pub mod common;
+
+use std::process::Command;
+
 use assert_cmd::prelude::*;
 use predicates::prelude::*;
-use std::process::Command;
-mod common;
 use rstest::rstest;
 
 /// Tests the version command for various subcommands.

@@ -7,12 +7,14 @@ use std::process::Command;
 
 use crate::build_type::BuildType;
 use crate::llvm_path::LLVMPath;
+use crate::platforms::Platform;
 
 ///
 /// The building sequence.
 ///
 pub fn build(
     build_type: BuildType,
+    targets: Vec<Platform>,
     enable_tests: bool,
     enable_coverage: bool,
     extra_args: Vec<String>,
@@ -44,6 +46,7 @@ pub fn build(
     download_musl(musl_name)?;
     build_musl(musl_build.as_path(), musl_target.as_path())?;
     build_crt(
+        targets.clone(),
         llvm_module_llvm.as_path(),
         llvm_build_crt.as_path(),
         llvm_target_crt.as_path(),
@@ -59,6 +62,7 @@ pub fn build(
     )?;
     build_target(
         build_type,
+        targets,
         llvm_module_llvm.as_path(),
         llvm_build_final.as_path(),
         llvm_target_final.as_path(),
@@ -180,11 +184,14 @@ fn build_musl(build_directory: &Path, target_directory: &Path) -> anyhow::Result
 /// The `crt` building sequence.
 ///
 fn build_crt(
+    mut targets: Vec<Platform>,
     source_directory: &Path,
     build_directory: &Path,
     target_directory: &Path,
     use_ccache: bool,
 ) -> anyhow::Result<()> {
+    targets.insert(0, Platform::AArch64);
+
     crate::utils::command(
         Command::new("cmake")
             .args([
@@ -203,7 +210,15 @@ fn build_crt(
                 "-DCMAKE_C_COMPILER='clang'",
                 "-DCMAKE_CXX_COMPILER='clang++'",
                 "-DLLVM_ENABLE_PROJECTS='compiler-rt'",
-                "-DLLVM_TARGETS_TO_BUILD='AArch64;EraVM'",
+                format!(
+                    "-DLLVM_TARGETS_TO_BUILD='{}'",
+                    targets
+                        .into_iter()
+                        .map(|platform| platform.to_string())
+                        .collect::<Vec<String>>()
+                        .join(";")
+                )
+                .as_str(),
                 "-DLLVM_DEFAULT_TARGET_TRIPLE='aarch64-unknown-linux-musl'",
                 "-DLLVM_BUILD_TESTS='Off'",
                 "-DLLVM_BUILD_RUNTIMES='Off'",
@@ -211,7 +226,6 @@ fn build_crt(
                 "-DLLVM_INCLUDE_TESTS='Off'",
                 "-DLLVM_INCLUDE_RUNTIMES='Off'",
                 "-DLLVM_INCLUDE_UTILS='Off'",
-                "-DLLVM_ENABLE_ASSERTIONS='Off'",
                 "-DCOMPILER_RT_DEFAULT_TARGET_ARCH='aarch64'",
                 "-DCOMPILER_RT_BUILD_CRT='On'",
                 "-DCOMPILER_RT_BUILD_SANITIZERS='Off'",
@@ -221,8 +235,10 @@ fn build_crt(
                 "-DCOMPILER_RT_BUILD_MEMPROF='Off'",
                 "-DCOMPILER_RT_BUILD_ORC='Off'",
             ])
-            .args(crate::platforms::SHARED_BUILD_OPTS)
-            .args(crate::platforms::shared_build_opts_ccache(use_ccache)),
+            .args(crate::platforms::shared::SHARED_BUILD_OPTS)
+            .args(crate::platforms::shared::shared_build_opts_ccache(
+                use_ccache,
+            )),
         "CRT building cmake",
     )?;
 
@@ -279,7 +295,6 @@ fn build_host(
                 "-DLLVM_BUILD_UTILS='Off'",
                 "-DLLVM_INCLUDE_TESTS='Off'",
                 "-DLLVM_INCLUDE_UTILS='Off'",
-                "-DLLVM_ENABLE_ASSERTIONS='Off'",
                 "-DLLVM_ENABLE_PROJECTS='clang;lld'",
                 "-DLLVM_ENABLE_RUNTIMES='compiler-rt;libcxx;libcxxabi;libunwind'",
                 "-DLIBCXX_CXX_ABI='libcxxabi'",
@@ -304,8 +319,10 @@ fn build_host(
                 "-DCOMPILER_RT_DEFAULT_TARGET_ARCH='aarch64'",
                 "-DCOMPILER_RT_DEFAULT_TARGET_ONLY='On'",
             ])
-            .args(crate::platforms::SHARED_BUILD_OPTS)
-            .args(crate::platforms::shared_build_opts_ccache(use_ccache)),
+            .args(crate::platforms::shared::SHARED_BUILD_OPTS)
+            .args(crate::platforms::shared::shared_build_opts_ccache(
+                use_ccache,
+            )),
         "LLVM host building cmake",
     )?;
 
@@ -340,6 +357,7 @@ fn build_host(
 #[allow(clippy::too_many_arguments)]
 fn build_target(
     build_type: BuildType,
+    targets: Vec<Platform>,
     source_directory: &Path,
     build_directory: &Path,
     target_directory: &Path,
@@ -381,22 +399,29 @@ fn build_target(
                 .as_str(),
                 "-DCMAKE_FIND_LIBRARY_SUFFIXES='.a'",
                 "-DCMAKE_EXE_LINKER_FLAGS='-fuse-ld=lld -static'",
-                "-DLLVM_TARGETS_TO_BUILD='EraVM'",
-                "-DLLVM_DEFAULT_TARGET_TRIPLE='eravm'",
-                "-DLLVM_OPTIMIZED_TABLEGEN='On'",
-                "-DLLVM_BUILD_RUNTIME='Off'",
-                "-DLLVM_BUILD_RUNTIMES='Off'",
-                "-DLLVM_INCLUDE_RUNTIMES='Off'",
+                format!(
+                    "-DLLVM_TARGETS_TO_BUILD='{}'",
+                    targets
+                        .into_iter()
+                        .map(|platform| platform.to_string())
+                        .collect::<Vec<String>>()
+                        .join(";")
+                )
+                .as_str(),
                 "-DLLVM_ENABLE_PROJECTS='llvm'",
-                "-DLLVM_ENABLE_ASSERTIONS='On'",
             ])
-            .args(crate::platforms::shared_build_opts_tests(enable_tests))
-            .args(crate::platforms::shared_build_opts_coverage(
+            .args(crate::platforms::shared::SHARED_BUILD_OPTS)
+            .args(crate::platforms::shared::SHARED_BUILD_OPTS_NOT_MUSL)
+            .args(crate::platforms::shared::shared_build_opts_tests(
+                enable_tests,
+            ))
+            .args(crate::platforms::shared::shared_build_opts_coverage(
                 enable_coverage,
             ))
-            .args(crate::platforms::SHARED_BUILD_OPTS)
             .args(extra_args)
-            .args(crate::platforms::shared_build_opts_ccache(use_ccache)),
+            .args(crate::platforms::shared::shared_build_opts_ccache(
+                use_ccache,
+            )),
         "LLVM target building cmake",
     )?;
 

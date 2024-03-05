@@ -1,9 +1,10 @@
+pub mod common;
+
+use std::process::Command;
+
 use assert_cmd::prelude::*;
-use assert_fs::prelude::*;
 use predicates::prelude::*;
 use rstest::rstest;
-use std::process::Command;
-mod common;
 
 /// Tests the cloning process of the LLVM repository using a specific branch and reference.
 ///

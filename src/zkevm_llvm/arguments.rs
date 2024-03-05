@@ -17,6 +17,9 @@ pub enum Arguments {
         /// Whether to build the 'Debug' version.
         #[structopt(long = "debug")]
         debug: bool,
+        /// Additional targets to build LLVM with.
+        #[structopt(long = "targets", multiple = true)]
+        targets: Vec<String>,
         /// Whether to build the LLVM tests.
         #[structopt(long = "enable-tests")]
         enable_tests: bool,

@@ -1,10 +1,10 @@
-use assert_cmd::prelude::*;
-use assert_fs::prelude::*;
-use predicates::prelude::*;
-use rstest::rstest;
+pub mod common;
+
 use std::process::Command;
 
-mod common;
+use assert_cmd::prelude::*;
+use predicates::prelude::*;
+use rstest::rstest;
 
 /// Tests the checkout process after cloning the LLVM repository.
 ///
