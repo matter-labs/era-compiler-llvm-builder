@@ -141,6 +141,7 @@ jobs:
           rustup target add ${{ matrix.target }}
           cargo build --release
       - name: Test
+        shell: bash
         run: |
           cargo install cargo2junit
           # Disable unsupported tests
