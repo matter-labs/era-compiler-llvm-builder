@@ -33,6 +33,14 @@ pub const SHARED_BUILD_OPTS_NOT_MUSL: [&str; 5] = [
     "-DLLVM_INCLUDE_RUNTIMES='Off'",
 ];
 
+/// The build options to enable assertions.
+pub fn shared_build_opts_assertions(enabled: bool) -> Vec<String> {
+    vec![format!(
+        "-DLLVM_ENABLE_ASSERTIONS='{}'",
+        if enabled { "On" } else { "Off" },
+    )]
+}
+
 /// The LLVM tests build options shared by all platforms.
 pub fn shared_build_opts_tests(enabled: bool) -> Vec<String> {
     vec![
