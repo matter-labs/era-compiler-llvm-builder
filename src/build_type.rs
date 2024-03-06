@@ -5,7 +5,7 @@
 ///
 /// The zkEVM LLVM build type.
 ///
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Eq)]
 pub enum BuildType {
     /// The debug build.
     Debug,

@@ -421,6 +421,9 @@ fn build_target(
             .args(extra_args)
             .args(crate::platforms::shared::shared_build_opts_ccache(
                 use_ccache,
+            ))
+            .args(crate::platforms::shared::shared_build_opts_assertions(
+                build_type == BuildType::Debug,
             )),
         "LLVM target building cmake",
     )?;

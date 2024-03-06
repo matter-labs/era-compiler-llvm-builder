@@ -3,7 +3,7 @@
 //!
 
 /// The build options shared by all platforms.
-pub const SHARED_BUILD_OPTS: [&str; 19] = [
+pub const SHARED_BUILD_OPTS: [&str; 18] = [
     "-DPACKAGE_VENDOR='Matter Labs'",
     "-DCLANG_VENDOR='Matter Labs'",
     "-DCLANG_REPOSITORY_STRING='origin'",
@@ -22,7 +22,6 @@ pub const SHARED_BUILD_OPTS: [&str; 19] = [
     "-DLLVM_ENABLE_TERMINFO='Off'",
     "-DLLVM_ENABLE_LIBEDIT='Off'",
     "-DLLVM_ENABLE_LIBPFM='Off'",
-    "-DLLVM_ENABLE_ASSERTIONS='On'",
 ];
 
 /// The build options shared by all platforms except MUSL.
@@ -33,6 +32,14 @@ pub const SHARED_BUILD_OPTS_NOT_MUSL: [&str; 5] = [
     "-DLLVM_BUILD_RUNTIMES='Off'",
     "-DLLVM_INCLUDE_RUNTIMES='Off'",
 ];
+
+/// The build options to enable assertions.
+pub fn shared_build_opts_assertions(enabled: bool) -> Vec<String> {
+    vec![format!(
+        "-DLLVM_ENABLE_ASSERTIONS='{}'",
+        if enabled { "On" } else { "Off" },
+    )]
+}
 
 /// The LLVM tests build options shared by all platforms.
 pub fn shared_build_opts_tests(enabled: bool) -> Vec<String> {

@@ -68,7 +68,10 @@ pub fn build(
             ))
             .args(crate::platforms::shared::SHARED_BUILD_OPTS)
             .args(crate::platforms::shared::SHARED_BUILD_OPTS_NOT_MUSL)
-            .args(extra_args),
+            .args(extra_args)
+            .args(crate::platforms::shared::shared_build_opts_assertions(
+                build_type == BuildType::Debug,
+            )),
         "LLVM building cmake",
     )?;
     crate::utils::ninja(llvm_build_final.as_ref())?;
