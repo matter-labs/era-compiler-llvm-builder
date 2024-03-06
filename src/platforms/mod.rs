@@ -11,7 +11,7 @@ pub mod x86_64_macos;
 pub mod x86_64_windows_gnu;
 
 /// The build options shared by all platforms.
-pub const SHARED_BUILD_OPTS: [&str; 18] = [
+pub const SHARED_BUILD_OPTS: [&str; 19] = [
     "-DPACKAGE_VENDOR='Matter Labs'",
     "-DCLANG_VENDOR='Matter Labs'",
     "-DCLANG_REPOSITORY_STRING='origin'",
@@ -30,6 +30,7 @@ pub const SHARED_BUILD_OPTS: [&str; 18] = [
     "-DLLVM_ENABLE_TERMINFO='Off'",
     "-DLLVM_ENABLE_LIBEDIT='Off'",
     "-DLLVM_ENABLE_LIBPFM='Off'",
+    "-DLLVM_ENABLE_ASSERTIONS='ON'",
 ];
 
 /// The build options shared by all platforms except MUSL.

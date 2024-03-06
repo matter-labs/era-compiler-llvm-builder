@@ -211,7 +211,6 @@ fn build_crt(
                 "-DLLVM_INCLUDE_TESTS='Off'",
                 "-DLLVM_INCLUDE_RUNTIMES='Off'",
                 "-DLLVM_INCLUDE_UTILS='Off'",
-                "-DLLVM_ENABLE_ASSERTIONS='Off'",
                 "-DCOMPILER_RT_DEFAULT_TARGET_ARCH='aarch64'",
                 "-DCOMPILER_RT_BUILD_CRT='On'",
                 "-DCOMPILER_RT_BUILD_SANITIZERS='Off'",
@@ -279,7 +278,6 @@ fn build_host(
                 "-DLLVM_BUILD_UTILS='Off'",
                 "-DLLVM_INCLUDE_TESTS='Off'",
                 "-DLLVM_INCLUDE_UTILS='Off'",
-                "-DLLVM_ENABLE_ASSERTIONS='Off'",
                 "-DLLVM_ENABLE_PROJECTS='clang;lld'",
                 "-DLLVM_ENABLE_RUNTIMES='compiler-rt;libcxx;libcxxabi;libunwind'",
                 "-DLIBCXX_CXX_ABI='libcxxabi'",
@@ -388,7 +386,6 @@ fn build_target(
                 "-DLLVM_BUILD_RUNTIMES='Off'",
                 "-DLLVM_INCLUDE_RUNTIMES='Off'",
                 "-DLLVM_ENABLE_PROJECTS='llvm'",
-                "-DLLVM_ENABLE_ASSERTIONS='On'",
             ])
             .args(crate::platforms::shared_build_opts_tests(enable_tests))
             .args(crate::platforms::shared_build_opts_coverage(
