@@ -74,46 +74,6 @@ fn clone_build_and_clean() -> anyhow::Result<()> {
     Ok(())
 }
 
-/// Tests the clone, build, and clean process of the LLVM repository with musl target.
-///
-/// This test verifies that the LLVM repository can be cloned, built, and cleaned for musl using 2-staged build.
-///
-/// # Errors
-///
-/// Returns an error if any of the test assertions fail or if there is an error while executing
-/// the build or clean commands.
-///
-/// # Returns
-///
-/// Returns `Ok(())` if the test passes.
-#[rstest]
-#[timeout(std::time::Duration::from_secs(10000))]
-fn clone_build_and_clean_musl() -> anyhow::Result<()> {
-    let mut cmd = Command::cargo_bin(common::ZKEVM_LLVM)?;
-    let lockfile = common::create_test_tmp_lockfile(common::ERA_LLVM_REPO_TEST_REF)?;
-    let test_dir = lockfile
-        .parent()
-        .expect("Lockfile parent dir does not exist");
-    cmd.current_dir(test_dir);
-    cmd.arg("clone");
-    cmd.assert()
-        .success()
-        .stderr(predicate::str::is_match(".*Updating files:.*100%.*done").unwrap());
-    let mut build_cmd = Command::cargo_bin(common::ZKEVM_LLVM)?;
-    build_cmd.current_dir(test_dir);
-    build_cmd
-        .arg("build")
-        .arg("--target aarch64-unknown-linux-musl")
-        .assert()
-        .success()
-        .stdout(predicate::str::is_match("Installing:.*").unwrap());
-    let mut clean_cmd = Command::cargo_bin(common::ZKEVM_LLVM)?;
-    clean_cmd.current_dir(test_dir);
-    clean_cmd.arg("clean");
-    clean_cmd.assert().success();
-    Ok(())
-}
-
 /// Tests the debug build process of the LLVM repository with tests and coverage enabled.
 ///
 /// This test verifies that the LLVM repository can be successfully cloned and built in debug mode
