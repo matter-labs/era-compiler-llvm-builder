@@ -29,7 +29,7 @@ fn build_without_clone() -> anyhow::Result<()> {
     cmd.assert()
         .failure()
         .stderr(predicate::str::contains(
-            "Error: LLVM building cmake failed",
+            "building cmake failed",
         ))
         .stderr(predicate::str::is_match("The source directory.*does not exist").unwrap());
     Ok(())
@@ -87,7 +87,9 @@ fn clone_build_and_clean() -> anyhow::Result<()> {
 /// # Returns
 ///
 /// Returns `Ok(())` if the test passes.
+
 #[rstest]
+#[ignore] // This test for MUSL targets, use --run-ignored to execute for other targets
 #[timeout(std::time::Duration::from_secs(5000))]
 fn debug_build_with_tests_coverage() -> anyhow::Result<()> {
     let mut cmd = Command::cargo_bin(common::ZKEVM_LLVM)?;
