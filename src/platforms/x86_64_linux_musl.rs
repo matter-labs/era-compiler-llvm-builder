@@ -295,6 +295,7 @@ fn build_host(
                 "-DLLVM_BUILD_UTILS='Off'",
                 "-DLLVM_INCLUDE_TESTS='Off'",
                 "-DLLVM_INCLUDE_UTILS='Off'",
+                "-DLLVM_ENABLE_ASSERTIONS='Off'",
                 "-DLLVM_ENABLE_PROJECTS='clang;lld'",
                 "-DLLVM_ENABLE_RUNTIMES='compiler-rt;libcxx;libcxxabi;libunwind'",
                 "-DLIBCXX_CXX_ABI='libcxxabi'",
