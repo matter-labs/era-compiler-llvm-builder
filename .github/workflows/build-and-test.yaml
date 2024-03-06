@@ -143,7 +143,10 @@ jobs:
       - name: Test
         run: |
           cargo install cargo2junit
-          cargo test --target ${{ matrix.target }} --no-fail-fast -- -Z unstable-options --format json | cargo2junit | tee "${UNIT_TESTS_RESULTS_XML}"
+          # Disable unsupported tests
+          [[ ${{ matrix.target }} == *"musl"* ]] && INCLUDE_IGNORED="--include-ignored"
+          cargo test --target ${{ matrix.target }} --no-fail-fast -- -Z unstable-options --format json ${INCLUDE_IGNORED} \
+            | cargo2junit | tee "${UNIT_TESTS_RESULTS_XML}"
       - name: Upload test results
         if: always()
         uses: EnricoMi/publish-unit-test-result-action@v2.12.0
