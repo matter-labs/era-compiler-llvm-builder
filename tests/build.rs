@@ -28,9 +28,7 @@ fn build_without_clone() -> anyhow::Result<()> {
     cmd.arg("build");
     cmd.assert()
         .failure()
-        .stderr(predicate::str::contains(
-            "building cmake failed",
-        ))
+        .stderr(predicate::str::contains("building cmake failed"))
         .stderr(predicate::str::is_match("The source directory.*does not exist").unwrap());
     Ok(())
 }
