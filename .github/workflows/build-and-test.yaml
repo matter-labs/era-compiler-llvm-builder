@@ -12,6 +12,11 @@ env:
   UNIT_TESTS_RESULTS_XML: unit-tests-results.xml
   RUSTC_BOOTSTRAP: 1
 
+# Cancel the workflow if any new changes pushed to a feature branch or the trunk
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   check-formatting:
     name: Check formatting
@@ -141,9 +146,13 @@ jobs:
           rustup target add ${{ matrix.target }}
           cargo build --release
       - name: Test
+        shell: bash
         run: |
           cargo install cargo2junit
-          cargo test --target ${{ matrix.target }} --no-fail-fast -- -Z unstable-options --format json | cargo2junit | tee "${UNIT_TESTS_RESULTS_XML}"
+          # Disable unsupported tests
+          [[ ${{ matrix.target }} != *musl* ]] && INCLUDE_IGNORED="--include-ignored"
+          cargo test --target ${{ matrix.target }} --no-fail-fast -- -Z unstable-options --format json ${INCLUDE_IGNORED} \
+            | cargo2junit | tee "${UNIT_TESTS_RESULTS_XML}"
       - name: Upload test results
         if: always()
         uses: EnricoMi/publish-unit-test-result-action@v2.12.0
