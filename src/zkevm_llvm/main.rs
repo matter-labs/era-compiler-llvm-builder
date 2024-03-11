@@ -52,6 +52,7 @@ fn main_inner() -> anyhow::Result<()> {
             enable_coverage,
             extra_args,
             use_ccache,
+            enable_assertions,
         } => {
             let build_type = compiler_llvm_builder::BuildType::from(debug);
 
@@ -87,6 +88,7 @@ fn main_inner() -> anyhow::Result<()> {
                 enable_coverage,
                 extra_args_unescaped,
                 use_ccache,
+                enable_assertions,
             )?;
         }
         Arguments::Checkout { force } => {

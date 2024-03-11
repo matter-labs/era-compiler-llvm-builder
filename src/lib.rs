@@ -109,6 +109,7 @@ pub fn build(
     enable_coverage: bool,
     extra_args: Vec<String>,
     use_ccache: bool,
+    enable_assertions: bool,
 ) -> anyhow::Result<()> {
     std::fs::create_dir_all(LLVMPath::DIRECTORY_LLVM_TARGET)?;
 
@@ -122,6 +123,7 @@ pub fn build(
                     enable_coverage,
                     extra_args,
                     use_ccache,
+                    enable_assertions,
                 )?;
             } else if cfg!(target_env = "musl") {
                 platforms::x86_64_linux_musl::build(
@@ -131,6 +133,7 @@ pub fn build(
                     enable_coverage,
                     extra_args,
                     use_ccache,
+                    enable_assertions,
                 )?;
             } else {
                 anyhow::bail!("Unsupported target environment for x86_64 and Linux");
@@ -143,6 +146,7 @@ pub fn build(
                 enable_coverage,
                 extra_args,
                 use_ccache,
+                enable_assertions,
             )?;
         } else if cfg!(target_os = "windows") && cfg!(target_env = "gnu") {
             platforms::x86_64_windows_gnu::build(
@@ -152,6 +156,7 @@ pub fn build(
                 enable_coverage,
                 extra_args,
                 use_ccache,
+                enable_assertions,
             )?;
         } else {
             anyhow::bail!("Unsupported target OS for x86_64");
@@ -166,6 +171,7 @@ pub fn build(
                     enable_coverage,
                     extra_args,
                     use_ccache,
+                    enable_assertions,
                 )?;
             } else if cfg!(target_env = "musl") {
                 platforms::aarch64_linux_musl::build(
@@ -175,6 +181,7 @@ pub fn build(
                     enable_coverage,
                     extra_args,
                     use_ccache,
+                    enable_assertions,
                 )?;
             } else {
                 anyhow::bail!("Unsupported target environment for aarch64 and Linux");
@@ -187,6 +194,7 @@ pub fn build(
                 enable_coverage,
                 extra_args,
                 use_ccache,
+                enable_assertions,
             )?;
         } else {
             anyhow::bail!("Unsupported target OS for aarch64");

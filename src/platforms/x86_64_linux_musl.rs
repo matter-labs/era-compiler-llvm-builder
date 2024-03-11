@@ -19,6 +19,7 @@ pub fn build(
     enable_coverage: bool,
     extra_args: Vec<String>,
     use_ccache: bool,
+    enable_assertions: bool,
 ) -> anyhow::Result<()> {
     crate::utils::check_presence("wget")?;
     crate::utils::check_presence("tar")?;
@@ -72,6 +73,7 @@ pub fn build(
         enable_coverage,
         extra_args,
         use_ccache,
+        enable_assertions,
     )?;
 
     Ok(())
@@ -367,6 +369,7 @@ fn build_target(
     enable_coverage: bool,
     extra_args: Vec<String>,
     use_ccache: bool,
+    enable_assertions: bool,
 ) -> anyhow::Result<()> {
     let mut clang_path = host_target_directory.to_path_buf();
     clang_path.push("bin/clang");
@@ -423,7 +426,7 @@ fn build_target(
                 use_ccache,
             ))
             .args(crate::platforms::shared::shared_build_opts_assertions(
-                build_type == BuildType::Debug,
+                enable_assertions,
             )),
         "LLVM target building cmake",
     )?;
