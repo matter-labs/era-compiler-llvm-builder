@@ -33,6 +33,9 @@ pub enum Arguments {
         /// Whether to use compiler cache (ccache) to speed-up builds.
         #[structopt(long = "use-ccache")]
         use_ccache: bool,
+        /// Whether to build with assertions enabled or not.
+        #[structopt(long = "enable-assertions")]
+        enable_assertions: bool,
     },
     /// Checkout the branch specified in `LLVM.lock`.
     Checkout {

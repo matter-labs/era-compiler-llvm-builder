@@ -18,6 +18,7 @@ pub fn build(
     enable_coverage: bool,
     extra_args: Vec<String>,
     use_ccache: bool,
+    enable_assertions: bool,
 ) -> anyhow::Result<()> {
     crate::utils::check_presence("cmake")?;
     crate::utils::check_presence("clang")?;
@@ -70,7 +71,7 @@ pub fn build(
                 use_ccache,
             ))
             .args(crate::platforms::shared::shared_build_opts_assertions(
-                build_type == BuildType::Debug,
+                enable_assertions,
             )),
         "LLVM building cmake",
     )?;
