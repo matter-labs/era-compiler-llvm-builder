@@ -11,7 +11,11 @@ use structopt::StructOpt;
 #[structopt(name = "llvm-builder", about = "The zkEVM LLVM framework builder")]
 pub enum Arguments {
     /// Clone the branch specified in `LLVM.lock`.
-    Clone,
+    Clone {
+        /// Use fast shallow clone with depth 1.
+        #[structopt(long = "shallow")]
+        shallow: bool,
+    },
     /// Build the LLVM framework.
     Build {
         /// Whether to build the 'Debug' version.
