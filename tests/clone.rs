@@ -37,10 +37,10 @@ fn clone() -> anyhow::Result<()> {
     Ok(())
 }
 
-/// Tests the shallow cloning process of the LLVM repository using a specific branch and reference.
+/// Tests the full cloning process of the LLVM repository using a specific branch and reference.
 ///
 /// This test verifies that the LLVM repository can be successfully cloned using a specific branch
-/// and reference with --shallow option.
+/// and reference with --deep option.
 ///
 /// # Errors
 ///
@@ -50,7 +50,7 @@ fn clone() -> anyhow::Result<()> {
 /// # Returns
 ///
 /// Returns `Ok(())` if the test passes.
-fn clone_shallow() -> anyhow::Result<()> {
+fn clone_deep() -> anyhow::Result<()> {
     let mut cmd = Command::cargo_bin(common::ZKEVM_LLVM)?;
     let lockfile = common::create_test_tmp_lockfile(common::ERA_LLVM_REPO_TEST_REF)?;
     let test_dir = lockfile
@@ -58,7 +58,7 @@ fn clone_shallow() -> anyhow::Result<()> {
         .expect("Lockfile parent dir does not exist");
     cmd.current_dir(test_dir);
     cmd.arg("clone");
-    cmd.arg("--shallow");
+    cmd.arg("--deep");
     cmd.assert()
         .success()
         .stderr(predicate::str::contains(format!(

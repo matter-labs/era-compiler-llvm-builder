@@ -12,9 +12,9 @@ use structopt::StructOpt;
 pub enum Arguments {
     /// Clone the branch specified in `LLVM.lock`.
     Clone {
-        /// Use fast shallow clone with depth 1.
-        #[structopt(long = "shallow")]
-        shallow: bool,
+        /// Clone with full commits history.
+        #[structopt(long)]
+        deep: bool,
     },
     /// Build the LLVM framework.
     Build {
