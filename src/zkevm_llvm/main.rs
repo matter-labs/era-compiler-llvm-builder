@@ -41,9 +41,9 @@ fn main_inner() -> anyhow::Result<()> {
     let arguments = Arguments::new();
 
     match arguments {
-        Arguments::Clone => {
+        Arguments::Clone { deep } => {
             let lock = compiler_llvm_builder::Lock::try_from(&PathBuf::from("LLVM.lock"))?;
-            compiler_llvm_builder::clone(lock)?;
+            compiler_llvm_builder::clone(lock, deep)?;
         }
         Arguments::Build {
             debug,

@@ -19,7 +19,7 @@ use std::process::Command;
 ///
 /// Executes the LLVM repository cloning.
 ///
-pub fn clone(lock: Lock) -> anyhow::Result<()> {
+pub fn clone(lock: Lock, deep: bool) -> anyhow::Result<()> {
     utils::check_presence("git")?;
 
     let destination_path = PathBuf::from(LLVMPath::DIRECTORY_LLVM_SOURCE);
@@ -30,14 +30,17 @@ pub fn clone(lock: Lock) -> anyhow::Result<()> {
         );
     }
 
+    let mut clone_args = vec!["clone", "--branch", lock.branch.as_str()];
+    if !deep {
+        clone_args.push("--depth");
+        clone_args.push("1");
+    }
+
     utils::command(
-        Command::new("git").args([
-            "clone",
-            "--branch",
-            lock.branch.as_str(),
-            lock.url.as_str(),
-            destination_path.to_string_lossy().as_ref(),
-        ]),
+        Command::new("git")
+            .args(clone_args)
+            .arg(lock.url.as_str())
+            .arg(destination_path.to_string_lossy().as_ref()),
         "LLVM repository cloning",
     )?;
 

@@ -141,18 +141,24 @@ jobs:
     steps:
       - name: Checkout source
         uses: actions/checkout@v4
+
       - name: Build
         run: |
           rustup target add ${{ matrix.target }}
           cargo build --release
+
       - name: Test
-        shell: bash
-        run: |
-          cargo install cargo2junit
-          # Disable unsupported tests
-          [[ ${{ matrix.target }} != *musl* ]] && INCLUDE_IGNORED="--include-ignored"
-          cargo test --target ${{ matrix.target }} --no-fail-fast -- -Z unstable-options --format json ${INCLUDE_IGNORED} \
-            | cargo2junit | tee "${UNIT_TESTS_RESULTS_XML}"
+        uses: nick-fields/retry@v2
+        with:
+          timeout_minutes: 120
+          max_attempts: 2 # protection mechanism for sporadic dependencies download failure
+          command: |
+            cargo install cargo2junit
+            # Disable unsupported tests
+            [[ ${{ matrix.target }} != *musl* ]] && INCLUDE_IGNORED="--include-ignored"
+            cargo test --target ${{ matrix.target }} --no-fail-fast -- -Z unstable-options --format json ${INCLUDE_IGNORED} \
+              | cargo2junit | tee "${UNIT_TESTS_RESULTS_XML}"
+
       - name: Upload test results
         if: always()
         uses: EnricoMi/publish-unit-test-result-action@v2.12.0
