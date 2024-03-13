@@ -57,6 +57,7 @@ pub fn build(
                 )
                 .as_str(),
                 "-DLLVM_USE_LINKER='lld'",
+                "-DCMAKE_EXE_LINKER_FLAGS='-static'",
             ])
             .args(crate::platforms::shared::shared_build_opts_tests(
                 enable_tests,
