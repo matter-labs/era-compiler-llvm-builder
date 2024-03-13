@@ -13,6 +13,7 @@ pub use self::llvm_path::LLVMPath;
 pub use self::lock::Lock;
 pub use self::platforms::Platform;
 
+use std::collections::HashSet;
 use std::path::PathBuf;
 use std::process::Command;
 
@@ -107,7 +108,7 @@ pub fn checkout(lock: Lock, force: bool) -> anyhow::Result<()> {
 ///
 pub fn build(
     build_type: BuildType,
-    targets: Vec<Platform>,
+    targets: HashSet<Platform>,
     enable_tests: bool,
     enable_coverage: bool,
     extra_args: Vec<String>,

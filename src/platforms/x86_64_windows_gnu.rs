@@ -2,6 +2,7 @@
 //! The zkEVM LLVM amd64 `windows-gnu` builder.
 //!
 
+use std::collections::HashSet;
 use std::path::PathBuf;
 use std::process::Command;
 
@@ -14,7 +15,7 @@ use crate::platforms::Platform;
 ///
 pub fn build(
     build_type: BuildType,
-    targets: Vec<Platform>,
+    targets: HashSet<Platform>,
     enable_tests: bool,
     enable_coverage: bool,
     extra_args: Vec<String>,

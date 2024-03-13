@@ -2,6 +2,7 @@
 //! The zkEVM LLVM arm64 `linux-musl` builder.
 //!
 
+use std::collections::HashSet;
 use std::path::Path;
 use std::process::Command;
 
@@ -14,7 +15,7 @@ use crate::platforms::Platform;
 ///
 pub fn build(
     build_type: BuildType,
-    targets: Vec<Platform>,
+    targets: HashSet<Platform>,
     enable_tests: bool,
     enable_coverage: bool,
     extra_args: Vec<String>,
@@ -186,13 +187,13 @@ fn build_musl(build_directory: &Path, target_directory: &Path) -> anyhow::Result
 /// The `crt` building sequence.
 ///
 fn build_crt(
-    mut targets: Vec<Platform>,
+    mut targets: HashSet<Platform>,
     source_directory: &Path,
     build_directory: &Path,
     target_directory: &Path,
     use_ccache: bool,
 ) -> anyhow::Result<()> {
-    targets.insert(0, Platform::AArch64);
+    targets.insert(Platform::AArch64);
 
     crate::utils::command(
         Command::new("cmake")
@@ -359,7 +360,7 @@ fn build_host(
 #[allow(clippy::too_many_arguments)]
 fn build_target(
     build_type: BuildType,
-    targets: Vec<Platform>,
+    targets: HashSet<Platform>,
     source_directory: &Path,
     build_directory: &Path,
     target_directory: &Path,

@@ -2,6 +2,7 @@
 //! The zkEVM LLVM amd64 `linux-gnu` builder.
 //!
 
+use std::collections::HashSet;
 use std::process::Command;
 
 use crate::build_type::BuildType;
@@ -13,7 +14,7 @@ use crate::platforms::Platform;
 ///
 pub fn build(
     build_type: BuildType,
-    targets: Vec<Platform>,
+    targets: HashSet<Platform>,
     enable_tests: bool,
     enable_coverage: bool,
     extra_args: Vec<String>,
