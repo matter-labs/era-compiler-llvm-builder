@@ -4,6 +4,7 @@
 
 pub(crate) mod arguments;
 
+use std::collections::HashSet;
 use std::path::PathBuf;
 use std::str::FromStr;
 
@@ -59,9 +60,10 @@ fn main_inner() -> anyhow::Result<()> {
             let mut targets = targets
                 .into_iter()
                 .map(|target| compiler_llvm_builder::Platform::from_str(target.as_str()))
-                .collect::<Result<Vec<compiler_llvm_builder::Platform>, String>>()
+                .collect::<Result<HashSet<compiler_llvm_builder::Platform>, String>>()
                 .map_err(|platform| anyhow::anyhow!("Unknown platform `{}`", platform))?;
-            targets.insert(0, compiler_llvm_builder::Platform::EraVM);
+            targets.insert(compiler_llvm_builder::Platform::EraVM);
+            targets.insert(compiler_llvm_builder::Platform::EVM);
 
             let extra_args_unescaped: Vec<String> = extra_args
                 .iter()
