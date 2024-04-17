@@ -54,6 +54,9 @@ pub fn build(
                 .as_str(),
                 "-DLLVM_ENABLE_PROJECTS='lld'",
                 "-DCMAKE_OSX_DEPLOYMENT_TARGET='11.0'",
+                // Do not print warnings for duplicate libraries for Apple linker.
+                "-DCMAKE_EXE_LINKER_FLAGS='-fuse-ld=lld'",
+                "-DCMAKE_SHARED_LINKER_FLAGS='-fuse-ld=lld'",
             ])
             .args(crate::platforms::shared::shared_build_opts_tests(
                 enable_tests,

@@ -3,10 +3,8 @@
 //!
 
 /// The build options shared by all platforms.
-pub const SHARED_BUILD_OPTS: [&str; 18] = [
+pub const SHARED_BUILD_OPTS: [&str; 16] = [
     "-DPACKAGE_VENDOR='Matter Labs'",
-    "-DCLANG_VENDOR='Matter Labs'",
-    "-DCLANG_REPOSITORY_STRING='origin'",
     "-DCMAKE_COLOR_DIAGNOSTICS='Off'",
     "-DLLVM_BUILD_DOCS='Off'",
     "-DLLVM_INCLUDE_DOCS='Off'",
