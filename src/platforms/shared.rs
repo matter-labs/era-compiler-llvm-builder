@@ -3,7 +3,7 @@
 //!
 
 /// The build options shared by all platforms.
-pub const SHARED_BUILD_OPTS: [&str; 16] = [
+pub const SHARED_BUILD_OPTS: [&str; 17] = [
     "-DPACKAGE_VENDOR='Matter Labs'",
     "-DCMAKE_COLOR_DIAGNOSTICS='Off'",
     "-DLLVM_BUILD_DOCS='Off'",
@@ -20,6 +20,7 @@ pub const SHARED_BUILD_OPTS: [&str; 16] = [
     "-DLLVM_ENABLE_TERMINFO='Off'",
     "-DLLVM_ENABLE_LIBEDIT='Off'",
     "-DLLVM_ENABLE_LIBPFM='Off'",
+    "-DCMAKE_BUILD_WITH_INSTALL_RPATH=1",
 ];
 
 /// The build options shared by all platforms except MUSL.
