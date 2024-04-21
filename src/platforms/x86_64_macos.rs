@@ -52,6 +52,7 @@ pub fn build(
                         .join(";")
                 )
                 .as_str(),
+                "-DLLVM_ENABLE_PROJECTS='lld'",
                 "-DCMAKE_OSX_DEPLOYMENT_TARGET='11.0'",
             ])
             .args(crate::platforms::shared::shared_build_opts_tests(
