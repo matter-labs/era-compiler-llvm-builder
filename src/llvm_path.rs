@@ -11,10 +11,10 @@ pub struct LLVMPath {}
 
 impl LLVMPath {
     /// The LLVM source directory.
-    pub const DIRECTORY_LLVM_SOURCE: &str = "./llvm/";
+    pub const DIRECTORY_LLVM_SOURCE: &'static str = "./llvm/";
 
     /// The LLVM target directory.
-    pub const DIRECTORY_LLVM_TARGET: &str = "./target-llvm/";
+    pub const DIRECTORY_LLVM_TARGET: &'static str = "./target-llvm/";
 
     ///
     /// Returns the path to the `llvm` LLVM source module directory.
