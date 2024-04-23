@@ -18,10 +18,44 @@ use std::path::PathBuf;
 use std::process::Command;
 
 ///
+/// Executes the LLVM host repository cloning for stage 1 MUSL builds.
+///
+pub fn clone_host() -> anyhow::Result<()> {
+    let destination_path = PathBuf::from(LLVMPath::DIRECTORY_LLVM_HOST_SOURCE);
+    if destination_path.exists() {
+        eprintln!(
+            "The host repository is already cloned at {:?}. Skipping...",
+            destination_path
+        );
+        return Ok(());
+    }
+
+    utils::command(
+        Command::new("git").args([
+            "clone",
+            "--depth",
+            "1",
+            "--branch",
+            utils::LLVM_HOST_SOURCE_TAG,
+            utils::LLVM_HOST_SOURCE_URL,
+            destination_path.to_string_lossy().as_ref(),
+        ]),
+        "LLVM host repository cloning",
+    )?;
+
+    Ok(())
+}
+
+///
 /// Executes the LLVM repository cloning.
 ///
 pub fn clone(lock: Lock, deep: bool) -> anyhow::Result<()> {
     utils::check_presence("git")?;
+
+    // Clone the host repository if the target is musl.
+    if cfg!(target_os = "linux") && cfg!(target_env = "musl") {
+        clone_host()?;
+    }
 
     let destination_path = PathBuf::from(LLVMPath::DIRECTORY_LLVM_SOURCE);
     if destination_path.exists() {

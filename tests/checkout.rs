@@ -39,7 +39,7 @@ fn checkout_after_clone() -> anyhow::Result<()> {
         .success()
         .stderr(predicate::str::contains(format!(
             "HEAD is now at {}",
-            common::ERA_LLVM_REPO_TEST_REF
+            &common::ERA_LLVM_REPO_TEST_REF[..8]
         )));
     Ok(())
 }
@@ -77,7 +77,7 @@ fn force_checkout() -> anyhow::Result<()> {
         .success()
         .stderr(predicate::str::contains(format!(
             "HEAD is now at {}",
-            common::ERA_LLVM_REPO_TEST_REF
+            &common::ERA_LLVM_REPO_TEST_REF[..8]
         )));
     Ok(())
 }
