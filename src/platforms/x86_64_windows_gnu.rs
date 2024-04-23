@@ -61,6 +61,7 @@ pub fn build(
                         .join(";")
                 )
                 .as_str(),
+                "-DLLVM_ENABLE_PROJECTS='lld'",
                 "-DLLVM_USE_LINKER='lld'",
             ])
             .args(crate::platforms::shared::shared_build_opts_tests(

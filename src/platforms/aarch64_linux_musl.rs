@@ -406,7 +406,7 @@ fn build_target(
                         .join(";")
                 )
                 .as_str(),
-                "-DLLVM_ENABLE_PROJECTS='llvm'",
+                "-DLLVM_ENABLE_PROJECTS='llvm;lld'",
             ])
             .args(crate::platforms::shared::SHARED_BUILD_OPTS)
             .args(crate::platforms::shared::SHARED_BUILD_OPTS_NOT_MUSL)
