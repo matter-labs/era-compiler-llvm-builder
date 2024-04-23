@@ -402,6 +402,7 @@ fn build_target(
                 )
                 .as_str(),
                 "-DCMAKE_FIND_LIBRARY_SUFFIXES='.a'",
+                "-DCMAKE_BUILD_WITH_INSTALL_RPATH=1",
                 "-DCMAKE_EXE_LINKER_FLAGS='-fuse-ld=lld -static'",
                 format!(
                     "-DLLVM_TARGETS_TO_BUILD='{}'",
