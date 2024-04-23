@@ -12,6 +12,12 @@ const DRY_RUN: bool = false;
 /// Enable verbose output.
 pub const VERBOSE: bool = false;
 
+/// The LLVM host repository URL.
+pub const LLVM_HOST_SOURCE_URL: &str = "https://github.com/llvm/llvm-project";
+
+/// The LLVM host repository tag.
+pub const LLVM_HOST_SOURCE_TAG: &str = "llvmorg-17.0.6";
+
 ///
 /// The subprocess runner.
 ///

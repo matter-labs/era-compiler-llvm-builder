@@ -32,7 +32,7 @@ fn clone() -> anyhow::Result<()> {
         .success()
         .stderr(predicate::str::contains(format!(
             "HEAD is now at {}",
-            common::ERA_LLVM_REPO_TEST_REF
+            &common::ERA_LLVM_REPO_TEST_REF[..8]
         )));
     Ok(())
 }
@@ -50,6 +50,7 @@ fn clone() -> anyhow::Result<()> {
 /// # Returns
 ///
 /// Returns `Ok(())` if the test passes.
+#[rstest]
 fn clone_deep() -> anyhow::Result<()> {
     let mut cmd = Command::cargo_bin(common::ZKEVM_LLVM)?;
     let lockfile = common::create_test_tmp_lockfile(common::ERA_LLVM_REPO_TEST_REF)?;
@@ -63,7 +64,7 @@ fn clone_deep() -> anyhow::Result<()> {
         .success()
         .stderr(predicate::str::contains(format!(
             "HEAD is now at {}",
-            common::ERA_LLVM_REPO_TEST_REF
+            &common::ERA_LLVM_REPO_TEST_REF[..8]
         )));
     Ok(())
 }
