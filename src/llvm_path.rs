@@ -10,11 +10,23 @@ use std::path::PathBuf;
 pub struct LLVMPath {}
 
 impl LLVMPath {
+    /// The LLVM host source directory for stage 1 of multistage MUSL builds.
+    pub const DIRECTORY_LLVM_HOST_SOURCE: &'static str = "./llvm-host/";
+
     /// The LLVM source directory.
     pub const DIRECTORY_LLVM_SOURCE: &'static str = "./llvm/";
 
     /// The LLVM target directory.
     pub const DIRECTORY_LLVM_TARGET: &'static str = "./target-llvm/";
+
+    ///
+    /// Returns the path to the `llvm` stage 1 host LLVM source module directory.
+    ///
+    pub fn llvm_host_module_llvm() -> anyhow::Result<PathBuf> {
+        let mut path = PathBuf::from(Self::DIRECTORY_LLVM_HOST_SOURCE);
+        path.push("llvm");
+        crate::utils::absolute_path(path)
+    }
 
     ///
     /// Returns the path to the `llvm` LLVM source module directory.

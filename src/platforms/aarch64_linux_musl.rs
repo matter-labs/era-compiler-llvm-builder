@@ -35,6 +35,7 @@ pub fn build(
     let musl_target = LLVMPath::musl_target()?;
 
     let llvm_module_llvm = LLVMPath::llvm_module_llvm()?;
+    let llvm_host_module_llvm = LLVMPath::llvm_host_module_llvm()?;
 
     let llvm_build_crt = LLVMPath::llvm_build_crt()?;
     let llvm_target_crt = LLVMPath::llvm_target_crt()?;
@@ -49,13 +50,13 @@ pub fn build(
     build_musl(musl_build.as_path(), musl_target.as_path())?;
     build_crt(
         targets.clone(),
-        llvm_module_llvm.as_path(),
+        llvm_host_module_llvm.as_path(),
         llvm_build_crt.as_path(),
         llvm_target_crt.as_path(),
         use_ccache,
     )?;
     build_host(
-        llvm_module_llvm.as_path(),
+        llvm_host_module_llvm.as_path(),
         llvm_build_host.as_path(),
         llvm_target_host.as_path(),
         musl_target.as_path(),
@@ -213,15 +214,7 @@ fn build_crt(
                 "-DCMAKE_C_COMPILER='clang'",
                 "-DCMAKE_CXX_COMPILER='clang++'",
                 "-DLLVM_ENABLE_PROJECTS='compiler-rt'",
-                format!(
-                    "-DLLVM_TARGETS_TO_BUILD='{}'",
-                    targets
-                        .into_iter()
-                        .map(|platform| platform.to_string())
-                        .collect::<Vec<String>>()
-                        .join(";")
-                )
-                .as_str(),
+                format!("-DLLVM_TARGETS_TO_BUILD='{}'", Platform::AArch64).as_str(),
                 "-DLLVM_DEFAULT_TARGET_TRIPLE='aarch64-unknown-linux-musl'",
                 "-DLLVM_BUILD_TESTS='Off'",
                 "-DLLVM_BUILD_RUNTIMES='Off'",
