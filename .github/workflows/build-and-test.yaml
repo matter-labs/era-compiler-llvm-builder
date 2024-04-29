@@ -80,6 +80,7 @@ jobs:
   build-and-test-macos:
     needs: check-formatting
     strategy:
+      fail-fast: false
       matrix:
         include:
           - name: "MacOS x86"

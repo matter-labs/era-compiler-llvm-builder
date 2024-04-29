@@ -3,10 +3,9 @@
 //!
 
 /// The build options shared by all platforms.
-pub const SHARED_BUILD_OPTS: [&str; 18] = [
+pub const SHARED_BUILD_OPTS: [&str; 17] = [
     "-DPACKAGE_VENDOR='Matter Labs'",
-    "-DCLANG_VENDOR='Matter Labs'",
-    "-DCLANG_REPOSITORY_STRING='origin'",
+    "-DCMAKE_BUILD_WITH_INSTALL_RPATH=1",
     "-DCMAKE_COLOR_DIAGNOSTICS='Off'",
     "-DLLVM_BUILD_DOCS='Off'",
     "-DLLVM_INCLUDE_DOCS='Off'",
@@ -33,7 +32,9 @@ pub const SHARED_BUILD_OPTS_NOT_MUSL: [&str; 5] = [
     "-DLLVM_INCLUDE_RUNTIMES='Off'",
 ];
 
+///
 /// The build options to enable assertions.
+///
 pub fn shared_build_opts_assertions(enabled: bool) -> Vec<String> {
     vec![format!(
         "-DLLVM_ENABLE_ASSERTIONS='{}'",
@@ -41,7 +42,9 @@ pub fn shared_build_opts_assertions(enabled: bool) -> Vec<String> {
     )]
 }
 
+///
 /// The LLVM tests build options shared by all platforms.
+///
 pub fn shared_build_opts_tests(enabled: bool) -> Vec<String> {
     vec![
         format!(
@@ -63,7 +66,9 @@ pub fn shared_build_opts_tests(enabled: bool) -> Vec<String> {
     ]
 }
 
+///
 /// The code coverage build options shared by all platforms.
+///
 pub fn shared_build_opts_coverage(enabled: bool) -> Vec<String> {
     vec![format!(
         "-DLLVM_BUILD_INSTRUMENTED_COVERAGE='{}'",
@@ -71,12 +76,30 @@ pub fn shared_build_opts_coverage(enabled: bool) -> Vec<String> {
     )]
 }
 
-/// Use of compiler cache (ccache) to speed up the build process
+///
+/// Use of compiler cache (ccache) to speed up the build process.
+///
 pub fn shared_build_opts_ccache(use_ccache: bool) -> Vec<String> {
     if use_ccache {
         vec![
             "-DCMAKE_C_COMPILER_LAUNCHER='ccache'".to_owned(),
             "-DCMAKE_CXX_COMPILER_LAUNCHER='ccache'".to_owned(),
+        ]
+    } else {
+        vec![]
+    }
+}
+
+///
+/// Ignore duplicate libraries warnings for MacOS with XCode>=15.
+///
+pub fn macos_build_opts_ignore_dupicate_libs_warnings() -> Vec<String> {
+    let xcode_version =
+        crate::utils::get_xcode_version().unwrap_or(crate::utils::XCODE_MIN_VERSION);
+    if xcode_version >= crate::utils::XCODE_VERSION_15 {
+        vec![
+            "-DCMAKE_EXE_LINKER_FLAGS='-Wl,-no_warn_duplicate_libraries'".to_owned(),
+            "-DCMAKE_SHARED_LINKER_FLAGS='-Wl,-no_warn_duplicate_libraries'".to_owned(),
         ]
     } else {
         vec![]

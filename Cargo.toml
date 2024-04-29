@@ -24,6 +24,7 @@ toml = "0.7"
 num_cpus = "1.15"
 fs_extra = "1.2"
 path-slash = "0.2"
+regex = "1.10"
 
 [dev-dependencies]
 assert_cmd = "2.0"
