@@ -15,12 +15,18 @@ pub enum Arguments {
         /// Clone with full commits history.
         #[structopt(long)]
         deep: bool,
+        /// Build LLVM with musl.
+        #[structopt(long = "musl")]
+        use_musl: bool,
     },
     /// Build the LLVM framework.
     Build {
         /// Whether to build the 'Debug' version.
         #[structopt(long = "debug")]
         debug: bool,
+        /// Build LLVM with musl.
+        #[structopt(long = "musl")]
+        use_musl: bool,
         /// Additional targets to build LLVM with.
         #[structopt(long = "targets", multiple = true)]
         targets: Vec<String>,

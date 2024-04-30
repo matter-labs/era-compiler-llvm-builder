@@ -49,11 +49,11 @@ pub fn clone_host() -> anyhow::Result<()> {
 ///
 /// Executes the LLVM repository cloning.
 ///
-pub fn clone(lock: Lock, deep: bool) -> anyhow::Result<()> {
+pub fn clone(lock: Lock, deep: bool, use_musl: bool) -> anyhow::Result<()> {
     utils::check_presence("git")?;
 
     // Clone the host repository if the target is musl.
-    if cfg!(target_os = "linux") && cfg!(target_env = "musl") {
+    if cfg!(target_os = "linux") && use_musl {
         clone_host()?;
     }
 
@@ -140,8 +140,10 @@ pub fn checkout(lock: Lock, force: bool) -> anyhow::Result<()> {
 /// argument is not possible. So for cross-platform testing, comment out all but the
 /// line to be tested, and perhaps also checks in the platform-specific build method.
 ///
+#[allow(clippy::too_many_arguments)]
 pub fn build(
     build_type: BuildType,
+    use_musl: bool,
     targets: HashSet<Platform>,
     enable_tests: bool,
     enable_coverage: bool,
@@ -153,17 +155,7 @@ pub fn build(
 
     if cfg!(target_arch = "x86_64") {
         if cfg!(target_os = "linux") {
-            if cfg!(target_env = "gnu") {
-                platforms::x86_64_linux_gnu::build(
-                    build_type,
-                    targets,
-                    enable_tests,
-                    enable_coverage,
-                    extra_args,
-                    use_ccache,
-                    enable_assertions,
-                )?;
-            } else if cfg!(target_env = "musl") {
+            if use_musl {
                 platforms::x86_64_linux_musl::build(
                     build_type,
                     targets,
@@ -174,7 +166,15 @@ pub fn build(
                     enable_assertions,
                 )?;
             } else {
-                anyhow::bail!("Unsupported target environment for x86_64 and Linux");
+                platforms::x86_64_linux_gnu::build(
+                    build_type,
+                    targets,
+                    enable_tests,
+                    enable_coverage,
+                    extra_args,
+                    use_ccache,
+                    enable_assertions,
+                )?;
             }
         } else if cfg!(target_os = "macos") {
             platforms::x86_64_macos::build(
@@ -201,17 +201,7 @@ pub fn build(
         }
     } else if cfg!(target_arch = "aarch64") {
         if cfg!(target_os = "linux") {
-            if cfg!(target_env = "gnu") {
-                platforms::aarch64_linux_gnu::build(
-                    build_type,
-                    targets,
-                    enable_tests,
-                    enable_coverage,
-                    extra_args,
-                    use_ccache,
-                    enable_assertions,
-                )?;
-            } else if cfg!(target_env = "musl") {
+            if use_musl {
                 platforms::aarch64_linux_musl::build(
                     build_type,
                     targets,
@@ -222,7 +212,15 @@ pub fn build(
                     enable_assertions,
                 )?;
             } else {
-                anyhow::bail!("Unsupported target environment for aarch64 and Linux");
+                platforms::aarch64_linux_gnu::build(
+                    build_type,
+                    targets,
+                    enable_tests,
+                    enable_coverage,
+                    extra_args,
+                    use_ccache,
+                    enable_assertions,
+                )?;
             }
         } else if cfg!(target_os = "macos") {
             platforms::aarch64_macos::build(

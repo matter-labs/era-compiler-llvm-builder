@@ -46,8 +46,10 @@ pub fn build(
     let llvm_build_final = LLVMPath::llvm_build_final()?;
     let llvm_target_final = LLVMPath::llvm_target_final()?;
 
-    download_musl(musl_name)?;
-    build_musl(musl_build.as_path(), musl_target.as_path())?;
+    if !LLVMPath::musl_source(musl_name)?.exists() {
+        crate::utils::download_musl(musl_name)?;
+    }
+    crate::utils::build_musl(musl_build.as_path(), musl_target.as_path())?;
     build_crt(
         targets.clone(),
         llvm_host_module_llvm.as_path(),
@@ -76,109 +78,6 @@ pub fn build(
         extra_args,
         use_ccache,
         enable_assertions,
-    )?;
-
-    Ok(())
-}
-
-///
-/// The `musl` downloading sequence.
-///
-fn download_musl(name: &str) -> anyhow::Result<()> {
-    let tar_file_name = format!("{name}.tar.gz");
-    let url = format!("https://git.musl-libc.org/cgit/musl/snapshot/{tar_file_name}");
-
-    crate::utils::command(
-        Command::new("wget")
-            .current_dir(LLVMPath::DIRECTORY_LLVM_TARGET)
-            .arg("--verbose")
-            .arg("--output-document")
-            .arg(tar_file_name.as_str())
-            .arg(url),
-        "MUSL downloading",
-    )?;
-
-    crate::utils::command(
-        Command::new("tar")
-            .current_dir(LLVMPath::DIRECTORY_LLVM_TARGET)
-            .arg("-x")
-            .arg("-v")
-            .arg("-z")
-            .arg("-f")
-            .arg(tar_file_name.as_str()),
-        "MUSL unpacking",
-    )?;
-
-    Ok(())
-}
-
-///
-/// The `musl` building sequence.
-///
-fn build_musl(build_directory: &Path, target_directory: &Path) -> anyhow::Result<()> {
-    std::fs::create_dir_all(build_directory)?;
-    std::fs::create_dir_all(target_directory)?;
-
-    crate::utils::command(
-        Command::new("../configure")
-            .current_dir(build_directory)
-            .arg(format!("--prefix={}", target_directory.to_string_lossy()))
-            .arg(format!(
-                "--syslibdir={}/lib/",
-                target_directory.to_string_lossy()
-            ))
-            .arg("--enable-wrapper='clang'"),
-        "MUSL configuring",
-    )?;
-    crate::utils::command(
-        Command::new("make")
-            .current_dir(build_directory)
-            .arg("-j")
-            .arg(num_cpus::get().to_string()),
-        "MUSL building",
-    )?;
-    crate::utils::command(
-        Command::new("make")
-            .current_dir(build_directory)
-            .arg("install"),
-        "MUSL installing",
-    )?;
-
-    let mut include_directory = target_directory.to_path_buf();
-    include_directory.push("include/");
-
-    let mut asm_include_directory = include_directory.clone();
-    asm_include_directory.push("asm/");
-    std::fs::create_dir_all(asm_include_directory.as_path())?;
-
-    let mut types_header_path = asm_include_directory.clone();
-    types_header_path.push("types.h");
-
-    let copy_options = fs_extra::dir::CopyOptions {
-        overwrite: true,
-        copy_inside: true,
-        ..Default::default()
-    };
-    fs_extra::dir::copy("/usr/include/linux", include_directory, &copy_options)?;
-
-    let copy_options = fs_extra::dir::CopyOptions {
-        overwrite: true,
-        copy_inside: true,
-        content_only: true,
-        ..Default::default()
-    };
-    fs_extra::dir::copy(
-        "/usr/include/asm-generic",
-        asm_include_directory,
-        &copy_options,
-    )?;
-
-    crate::utils::command(
-        Command::new("sed")
-            .arg("-i")
-            .arg("s/asm-generic/asm/")
-            .arg(types_header_path),
-        "types_header asm signature replacement",
     )?;
 
     Ok(())

@@ -38,6 +38,15 @@ impl LLVMPath {
     }
 
     ///
+    /// Returns the path to the MUSL source.
+    ///
+    pub fn musl_source(name: &str) -> anyhow::Result<PathBuf> {
+        let mut path = PathBuf::from(Self::DIRECTORY_LLVM_TARGET);
+        path.push(name);
+        crate::utils::absolute_path(path)
+    }
+
+    ///
     /// Returns the path to the MUSL build directory.
     ///
     pub fn musl_build(source_directory: &str) -> anyhow::Result<PathBuf> {

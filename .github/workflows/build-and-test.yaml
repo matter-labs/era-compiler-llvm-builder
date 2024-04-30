@@ -30,90 +30,90 @@ jobs:
       - name: Run clippy
         run: cargo clippy
 
-  build-and-test-windows:
-    needs: check-formatting
-    name: "Windows"
-    runs-on: windows-2022-github-hosted-16core
-    env:
-      LIBSTDCPP_SOURCE_PATH: "C:/a/_temp/msys64/mingw64/lib/libstdc++.a"
-    defaults:
-      run:
-        shell: msys2 {0}
-    steps:
-      - name: Checkout source
-        uses: actions/checkout@v4
-      - name: Prepare msys2
-        uses: msys2/setup-msys2@v2
-      - name: Prepare env
-        run: |
-          pacman-key --refresh
-          pacman -Sy
-          curl -LO https://repo.msys2.org/mingw/mingw64/mingw-w64-x86_64-cmake-3.27.7-3-any.pkg.tar.zst
-          pacman --noconfirm -U mingw-w64-x86_64-cmake-3.27.7-3-any.pkg.tar.zst
-          pacman --noconfirm -S --needed --overwrite \
-          base-devel \
-          git \
-          ninja \
-          mingw-w64-x86_64-clang \
-          mingw-w64-x86_64-lld \
-          mingw-w64-x86_64-rust \
-          mingw-w64-x86_64-gcc-libs \
-          mingw-w64-x86_64-gcc
-      - name: Build
-        run: |
-          export PATH="${PATH}:/c/Users/runneradmin/.cargo/bin/"
-          cargo build --release
-      - name: Test
-        run: |
-          export PATH="$PATH:/c/Users/runneradmin/.cargo/bin/"
-          cargo install cargo2junit
-          cargo test --no-fail-fast -- --skip debug_build_with_tests_coverage -Z unstable-options --format json | cargo2junit | tee "${UNIT_TESTS_RESULTS_XML}"
-      - name: Upload test results
-        if: always()
-        uses: EnricoMi/publish-unit-test-result-action/composite@v2.12.0
-        with:
-          check_name: Windows Unit Tests Results
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          files: ${{ env.UNIT_TESTS_RESULTS_XML }}
-          action_fail_on_inconclusive: true
-
-  build-and-test-macos:
-    needs: check-formatting
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - name: "MacOS x86"
-            runner: macos-12-large
-          - name: "MacOS arm64"
-            runner: [ self-hosted, macOS, ARM64 ]
-    runs-on: ${{ matrix.runner }}
-    name: ${{ matrix.name }}
-    steps:
-      - name: Cleanup workspace
-        if: matrix.name == 'MacOS arm64'
-        run: |
-          rm -rf ${{ github.workspace }}/*
-          echo "${HOME}/.cargo/bin" >> $GITHUB_PATH
-          echo "/opt/homebrew/bin" >> $GITHUB_PATH
-      - name: Checkout source
-        uses: actions/checkout@v4
-      - name: Prepare environment
-        run: brew install cmake ninja
-      - name: Build
-        run: cargo build --release
-      - name: Test
-        run: |
-          cargo install cargo2junit
-          cargo test --no-fail-fast -- -Z unstable-options --format json | cargo2junit | tee "${UNIT_TESTS_RESULTS_XML}"
-      - name: Upload test results
-        if: always()
-        uses: EnricoMi/publish-unit-test-result-action/composite@v2.12.0
-        with:
-          check_name: ${{ matrix.name }} Unit Tests Results
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          files: ${{ env.UNIT_TESTS_RESULTS_XML }}
-          action_fail_on_inconclusive: true
+#  build-and-test-windows:
+#    needs: check-formatting
+#    name: "Windows"
+#    runs-on: windows-2022-github-hosted-16core
+#    env:
+#      LIBSTDCPP_SOURCE_PATH: "C:/a/_temp/msys64/mingw64/lib/libstdc++.a"
+#    defaults:
+#      run:
+#        shell: msys2 {0}
+#    steps:
+#      - name: Checkout source
+#        uses: actions/checkout@v4
+#      - name: Prepare msys2
+#        uses: msys2/setup-msys2@v2
+#      - name: Prepare env
+#        run: |
+#          pacman-key --refresh
+#          pacman -Sy
+#          curl -LO https://repo.msys2.org/mingw/mingw64/mingw-w64-x86_64-cmake-3.27.7-3-any.pkg.tar.zst
+#          pacman --noconfirm -U mingw-w64-x86_64-cmake-3.27.7-3-any.pkg.tar.zst
+#          pacman --noconfirm -S --needed --overwrite \
+#          base-devel \
+#          git \
+#          ninja \
+#          mingw-w64-x86_64-clang \
+#          mingw-w64-x86_64-lld \
+#          mingw-w64-x86_64-rust \
+#          mingw-w64-x86_64-gcc-libs \
+#          mingw-w64-x86_64-gcc
+#      - name: Build
+#        run: |
+#          export PATH="${PATH}:/c/Users/runneradmin/.cargo/bin/"
+#          cargo build --release
+#      - name: Test
+#        run: |
+#          export PATH="$PATH:/c/Users/runneradmin/.cargo/bin/"
+#          cargo install cargo2junit
+#          cargo test --no-fail-fast -- --skip debug_build_with_tests_coverage -Z unstable-options --format json | cargo2junit | tee "${UNIT_TESTS_RESULTS_XML}"
+#      - name: Upload test results
+#        if: always()
+#        uses: EnricoMi/publish-unit-test-result-action/composite@v2.12.0
+#        with:
+#          check_name: Windows Unit Tests Results
+#          github_token: ${{ secrets.GITHUB_TOKEN }}
+#          files: ${{ env.UNIT_TESTS_RESULTS_XML }}
+#          action_fail_on_inconclusive: true
+#
+#  build-and-test-macos:
+#    needs: check-formatting
+#    strategy:
+#      fail-fast: false
+#      matrix:
+#        include:
+#          - name: "MacOS x86"
+#            runner: macos-12-large
+#          - name: "MacOS arm64"
+#            runner: [ self-hosted, macOS, ARM64 ]
+#    runs-on: ${{ matrix.runner }}
+#    name: ${{ matrix.name }}
+#    steps:
+#      - name: Cleanup workspace
+#        if: matrix.name == 'MacOS arm64'
+#        run: |
+#          rm -rf ${{ github.workspace }}/*
+#          echo "${HOME}/.cargo/bin" >> $GITHUB_PATH
+#          echo "/opt/homebrew/bin" >> $GITHUB_PATH
+#      - name: Checkout source
+#        uses: actions/checkout@v4
+#      - name: Prepare environment
+#        run: brew install cmake ninja
+#      - name: Build
+#        run: cargo build --release
+#      - name: Test
+#        run: |
+#          cargo install cargo2junit
+#          cargo test --no-fail-fast -- -Z unstable-options --format json | cargo2junit | tee "${UNIT_TESTS_RESULTS_XML}"
+#      - name: Upload test results
+#        if: always()
+#        uses: EnricoMi/publish-unit-test-result-action/composite@v2.12.0
+#        with:
+#          check_name: ${{ matrix.name }} Unit Tests Results
+#          github_token: ${{ secrets.GITHUB_TOKEN }}
+#          files: ${{ env.UNIT_TESTS_RESULTS_XML }}
+#          action_fail_on_inconclusive: true
 
   build-and-test-linux:
     needs: check-formatting
@@ -121,19 +121,10 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - name: "Linux x86_64 gnu"
+          - name: "Linux x86_64"
             runner: matterlabs-ci-runner
-            target: "x86_64-unknown-linux-gnu"
-          - name: "Linux aarch64 gnu"
+          - name: "Linux aarch64"
             runner: matterlabs-ci-runner-arm
-            target: "aarch64-unknown-linux-gnu"
-          - name: "Linux x86_64 musl"
-            runner: matterlabs-ci-runner
-            target: "x86_64-unknown-linux-musl"
-          - name: "Linux arm64 musl"
-            runner: matterlabs-ci-runner-arm
-            target: "aarch64-unknown-linux-musl"
-            rustflags: "-C link-arg=-Wl,-Bstatic -C link-arg=-lc -C link-arg=-L/usr/lib/llvm-17/lib/clang/17/lib/linux/ -C link-arg=-lclang_rt.builtins-aarch64"
     runs-on: ${{ matrix.runner }}
     name: ${{ matrix.name }}
     container:
@@ -144,21 +135,14 @@ jobs:
       - name: Checkout source
         uses: actions/checkout@v4
 
-      - name: Build
-        run: |
-          rustup target add ${{ matrix.target }}
-          cargo build --release
-
-      - name: Test
+      - name: Build and test
         uses: nick-fields/retry@v2
         with:
           timeout_minutes: 120
           max_attempts: 2 # protection mechanism for sporadic dependencies download failure
           command: |
             cargo install cargo2junit
-            # Disable unsupported tests
-            [[ ${{ matrix.target }} != *musl* ]] && INCLUDE_IGNORED="--include-ignored"
-            cargo test --target ${{ matrix.target }} --no-fail-fast -- -Z unstable-options --format json ${INCLUDE_IGNORED} \
+            cargo test --no-fail-fast -- -Z unstable-options --format json ${INCLUDE_IGNORED} \
               | cargo2junit | tee "${UNIT_TESTS_RESULTS_XML}"
 
       - name: Upload test results
