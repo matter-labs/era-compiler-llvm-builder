@@ -1,14 +1,18 @@
 //!
-//! The zkEVM LLVM builder utilities.
+//! The LLVM builder utilities.
 //!
 
 use std::path::Path;
 use std::path::PathBuf;
 use std::process::Command;
+use std::process::Stdio;
 
 use path_slash::PathBufExt;
+use regex::Regex;
 
-const DRY_RUN: bool = false;
+/// The dry run flag.
+pub const DRY_RUN: bool = false;
+
 /// Enable verbose output.
 pub const VERBOSE: bool = false;
 
@@ -17,6 +21,12 @@ pub const LLVM_HOST_SOURCE_URL: &str = "https://github.com/llvm/llvm-project";
 
 /// The LLVM host repository tag.
 pub const LLVM_HOST_SOURCE_TAG: &str = "llvmorg-17.0.6";
+
+/// The minimum required XCode version.
+pub const XCODE_MIN_VERSION: u32 = 11;
+
+/// The XCode version 15.
+pub const XCODE_VERSION_15: u32 = 15;
 
 ///
 /// The subprocess runner.
@@ -81,4 +91,34 @@ pub fn check_presence(name: &str) -> anyhow::Result<()> {
         anyhow::bail!("Tool `{}` is missing. Please install", name);
     }
     Ok(())
+}
+
+///
+/// Identify XCode version using `pkgutil`.
+///
+pub fn get_xcode_version() -> anyhow::Result<u32> {
+    let pkgutil = Command::new("pkgutil")
+        .args(["--pkg-info", "com.apple.pkg.CLTools_Executables"])
+        .stdout(Stdio::piped())
+        .spawn()
+        .map_err(|error| anyhow::anyhow!("`pkgutil` process: {}", error))?;
+    let grep_version = Command::new("grep")
+        .arg("version")
+        .stdin(Stdio::from(pkgutil.stdout.expect(
+            "Failed to identify XCode version - XCode or CLI tools are not installed",
+        )))
+        .output()
+        .map_err(|error| anyhow::anyhow!("`grep` process: {}", error))?;
+    let version_string = String::from_utf8(grep_version.stdout)?;
+    let re = Regex::new(r"version: (\d+)\..*")?;
+    let captures = re.captures(version_string.as_str()).ok_or(anyhow::anyhow!(
+        "Failed to parse XCode version: {version_string}"
+    ))?;
+    let xcode_version: u32 = captures
+        .get(1)
+        .expect("Always has a major version")
+        .as_str()
+        .parse()
+        .map_err(|error| anyhow::anyhow!("Failed to parse XCode version: {error}"))?;
+    Ok(xcode_version)
 }

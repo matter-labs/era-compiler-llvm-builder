@@ -4,7 +4,7 @@ pub const ZKEVM_LLVM: &str = "zkevm-llvm";
 pub const PACKAGE_VERSION: &str = env!("CARGO_PKG_VERSION");
 pub const ERA_LLVM_REPO_URL: &str = "https://github.com/matter-labs/era-compiler-llvm";
 pub const ERA_LLVM_REPO_TEST_BRANCH: &str = "v1.4.2";
-pub const ERA_LLVM_REPO_TEST_REF: &str = "714cc6aa05ea03dab3e4e504cb8c25973a33ea94";
+pub const ERA_LLVM_REPO_TEST_REF: &str = "b5ccf6d5774e9bc3cee47ab4a334404718d3adfd";
 pub const ERA_LLVM_REPO_TEST_SHA_INVALID: &str = "12345abcd";
 pub const LLVM_LOCK_FILE: &str = "LLVM.lock";
 

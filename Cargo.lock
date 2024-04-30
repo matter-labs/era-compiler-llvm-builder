@@ -110,6 +110,7 @@ dependencies = [
  "num_cpus",
  "path-slash",
  "predicates",
+ "regex",
  "rstest",
  "serde",
  "structopt",

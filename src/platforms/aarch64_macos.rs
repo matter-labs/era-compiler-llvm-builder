@@ -69,7 +69,8 @@ pub fn build(
             ))
             .args(crate::platforms::shared::shared_build_opts_assertions(
                 enable_assertions,
-            )),
+            ))
+            .args(crate::platforms::shared::macos_build_opts_ignore_dupicate_libs_warnings()),
         "LLVM building cmake",
     )?;
 
