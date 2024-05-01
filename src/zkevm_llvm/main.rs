@@ -5,6 +5,7 @@
 pub(crate) mod arguments;
 
 use std::collections::HashSet;
+use std::env;
 use std::path::PathBuf;
 use std::str::FromStr;
 
@@ -32,7 +33,7 @@ fn main() {
 /// The entry result wrapper.
 ///
 fn main_inner() -> anyhow::Result<()> {
-    if compiler_llvm_builder::utils::VERBOSE {
+    if env::var("VERBOSE").is_ok() {
         println!("std::env::args(): {:#?}", std::env::args());
         println!(
             "\nstd::env::args() collected: {}",
@@ -42,13 +43,13 @@ fn main_inner() -> anyhow::Result<()> {
     let arguments = Arguments::new();
 
     match arguments {
-        Arguments::Clone { deep, use_musl } => {
+        Arguments::Clone { deep, target_env } => {
             let lock = compiler_llvm_builder::Lock::try_from(&PathBuf::from("LLVM.lock"))?;
-            compiler_llvm_builder::clone(lock, deep, use_musl)?;
+            compiler_llvm_builder::clone(lock, deep, target_env)?;
         }
         Arguments::Build {
             debug,
-            use_musl,
+            target_env,
             targets,
             enable_tests,
             enable_coverage,
@@ -75,7 +76,7 @@ fn main_inner() -> anyhow::Result<()> {
                         .to_owned()
                 })
                 .collect();
-            if compiler_llvm_builder::utils::VERBOSE {
+            if env::var("VERBOSE").is_ok() {
                 println!("\nextra_args: {:#?}", extra_args);
                 println!("\nextra_args_unescaped: {:#?}", extra_args_unescaped);
             }
@@ -86,7 +87,7 @@ fn main_inner() -> anyhow::Result<()> {
 
             compiler_llvm_builder::build(
                 build_type,
-                use_musl,
+                target_env,
                 targets,
                 enable_tests,
                 enable_coverage,

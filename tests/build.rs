@@ -94,7 +94,7 @@ fn clone_build_and_clean_musl() -> anyhow::Result<()> {
         .parent()
         .expect("Lockfile parent dir does not exist");
     cmd.current_dir(test_dir);
-    cmd.arg("clone").arg("--musl");
+    cmd.arg("clone").arg("--target-env").arg("musl");
     cmd.assert()
         .success()
         .stderr(predicate::str::is_match(".*Updating files:.*100%.*done").unwrap());
@@ -102,7 +102,8 @@ fn clone_build_and_clean_musl() -> anyhow::Result<()> {
     build_cmd.current_dir(test_dir);
     build_cmd
         .arg("build")
-        .arg("--musl")
+        .arg("--target-env")
+        .arg("musl")
         .assert()
         .success()
         .stdout(predicate::str::is_match("Installing:.*").unwrap());

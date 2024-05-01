@@ -2,6 +2,7 @@
 //! The LLVM builder utilities.
 //!
 
+use std::env;
 use std::fs::File;
 use std::path::Path;
 use std::path::PathBuf;
@@ -14,12 +15,6 @@ use flate2::read::GzDecoder;
 use path_slash::PathBufExt;
 use regex::Regex;
 use tar::Archive;
-
-/// The dry run flag.
-pub const DRY_RUN: bool = false;
-
-/// Enable verbose output.
-pub const VERBOSE: bool = false;
 
 /// The LLVM host repository URL.
 pub const LLVM_HOST_SOURCE_URL: &str = "https://github.com/llvm/llvm-project";
@@ -51,10 +46,10 @@ pub const MUSL_SNAPSHOTS_URL: &str = "https://git.musl-libc.org/cgit/musl/snapsh
 /// Checks the status and prints `stderr`.
 ///
 pub fn command(command: &mut Command, description: &str) -> anyhow::Result<()> {
-    if VERBOSE {
+    if env::var("VERBOSE").is_ok() {
         println!("\ndescription: {}; command: {:?}", description, command);
     }
-    if DRY_RUN {
+    if env::var("DRY_RUN").is_ok() {
         println!("\tOnly a dry run; not executing the command.");
     } else {
         let status = command

@@ -15,18 +15,18 @@ pub enum Arguments {
         /// Clone with full commits history.
         #[structopt(long)]
         deep: bool,
-        /// Build LLVM with musl.
-        #[structopt(long = "musl")]
-        use_musl: bool,
+        /// Target environment to build LLVM (GNU or MUSL).
+        #[structopt(long = "target-env", default_value = "gnu")]
+        target_env: compiler_llvm_builder::platforms::TargetEnv,
     },
     /// Build the LLVM framework.
     Build {
         /// Whether to build the 'Debug' version.
         #[structopt(long = "debug")]
         debug: bool,
-        /// Build LLVM with musl.
-        #[structopt(long = "musl")]
-        use_musl: bool,
+        /// Target environment to build LLVM (`gnu` or `musl`).
+        #[structopt(long = "target-env", default_value = "gnu")]
+        target_env: compiler_llvm_builder::platforms::TargetEnv,
         /// Additional targets to build LLVM with.
         #[structopt(long = "targets", multiple = true)]
         targets: Vec<String>,
