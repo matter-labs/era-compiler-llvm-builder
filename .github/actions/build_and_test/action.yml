@@ -1,0 +1,38 @@
+name: 'Build and test'
+description: 'Builds and tests LLVM builder.'
+runs:
+  using: "composite"
+  steps:
+    - name: Build and test
+      shell: ${{ runner.os == 'Windows' && 'msys2 {0}' || 'bash' }}
+      env:
+        LIBSTDCPP_SOURCE_PATH: "C:/a/_temp/msys64/mingw64/lib/libstdc++.a"
+      run: |
+        cargo install cargo2junit
+        [ "${RUNNER_OS}" = "Windows" ] && ADD_FLAGS="--skip debug_build_with_tests_coverage"
+        cargo test --no-fail-fast -- ${ADD_FLAGS} -Z unstable-options --format json \
+          | cargo2junit | tee "${UNIT_TESTS_RESULTS_XML}"
+
+    - name: Upload test results (Linux)
+      if: runner.os == 'Linux'
+      uses: EnricoMi/publish-unit-test-result-action@v2
+      with:
+        check_name: ${{ matrix.name }} Test Results
+        files: ${{ env.UNIT_TESTS_RESULTS_XML }}
+        action_fail_on_inconclusive: true
+
+    - name: Upload test results (MacOS)
+      if: runner.os == 'macos'
+      uses: EnricoMi/publish-unit-test-result-action/macos@v2
+      with:
+        check_name: ${{ matrix.name }} Test Results
+        files: ${{ env.UNIT_TESTS_RESULTS_XML }}
+        action_fail_on_inconclusive: true
+
+    - name: Upload test results (windows)
+      if: runner.os == 'Windows'
+      uses: EnricoMi/publish-unit-test-result-action/windows@v2
+      with:
+        check_name: ${{ matrix.name }} Test Results
+        files: ${{ env.UNIT_TESTS_RESULTS_XML }}
+        action_fail_on_inconclusive: true

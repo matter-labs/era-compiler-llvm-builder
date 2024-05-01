@@ -49,11 +49,11 @@ pub fn clone_host() -> anyhow::Result<()> {
 ///
 /// Executes the LLVM repository cloning.
 ///
-pub fn clone(lock: Lock, deep: bool) -> anyhow::Result<()> {
+pub fn clone(lock: Lock, deep: bool, target_env: platforms::TargetEnv) -> anyhow::Result<()> {
     utils::check_presence("git")?;
 
     // Clone the host repository if the target is musl.
-    if cfg!(target_os = "linux") && cfg!(target_env = "musl") {
+    if cfg!(target_os = "linux") && target_env == platforms::TargetEnv::MUSL {
         clone_host()?;
     }
 
@@ -140,8 +140,10 @@ pub fn checkout(lock: Lock, force: bool) -> anyhow::Result<()> {
 /// argument is not possible. So for cross-platform testing, comment out all but the
 /// line to be tested, and perhaps also checks in the platform-specific build method.
 ///
+#[allow(clippy::too_many_arguments)]
 pub fn build(
     build_type: BuildType,
+    target_env: platforms::TargetEnv,
     targets: HashSet<Platform>,
     enable_tests: bool,
     enable_coverage: bool,
@@ -153,8 +155,8 @@ pub fn build(
 
     if cfg!(target_arch = "x86_64") {
         if cfg!(target_os = "linux") {
-            if cfg!(target_env = "gnu") {
-                platforms::x86_64_linux_gnu::build(
+            if target_env == platforms::TargetEnv::MUSL {
+                platforms::x86_64_linux_musl::build(
                     build_type,
                     targets,
                     enable_tests,
@@ -163,8 +165,8 @@ pub fn build(
                     use_ccache,
                     enable_assertions,
                 )?;
-            } else if cfg!(target_env = "musl") {
-                platforms::x86_64_linux_musl::build(
+            } else if target_env == platforms::TargetEnv::GNU {
+                platforms::x86_64_linux_gnu::build(
                     build_type,
                     targets,
                     enable_tests,
@@ -201,8 +203,8 @@ pub fn build(
         }
     } else if cfg!(target_arch = "aarch64") {
         if cfg!(target_os = "linux") {
-            if cfg!(target_env = "gnu") {
-                platforms::aarch64_linux_gnu::build(
+            if target_env == platforms::TargetEnv::MUSL {
+                platforms::aarch64_linux_musl::build(
                     build_type,
                     targets,
                     enable_tests,
@@ -211,8 +213,8 @@ pub fn build(
                     use_ccache,
                     enable_assertions,
                 )?;
-            } else if cfg!(target_env = "musl") {
-                platforms::aarch64_linux_musl::build(
+            } else if target_env == platforms::TargetEnv::GNU {
+                platforms::aarch64_linux_gnu::build(
                     build_type,
                     targets,
                     enable_tests,
