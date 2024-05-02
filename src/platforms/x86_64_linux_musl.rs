@@ -22,8 +22,6 @@ pub fn build(
     use_ccache: bool,
     enable_assertions: bool,
 ) -> anyhow::Result<()> {
-    crate::utils::check_presence("wget")?;
-    crate::utils::check_presence("tar")?;
     crate::utils::check_presence("cmake")?;
     crate::utils::check_presence("clang")?;
     crate::utils::check_presence("clang++")?;

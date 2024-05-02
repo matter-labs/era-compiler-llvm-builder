@@ -22,8 +22,6 @@ pub fn build(
     use_ccache: bool,
     enable_assertions: bool,
 ) -> anyhow::Result<()> {
-    crate::utils::check_presence("wget")?;
-    crate::utils::check_presence("tar")?;
     crate::utils::check_presence("cmake")?;
     crate::utils::check_presence("clang")?;
     crate::utils::check_presence("clang++")?;
@@ -123,6 +121,7 @@ fn build_crt(
                 "-DLLVM_INCLUDE_UTILS='Off'",
                 "-DCOMPILER_RT_DEFAULT_TARGET_ARCH='aarch64'",
                 "-DCOMPILER_RT_BUILD_CRT='On'",
+                "-DCOMPILER_RT_BUILD_BUILTINS='On'",
                 "-DCOMPILER_RT_BUILD_SANITIZERS='Off'",
                 "-DCOMPILER_RT_BUILD_XRAY='Off'",
                 "-DCOMPILER_RT_BUILD_LIBFUZZER='Off'",
