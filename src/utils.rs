@@ -29,7 +29,7 @@ pub const XCODE_MIN_VERSION: u32 = 11;
 pub const XCODE_VERSION_15: u32 = 15;
 
 /// The number of download retries if failed.
-pub const DOWNLOAD_RETRIES: u16 = 3;
+pub const DOWNLOAD_RETRIES: u16 = 16;
 
 /// The number of parallel download requests.
 pub const DOWNLOAD_PARALLEL_REQUESTS: u16 = 1;
@@ -72,17 +72,25 @@ pub fn download(url: &str, path: &str) -> anyhow::Result<()> {
         .retries(DOWNLOAD_RETRIES)
         .timeout(Duration::from_secs(DOWNLOAD_TIMEOUT_SECONDS))
         .build()?;
-    let dl = downloader::Download::new(url);
-    for r in downloader.download(&[dl])? {
-        let summary = r.map_err(|error| anyhow::anyhow!("{}", error))?;
-        if !summary
-            .status
-            .iter()
-            .any(|&(_, status)| status == http::status::StatusCode::OK)
-        {
-            anyhow::bail!("MUSL download failed! for {}", url);
-        }
+    let download = downloader::Download::new(url);
+
+    let results: Vec<Result<downloader::DownloadSummary, downloader::Error>> =
+        downloader.download(&[download])?.into_iter().collect();
+    if results
+        .iter()
+        .map(|result| {
+            result.as_ref().map(|summary| {
+                summary
+                    .status
+                    .iter()
+                    .all(|(_, status)| status == &http::status::StatusCode::OK)
+            })
+        })
+        .any(|result| result.is_ok())
+    {
+        anyhow::bail!("MUSL download from `{url}` failed: {:?}", results);
     }
+
     Ok(())
 }
 
