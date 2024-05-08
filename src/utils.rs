@@ -86,7 +86,7 @@ pub fn download(url: &str, path: &str) -> anyhow::Result<()> {
                     .all(|(_, status)| status == &http::status::StatusCode::OK)
             })
         })
-        .any(|result| result.is_ok())
+        .all(|result| result.is_err())
     {
         anyhow::bail!("MUSL download from `{url}` failed: {:?}", results);
     }
