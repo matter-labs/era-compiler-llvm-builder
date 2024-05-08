@@ -30,7 +30,7 @@ fn clone() -> anyhow::Result<()> {
     cmd.arg("clone");
     cmd.assert()
         .success()
-        .stderr(predicate::str::contains("HEAD is now at"));
+        .stderr(predicate::str::is_match(".*Updating files:.*100%.*done").unwrap());
     Ok(())
 }
 
@@ -59,7 +59,7 @@ fn clone_deep() -> anyhow::Result<()> {
     cmd.arg("--deep");
     cmd.assert()
         .success()
-        .stderr(predicate::str::contains("HEAD is now at"));
+        .stderr(predicate::str::is_match(".*Updating files:.*100%.*done").unwrap());
     Ok(())
 }
 

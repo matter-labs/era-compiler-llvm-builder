@@ -20,6 +20,7 @@ runs:
         check_name: ${{ matrix.name }} Test Results
         files: ${{ env.UNIT_TESTS_RESULTS_XML }}
         action_fail_on_inconclusive: true
+        comment_mode: off
 
     - name: Upload test results (MacOS)
       if: runner.os == 'macos'
@@ -28,6 +29,7 @@ runs:
         check_name: ${{ matrix.name }} Test Results
         files: ${{ env.UNIT_TESTS_RESULTS_XML }}
         action_fail_on_inconclusive: true
+        comment_mode: off
 
     - name: Upload test results (windows)
       if: runner.os == 'Windows'
@@ -36,3 +38,4 @@ runs:
         check_name: ${{ matrix.name }} Test Results
         files: ${{ env.UNIT_TESTS_RESULTS_XML }}
         action_fail_on_inconclusive: true
+        comment_mode: off

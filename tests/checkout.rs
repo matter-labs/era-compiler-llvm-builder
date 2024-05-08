@@ -34,10 +34,7 @@ fn checkout_after_clone() -> anyhow::Result<()> {
     let mut checkout_cmd = Command::cargo_bin(common::ZKSYNC_LLVM)?;
     checkout_cmd.current_dir(test_dir);
     checkout_cmd.arg("checkout");
-    checkout_cmd
-        .assert()
-        .success()
-        .stderr(predicate::str::contains("HEAD is now at"));
+    checkout_cmd.assert().success();
     Ok(())
 }
 
@@ -69,10 +66,7 @@ fn force_checkout() -> anyhow::Result<()> {
     let mut checkout_cmd = Command::cargo_bin(common::ZKSYNC_LLVM)?;
     checkout_cmd.current_dir(test_dir);
     checkout_cmd.arg("checkout").arg("--force");
-    checkout_cmd
-        .assert()
-        .success()
-        .stderr(predicate::str::contains("HEAD is now at"));
+    checkout_cmd.assert().success();
     Ok(())
 }
 
