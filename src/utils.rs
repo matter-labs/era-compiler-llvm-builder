@@ -10,11 +10,7 @@ use std::process::Command;
 use std::process::Stdio;
 use std::time::Duration;
 
-use downloader::Downloader;
-use flate2::read::GzDecoder;
 use path_slash::PathBufExt;
-use regex::Regex;
-use tar::Archive;
 
 /// The LLVM host repository URL.
 pub const LLVM_HOST_SOURCE_URL: &str = "https://github.com/llvm/llvm-project";
@@ -66,31 +62,16 @@ pub fn command(command: &mut Command, description: &str) -> anyhow::Result<()> {
 /// Download a file from the URL to the path.
 ///
 pub fn download(url: &str, path: &str) -> anyhow::Result<()> {
-    let mut downloader = Downloader::builder()
+    let mut downloader = downloader::Downloader::builder()
         .download_folder(Path::new(path))
         .parallel_requests(DOWNLOAD_PARALLEL_REQUESTS)
         .retries(DOWNLOAD_RETRIES)
         .timeout(Duration::from_secs(DOWNLOAD_TIMEOUT_SECONDS))
         .build()?;
-    let download = downloader::Download::new(url);
-
-    let results: Vec<Result<downloader::DownloadSummary, downloader::Error>> =
-        downloader.download(&[download])?.into_iter().collect();
-    if results
-        .iter()
-        .map(|result| {
-            result.as_ref().map(|summary| {
-                summary
-                    .status
-                    .iter()
-                    .all(|(_, status)| status == &http::status::StatusCode::OK)
-            })
-        })
-        .all(|result| result.is_err())
-    {
-        anyhow::bail!("MUSL download from `{url}` failed: {:?}", results);
+    let downloads = vec![downloader::Download::new(url)];
+    while let Err(error) = downloader.download(downloads.as_slice()) {
+        eprintln!("MUSL download from `{url}` failed: {:?}", error);
     }
-
     Ok(())
 }
 
@@ -99,8 +80,8 @@ pub fn download(url: &str, path: &str) -> anyhow::Result<()> {
 ///
 pub fn unpack_tar(filename: PathBuf, path: &str) -> anyhow::Result<()> {
     let tar_gz = File::open(filename)?;
-    let tar = GzDecoder::new(tar_gz);
-    let mut archive = Archive::new(tar);
+    let tar = flate2::read::GzDecoder::new(tar_gz);
+    let mut archive = tar::Archive::new(tar);
     archive.unpack(path)?;
     Ok(())
 }
@@ -249,10 +230,12 @@ pub fn get_xcode_version() -> anyhow::Result<u32> {
         .output()
         .map_err(|error| anyhow::anyhow!("`grep` process: {}", error))?;
     let version_string = String::from_utf8(grep_version.stdout)?;
-    let re = Regex::new(r"version: (\d+)\..*")?;
-    let captures = re.captures(version_string.as_str()).ok_or(anyhow::anyhow!(
-        "Failed to parse XCode version: {version_string}"
-    ))?;
+    let version_regex = regex::Regex::new(r"version: (\d+)\..*")?;
+    let captures = version_regex
+        .captures(version_string.as_str())
+        .ok_or(anyhow::anyhow!(
+            "Failed to parse XCode version: {version_string}"
+        ))?;
     let xcode_version: u32 = captures
         .get(1)
         .expect("Always has a major version")
