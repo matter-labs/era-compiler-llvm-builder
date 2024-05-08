@@ -21,7 +21,7 @@ use rstest::rstest;
 /// Returns `Ok(())` if the test passes.
 #[rstest]
 fn build_without_clone() -> anyhow::Result<()> {
-    let mut cmd = Command::cargo_bin(common::ZKEVM_LLVM)?;
+    let mut cmd = Command::cargo_bin(common::ZKSYNC_LLVM)?;
     let file = assert_fs::NamedTempFile::new(common::LLVM_LOCK_FILE)?;
     let path = file.parent().expect("Lockfile parent dir does not exist");
     cmd.current_dir(path);
@@ -48,8 +48,8 @@ fn build_without_clone() -> anyhow::Result<()> {
 #[rstest]
 #[timeout(std::time::Duration::from_secs(5000))]
 fn clone_build_and_clean() -> anyhow::Result<()> {
-    let mut cmd = Command::cargo_bin(common::ZKEVM_LLVM)?;
-    let lockfile = common::create_test_tmp_lockfile(common::ERA_LLVM_REPO_TEST_REF)?;
+    let mut cmd = Command::cargo_bin(common::ZKSYNC_LLVM)?;
+    let lockfile = common::create_test_tmp_lockfile(None)?;
     let test_dir = lockfile
         .parent()
         .expect("Lockfile parent dir does not exist");
@@ -58,14 +58,14 @@ fn clone_build_and_clean() -> anyhow::Result<()> {
     cmd.assert()
         .success()
         .stderr(predicate::str::is_match(".*Updating files:.*100%.*done").unwrap());
-    let mut build_cmd = Command::cargo_bin(common::ZKEVM_LLVM)?;
+    let mut build_cmd = Command::cargo_bin(common::ZKSYNC_LLVM)?;
     build_cmd.current_dir(test_dir);
     build_cmd
         .arg("build")
         .assert()
         .success()
         .stdout(predicate::str::is_match("Installing:.*").unwrap());
-    let mut clean_cmd = Command::cargo_bin(common::ZKEVM_LLVM)?;
+    let mut clean_cmd = Command::cargo_bin(common::ZKSYNC_LLVM)?;
     clean_cmd.current_dir(test_dir);
     clean_cmd.arg("clean");
     clean_cmd.assert().success();
@@ -88,8 +88,8 @@ fn clone_build_and_clean() -> anyhow::Result<()> {
 #[rstest]
 #[timeout(std::time::Duration::from_secs(5000))]
 fn clone_build_and_clean_musl() -> anyhow::Result<()> {
-    let mut cmd = Command::cargo_bin(common::ZKEVM_LLVM)?;
-    let lockfile = common::create_test_tmp_lockfile(common::ERA_LLVM_REPO_TEST_REF)?;
+    let mut cmd = Command::cargo_bin(common::ZKSYNC_LLVM)?;
+    let lockfile = common::create_test_tmp_lockfile(None)?;
     let test_dir = lockfile
         .parent()
         .expect("Lockfile parent dir does not exist");
@@ -98,7 +98,7 @@ fn clone_build_and_clean_musl() -> anyhow::Result<()> {
     cmd.assert()
         .success()
         .stderr(predicate::str::is_match(".*Updating files:.*100%.*done").unwrap());
-    let mut build_cmd = Command::cargo_bin(common::ZKEVM_LLVM)?;
+    let mut build_cmd = Command::cargo_bin(common::ZKSYNC_LLVM)?;
     build_cmd.current_dir(test_dir);
     build_cmd
         .arg("build")
@@ -107,7 +107,7 @@ fn clone_build_and_clean_musl() -> anyhow::Result<()> {
         .assert()
         .success()
         .stdout(predicate::str::is_match("Installing:.*").unwrap());
-    let mut clean_cmd = Command::cargo_bin(common::ZKEVM_LLVM)?;
+    let mut clean_cmd = Command::cargo_bin(common::ZKSYNC_LLVM)?;
     clean_cmd.current_dir(test_dir);
     clean_cmd.arg("clean");
     clean_cmd.assert().success();
@@ -130,8 +130,8 @@ fn clone_build_and_clean_musl() -> anyhow::Result<()> {
 #[rstest]
 #[timeout(std::time::Duration::from_secs(5000))]
 fn debug_build_with_tests_coverage() -> anyhow::Result<()> {
-    let mut cmd = Command::cargo_bin(common::ZKEVM_LLVM)?;
-    let lockfile = common::create_test_tmp_lockfile(common::ERA_LLVM_REPO_TEST_REF)?;
+    let mut cmd = Command::cargo_bin(common::ZKSYNC_LLVM)?;
+    let lockfile = common::create_test_tmp_lockfile(None)?;
     let test_dir = lockfile
         .parent()
         .expect("Lockfile parent dir does not exist");
@@ -140,7 +140,7 @@ fn debug_build_with_tests_coverage() -> anyhow::Result<()> {
     cmd.assert()
         .success()
         .stderr(predicate::str::is_match(".*Updating files:.*100%.*done").unwrap());
-    let mut build_cmd = Command::cargo_bin(common::ZKEVM_LLVM)?;
+    let mut build_cmd = Command::cargo_bin(common::ZKSYNC_LLVM)?;
     build_cmd.current_dir(test_dir);
     build_cmd
         .arg("build")

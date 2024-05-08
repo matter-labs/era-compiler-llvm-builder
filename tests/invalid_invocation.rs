@@ -30,7 +30,7 @@ use rstest::rstest;
 #[case("clone", "--invalid-clone-option")]
 #[case("checkout", "--invalid-checkout-option")]
 fn invalid_option(#[case] subcommand: &str, #[case] option: &str) -> anyhow::Result<()> {
-    let mut cmd = Command::cargo_bin(common::ZKEVM_LLVM)?;
+    let mut cmd = Command::cargo_bin(common::ZKSYNC_LLVM)?;
     if subcommand != "" {
         cmd.arg(subcommand);
     }
@@ -65,7 +65,7 @@ fn invalid_option(#[case] subcommand: &str, #[case] option: &str) -> anyhow::Res
 #[case("123")]
 #[case("$$.@!;-a3")]
 fn invalid_subcommand(#[case] subcommand: &str) -> anyhow::Result<()> {
-    let mut cmd = Command::cargo_bin(common::ZKEVM_LLVM)?;
+    let mut cmd = Command::cargo_bin(common::ZKSYNC_LLVM)?;
     cmd.arg(subcommand);
     cmd.assert()
         .failure()
