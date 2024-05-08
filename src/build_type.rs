@@ -1,9 +1,9 @@
 //!
-//! The zkEVM LLVM build type.
+//! The ZKsync LLVM build type.
 //!
 
 ///
-/// The zkEVM LLVM build type.
+/// The ZKsync LLVM build type.
 ///
 #[derive(Debug, PartialEq, Eq)]
 pub enum BuildType {

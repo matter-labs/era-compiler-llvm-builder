@@ -1,5 +1,5 @@
 //!
-//! The zkEVM LLVM builder lock file.
+//! The ZKsync LLVM builder lock file.
 //!
 
 use anyhow::Context;

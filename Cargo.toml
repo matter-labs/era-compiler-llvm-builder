@@ -1,17 +1,18 @@
 [package]
 name = "compiler-llvm-builder"
-version = "1.0.24"
+version = "1.0.25"
 authors = [
     "Oleksandr Zarudnyi <a.zarudnyy@matterlabs.dev>",
+    "Anton Baliasnikov <aba@matterlabs.dev>",
 ]
 license = "MIT OR Apache-2.0"
 edition = "2021"
-description = "EraVM LLVM Framework Builder"
+description = "ZKsync LLVM Framework Builder"
 repository = "https://github.com/matter-labs/era-compiler-llvm-builder"
 
 [[bin]]
-name = "zkevm-llvm"
-path = "src/zkevm_llvm/main.rs"
+name = "zksync-llvm"
+path = "src/zksync_llvm/main.rs"
 
 [lib]
 doctest = false

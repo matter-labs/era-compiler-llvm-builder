@@ -1,14 +1,14 @@
 //!
-//! The zkEVM LLVM builder arguments.
+//! The ZKsync LLVM builder arguments.
 //!
 
 use structopt::StructOpt;
 
 ///
-/// The zkEVM LLVM builder arguments.
+/// The ZKsync LLVM builder arguments.
 ///
 #[derive(Debug, StructOpt)]
-#[structopt(name = "llvm-builder", about = "The zkEVM LLVM framework builder")]
+#[structopt(name = "llvm-builder", about = "The ZKsync LLVM framework builder")]
 pub enum Arguments {
     /// Clone the branch specified in `LLVM.lock`.
     Clone {

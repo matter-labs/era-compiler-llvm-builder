@@ -1,5 +1,5 @@
 //!
-//! The zkEVM LLVM builder.
+//! The ZKsync LLVM builder.
 //!
 
 pub(crate) mod arguments;
