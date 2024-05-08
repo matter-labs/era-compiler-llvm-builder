@@ -2,6 +2,9 @@
 //! The shared options for building various platforms.
 //!
 
+use std::path::Path;
+use std::process::Command;
+
 /// The build options shared by all platforms.
 pub const SHARED_BUILD_OPTS: [&str; 16] = [
     "-DPACKAGE_VENDOR='Matter Labs'",
@@ -30,6 +33,78 @@ pub const SHARED_BUILD_OPTS_NOT_MUSL: [&str; 5] = [
     "-DLLVM_BUILD_RUNTIMES='Off'",
     "-DLLVM_INCLUDE_RUNTIMES='Off'",
 ];
+
+///
+/// The `musl` building sequence.
+///
+pub fn build_musl(build_directory: &Path, target_directory: &Path) -> anyhow::Result<()> {
+    std::fs::create_dir_all(build_directory)?;
+    std::fs::create_dir_all(target_directory)?;
+
+    crate::utils::command(
+        Command::new("../configure")
+            .current_dir(build_directory)
+            .arg(format!("--prefix={}", target_directory.to_string_lossy()))
+            .arg(format!(
+                "--syslibdir={}/lib/",
+                target_directory.to_string_lossy()
+            ))
+            .arg("--enable-wrapper='clang'"),
+        "MUSL configuring",
+    )?;
+    crate::utils::command(
+        Command::new("make")
+            .current_dir(build_directory)
+            .arg("-j")
+            .arg(num_cpus::get().to_string()),
+        "MUSL building",
+    )?;
+    crate::utils::command(
+        Command::new("make")
+            .current_dir(build_directory)
+            .arg("install"),
+        "MUSL installing",
+    )?;
+
+    let mut include_directory = target_directory.to_path_buf();
+    include_directory.push("include/");
+
+    let mut asm_include_directory = include_directory.clone();
+    asm_include_directory.push("asm/");
+    std::fs::create_dir_all(asm_include_directory.as_path())?;
+
+    let mut types_header_path = asm_include_directory.clone();
+    types_header_path.push("types.h");
+
+    let copy_options = fs_extra::dir::CopyOptions {
+        overwrite: true,
+        copy_inside: true,
+        ..Default::default()
+    };
+    fs_extra::dir::copy("/usr/include/linux", include_directory, &copy_options)?;
+
+    let copy_options = fs_extra::dir::CopyOptions {
+        overwrite: true,
+        copy_inside: true,
+        content_only: true,
+        ..Default::default()
+    };
+    fs_extra::dir::copy(
+        "/usr/include/asm-generic",
+        asm_include_directory,
+        &copy_options,
+    )?;
+
+    crate::utils::command(
+        Command::new("sed")
+            .arg("-i")
+            .arg("s/asm-generic/asm/")
+            .arg(types_header_path),
+        "types_header asm signature replacement",
+    )?;
+
+    Ok(())
+}
 
 ///
 /// The build options to enable assertions.

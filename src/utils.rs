@@ -2,7 +2,6 @@
 //! The LLVM builder utilities.
 //!
 
-use std::env;
 use std::fs::File;
 use std::path::Path;
 use std::path::PathBuf;
@@ -42,10 +41,10 @@ pub const MUSL_SNAPSHOTS_URL: &str = "https://git.musl-libc.org/cgit/musl/snapsh
 /// Checks the status and prints `stderr`.
 ///
 pub fn command(command: &mut Command, description: &str) -> anyhow::Result<()> {
-    if env::var("VERBOSE").is_ok() {
+    if std::env::var("VERBOSE").is_ok() {
         println!("\ndescription: {}; command: {:?}", description, command);
     }
-    if env::var("DRY_RUN").is_ok() {
+    if std::env::var("DRY_RUN").is_ok() {
         println!("\tOnly a dry run; not executing the command.");
     } else {
         let status = command
@@ -95,78 +94,6 @@ pub fn download_musl(name: &str) -> anyhow::Result<()> {
     download(url.as_str(), crate::LLVMPath::DIRECTORY_LLVM_TARGET)?;
     let musl_tarball = crate::LLVMPath::musl_source(tar_file_name.as_str())?;
     unpack_tar(musl_tarball, crate::LLVMPath::DIRECTORY_LLVM_TARGET)?;
-    Ok(())
-}
-
-///
-/// The `musl` building sequence.
-///
-pub fn build_musl(build_directory: &Path, target_directory: &Path) -> anyhow::Result<()> {
-    std::fs::create_dir_all(build_directory)?;
-    std::fs::create_dir_all(target_directory)?;
-
-    command(
-        Command::new("../configure")
-            .current_dir(build_directory)
-            .arg(format!("--prefix={}", target_directory.to_string_lossy()))
-            .arg(format!(
-                "--syslibdir={}/lib/",
-                target_directory.to_string_lossy()
-            ))
-            .arg("--enable-wrapper='clang'"),
-        "MUSL configuring",
-    )?;
-    command(
-        Command::new("make")
-            .current_dir(build_directory)
-            .arg("-j")
-            .arg(num_cpus::get().to_string()),
-        "MUSL building",
-    )?;
-    command(
-        Command::new("make")
-            .current_dir(build_directory)
-            .arg("install"),
-        "MUSL installing",
-    )?;
-
-    let mut include_directory = target_directory.to_path_buf();
-    include_directory.push("include/");
-
-    let mut asm_include_directory = include_directory.clone();
-    asm_include_directory.push("asm/");
-    std::fs::create_dir_all(asm_include_directory.as_path())?;
-
-    let mut types_header_path = asm_include_directory.clone();
-    types_header_path.push("types.h");
-
-    let copy_options = fs_extra::dir::CopyOptions {
-        overwrite: true,
-        copy_inside: true,
-        ..Default::default()
-    };
-    fs_extra::dir::copy("/usr/include/linux", include_directory, &copy_options)?;
-
-    let copy_options = fs_extra::dir::CopyOptions {
-        overwrite: true,
-        copy_inside: true,
-        content_only: true,
-        ..Default::default()
-    };
-    fs_extra::dir::copy(
-        "/usr/include/asm-generic",
-        asm_include_directory,
-        &copy_options,
-    )?;
-
-    command(
-        Command::new("sed")
-            .arg("-i")
-            .arg("s/asm-generic/asm/")
-            .arg(types_header_path),
-        "types_header asm signature replacement",
-    )?;
-
     Ok(())
 }
 
