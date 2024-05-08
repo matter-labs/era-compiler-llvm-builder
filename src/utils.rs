@@ -75,12 +75,12 @@ pub fn download(url: &str, path: &str) -> anyhow::Result<()> {
     let dl = downloader::Download::new(url);
     for r in downloader.download(&[dl])? {
         let summary = r.map_err(|error| anyhow::anyhow!("{}", error))?;
-        for download_result in summary.status {
-            let url = download_result.0;
-            let http_result = download_result.1;
-            if http_result != http::status::StatusCode::OK {
-                anyhow::bail!("{url} failed with HTTP code: {http_result}");
-            }
+        if !summary
+            .status
+            .iter()
+            .any(|&(_, status)| status == http::status::StatusCode::OK)
+        {
+            anyhow::bail!("MUSL download failed! for {}", url);
         }
     }
     Ok(())
