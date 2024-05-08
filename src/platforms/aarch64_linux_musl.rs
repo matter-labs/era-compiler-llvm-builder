@@ -47,7 +47,7 @@ pub fn build(
     if !LLVMPath::musl_source(musl_name)?.exists() {
         crate::utils::download_musl(musl_name)?;
     }
-    crate::utils::build_musl(musl_build.as_path(), musl_target.as_path())?;
+    crate::platforms::shared::build_musl(musl_build.as_path(), musl_target.as_path())?;
     build_crt(
         targets.clone(),
         llvm_host_module_llvm.as_path(),
