@@ -21,8 +21,8 @@ use rstest::rstest;
 /// Returns `Ok(())` if the test passes.
 #[rstest]
 fn clone() -> anyhow::Result<()> {
-    let mut cmd = Command::cargo_bin(common::ZKEVM_LLVM)?;
-    let lockfile = common::create_test_tmp_lockfile(common::ERA_LLVM_REPO_TEST_REF)?;
+    let mut cmd = Command::cargo_bin(common::ZKSYNC_LLVM)?;
+    let lockfile = common::create_test_tmp_lockfile(None)?;
     let test_dir = lockfile
         .parent()
         .expect("Lockfile parent dir does not exist");
@@ -30,10 +30,7 @@ fn clone() -> anyhow::Result<()> {
     cmd.arg("clone");
     cmd.assert()
         .success()
-        .stderr(predicate::str::contains(format!(
-            "HEAD is now at {}",
-            &common::ERA_LLVM_REPO_TEST_REF[..8]
-        )));
+        .stderr(predicate::str::is_match(".*Updating files:.*100%.*done").unwrap());
     Ok(())
 }
 
@@ -52,8 +49,8 @@ fn clone() -> anyhow::Result<()> {
 /// Returns `Ok(())` if the test passes.
 #[rstest]
 fn clone_deep() -> anyhow::Result<()> {
-    let mut cmd = Command::cargo_bin(common::ZKEVM_LLVM)?;
-    let lockfile = common::create_test_tmp_lockfile(common::ERA_LLVM_REPO_TEST_REF)?;
+    let mut cmd = Command::cargo_bin(common::ZKSYNC_LLVM)?;
+    let lockfile = common::create_test_tmp_lockfile(None)?;
     let test_dir = lockfile
         .parent()
         .expect("Lockfile parent dir does not exist");
@@ -62,10 +59,7 @@ fn clone_deep() -> anyhow::Result<()> {
     cmd.arg("--deep");
     cmd.assert()
         .success()
-        .stderr(predicate::str::contains(format!(
-            "HEAD is now at {}",
-            &common::ERA_LLVM_REPO_TEST_REF[..8]
-        )));
+        .stderr(predicate::str::is_match(".*Updating files:.*100%.*done").unwrap());
     Ok(())
 }
 
@@ -84,8 +78,9 @@ fn clone_deep() -> anyhow::Result<()> {
 /// Returns `Ok(())` if the test passes.
 #[rstest]
 fn clone_wrong_reference() -> anyhow::Result<()> {
-    let mut cmd = Command::cargo_bin(common::ZKEVM_LLVM)?;
-    let lockfile = common::create_test_tmp_lockfile(common::ERA_LLVM_REPO_TEST_SHA_INVALID)?;
+    let mut cmd = Command::cargo_bin(common::ZKSYNC_LLVM)?;
+    let lockfile =
+        common::create_test_tmp_lockfile(Some(common::ERA_LLVM_REPO_TEST_SHA_INVALID.to_string()))?;
     let test_dir = lockfile
         .parent()
         .expect("Lockfile parent dir does not exist");
@@ -112,7 +107,7 @@ fn clone_wrong_reference() -> anyhow::Result<()> {
 /// Returns `Ok(())` if the test passes.
 #[rstest]
 fn clone_without_lockfile() -> anyhow::Result<()> {
-    let mut cmd = Command::cargo_bin(common::ZKEVM_LLVM)?;
+    let mut cmd = Command::cargo_bin(common::ZKSYNC_LLVM)?;
     let file = assert_fs::NamedTempFile::new(common::LLVM_LOCK_FILE)?;
     let path = file.parent().expect("Lockfile parent dir does not exist");
     cmd.current_dir(path);

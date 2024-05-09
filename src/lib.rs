@@ -1,5 +1,5 @@
 //!
-//! The zkEVM LLVM builder library.
+//! The ZKsync LLVM builder library.
 //!
 
 pub mod build_type;

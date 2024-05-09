@@ -1,5 +1,5 @@
 //!
-//! The zkEVM LLVM builder constants.
+//! The ZKsync LLVM builder constants.
 //!
 
 use std::path::PathBuf;

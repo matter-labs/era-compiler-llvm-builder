@@ -30,7 +30,7 @@ use rstest::rstest;
 #[case("clone")]
 #[case("checkout")]
 fn version(#[case] subcommand: String) -> anyhow::Result<()> {
-    let mut cmd = Command::cargo_bin(common::ZKEVM_LLVM)?;
+    let mut cmd = Command::cargo_bin(common::ZKSYNC_LLVM)?;
     if subcommand != "" {
         cmd.arg(subcommand);
     }

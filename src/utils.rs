@@ -67,9 +67,8 @@ pub fn download(url: &str, path: &str) -> anyhow::Result<()> {
         .retries(DOWNLOAD_RETRIES)
         .timeout(Duration::from_secs(DOWNLOAD_TIMEOUT_SECONDS))
         .build()?;
-    let downloads = vec![downloader::Download::new(url)];
-    while let Err(error) = downloader.download(downloads.as_slice()) {
-        eprintln!("MUSL download from `{url}` failed: {:?}", error);
+    while let Err(error) = downloader.download(&[downloader::Download::new(url)]) {
+        eprintln!("MUSL download from `{url}` failed: {error}");
     }
     Ok(())
 }

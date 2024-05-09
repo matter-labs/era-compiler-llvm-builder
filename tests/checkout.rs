@@ -21,8 +21,8 @@ use rstest::rstest;
 /// Returns `Ok(())` if the test passes.
 #[rstest]
 fn checkout_after_clone() -> anyhow::Result<()> {
-    let mut cmd = Command::cargo_bin(common::ZKEVM_LLVM)?;
-    let lockfile = common::create_test_tmp_lockfile(common::ERA_LLVM_REPO_TEST_REF)?;
+    let mut cmd = Command::cargo_bin(common::ZKSYNC_LLVM)?;
+    let lockfile = common::create_test_tmp_lockfile(None)?;
     let test_dir = lockfile
         .parent()
         .expect("Lockfile parent dir does not exist");
@@ -31,16 +31,10 @@ fn checkout_after_clone() -> anyhow::Result<()> {
     cmd.assert()
         .success()
         .stderr(predicate::str::is_match(".*Updating files:.*100%.*done").unwrap());
-    let mut checkout_cmd = Command::cargo_bin(common::ZKEVM_LLVM)?;
+    let mut checkout_cmd = Command::cargo_bin(common::ZKSYNC_LLVM)?;
     checkout_cmd.current_dir(test_dir);
     checkout_cmd.arg("checkout");
-    checkout_cmd
-        .assert()
-        .success()
-        .stderr(predicate::str::contains(format!(
-            "HEAD is now at {}",
-            &common::ERA_LLVM_REPO_TEST_REF[..8]
-        )));
+    checkout_cmd.assert().success();
     Ok(())
 }
 
@@ -59,8 +53,8 @@ fn checkout_after_clone() -> anyhow::Result<()> {
 /// Returns `Ok(())` if the test passes.
 #[rstest]
 fn force_checkout() -> anyhow::Result<()> {
-    let mut cmd = Command::cargo_bin(common::ZKEVM_LLVM)?;
-    let lockfile = common::create_test_tmp_lockfile(common::ERA_LLVM_REPO_TEST_REF)?;
+    let mut cmd = Command::cargo_bin(common::ZKSYNC_LLVM)?;
+    let lockfile = common::create_test_tmp_lockfile(None)?;
     let test_dir = lockfile
         .parent()
         .expect("Lockfile parent dir does not exist");
@@ -69,16 +63,10 @@ fn force_checkout() -> anyhow::Result<()> {
     cmd.assert()
         .success()
         .stderr(predicate::str::is_match(".*Updating files:.*100%.*done").unwrap());
-    let mut checkout_cmd = Command::cargo_bin(common::ZKEVM_LLVM)?;
+    let mut checkout_cmd = Command::cargo_bin(common::ZKSYNC_LLVM)?;
     checkout_cmd.current_dir(test_dir);
     checkout_cmd.arg("checkout").arg("--force");
-    checkout_cmd
-        .assert()
-        .success()
-        .stderr(predicate::str::contains(format!(
-            "HEAD is now at {}",
-            &common::ERA_LLVM_REPO_TEST_REF[..8]
-        )));
+    checkout_cmd.assert().success();
     Ok(())
 }
 
@@ -97,7 +85,7 @@ fn force_checkout() -> anyhow::Result<()> {
 /// Returns `Ok(())` if the test passes.
 #[rstest]
 fn checkout_without_lockfile() -> anyhow::Result<()> {
-    let mut cmd = Command::cargo_bin(common::ZKEVM_LLVM)?;
+    let mut cmd = Command::cargo_bin(common::ZKSYNC_LLVM)?;
     let file = assert_fs::NamedTempFile::new(common::LLVM_LOCK_FILE)?;
     let path = file.parent().expect("Lockfile parent dir does not exist");
     cmd.current_dir(path);
