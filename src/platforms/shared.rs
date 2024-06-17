@@ -2,6 +2,7 @@
 //! The shared options for building various platforms.
 //!
 
+use crate::sanitizer::Sanitizer;
 use std::path::Path;
 use std::process::Command;
 
@@ -114,6 +115,16 @@ pub fn shared_build_opts_assertions(enabled: bool) -> Vec<String> {
         "-DLLVM_ENABLE_ASSERTIONS='{}'",
         if enabled { "On" } else { "Off" },
     )]
+}
+
+///
+/// The build options to enable sanitizers.
+///
+pub fn shared_build_opts_sanitizers(sanitizer: Option<Sanitizer>) -> Vec<String> {
+    match sanitizer {
+        Some(sanitizer) => vec![format!("-DLLVM_USE_SANITIZER='{}'", sanitizer)],
+        None => vec![],
+    }
 }
 
 ///

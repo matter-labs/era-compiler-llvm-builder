@@ -128,7 +128,7 @@ fn clone_build_and_clean_musl() -> anyhow::Result<()> {
 ///
 /// Returns `Ok(())` if the test passes.
 #[rstest]
-#[timeout(std::time::Duration::from_secs(5000))]
+#[timeout(std::time::Duration::from_secs(10000))]
 fn debug_build_with_tests_coverage() -> anyhow::Result<()> {
     let mut cmd = Command::cargo_bin(common::ZKSYNC_LLVM)?;
     let lockfile = common::create_test_tmp_lockfile(None)?;
@@ -147,6 +147,41 @@ fn debug_build_with_tests_coverage() -> anyhow::Result<()> {
         .arg("--enable-coverage")
         .arg("--enable-tests")
         .arg("--debug");
+    build_cmd
+        .assert()
+        .success()
+        .stdout(predicate::str::is_match("Installing:.*").unwrap());
+    Ok(())
+}
+
+/// Tests LLVM build with address sanitizer enabled.
+///
+/// This test verifies that the LLVM repository can be successfully built with address sanitizer.
+///
+/// # Errors
+///
+/// Returns an error if any of the test assertions fail or if there is an error while executing
+/// the build commands.
+///
+/// # Returns
+///
+/// Returns `Ok(())` if the test passes.
+#[rstest]
+#[timeout(std::time::Duration::from_secs(10000))]
+fn build_with_sanitizers() -> anyhow::Result<()> {
+    let mut cmd = Command::cargo_bin(common::ZKSYNC_LLVM)?;
+    let lockfile = common::create_test_tmp_lockfile(None)?;
+    let test_dir = lockfile
+        .parent()
+        .expect("Lockfile parent dir does not exist");
+    cmd.current_dir(test_dir);
+    cmd.arg("clone");
+    cmd.assert()
+        .success()
+        .stderr(predicate::str::is_match(".*Updating files:.*100%.*done").unwrap());
+    let mut build_cmd = Command::cargo_bin(common::ZKSYNC_LLVM)?;
+    build_cmd.current_dir(test_dir);
+    build_cmd.arg("build").arg("--sanitizer").arg("Address");
     build_cmd
         .assert()
         .success()

@@ -9,7 +9,7 @@ runs:
         LIBSTDCPP_SOURCE_PATH: "C:/a/_temp/msys64/mingw64/lib/libstdc++.a"
       run: |
         cargo install cargo2junit
-        [ "${RUNNER_OS}" = "Windows" ] && ADD_FLAGS="--skip debug_build_with_tests_coverage"
+        [ "${RUNNER_OS}" = "Windows" ] && ADD_FLAGS="--skip debug_build_with_tests_coverage --skip build_with_sanitizers"
         cargo test --no-fail-fast -- ${ADD_FLAGS} -Z unstable-options --format json \
           | cargo2junit | tee "${UNIT_TESTS_RESULTS_XML}"
 
