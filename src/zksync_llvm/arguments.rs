@@ -46,6 +46,9 @@ pub enum Arguments {
         /// Whether to build with assertions enabled or not.
         #[structopt(long = "enable-assertions")]
         enable_assertions: bool,
+        /// Build LLVM with sanitizer enabled (`Address`, `Memory`, `MemoryWithOrigins`, `Undefined`, `Thread`, `DataFlow`, or `Address;Undefined`).
+        #[structopt(long = "sanitizer")]
+        sanitizer: Option<compiler_llvm_builder::sanitizer::Sanitizer>,
     },
     /// Checkout the branch specified in `LLVM.lock`.
     Checkout {

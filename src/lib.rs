@@ -6,6 +6,7 @@ pub mod build_type;
 pub mod llvm_path;
 pub mod lock;
 pub mod platforms;
+pub mod sanitizer;
 pub mod utils;
 
 pub use self::build_type::BuildType;
@@ -150,6 +151,7 @@ pub fn build(
     extra_args: Vec<String>,
     use_ccache: bool,
     enable_assertions: bool,
+    sanitizer: Option<sanitizer::Sanitizer>,
 ) -> anyhow::Result<()> {
     std::fs::create_dir_all(LLVMPath::DIRECTORY_LLVM_TARGET)?;
 
@@ -164,6 +166,7 @@ pub fn build(
                     extra_args,
                     use_ccache,
                     enable_assertions,
+                    sanitizer,
                 )?;
             } else if target_env == platforms::TargetEnv::GNU {
                 platforms::x86_64_linux_gnu::build(
@@ -174,6 +177,7 @@ pub fn build(
                     extra_args,
                     use_ccache,
                     enable_assertions,
+                    sanitizer,
                 )?;
             } else {
                 anyhow::bail!("Unsupported target environment for x86_64 and Linux");
@@ -187,6 +191,7 @@ pub fn build(
                 extra_args,
                 use_ccache,
                 enable_assertions,
+                sanitizer,
             )?;
         } else if cfg!(target_os = "windows") && cfg!(target_env = "gnu") {
             platforms::x86_64_windows_gnu::build(
@@ -197,6 +202,7 @@ pub fn build(
                 extra_args,
                 use_ccache,
                 enable_assertions,
+                sanitizer,
             )?;
         } else {
             anyhow::bail!("Unsupported target OS for x86_64");
@@ -212,6 +218,7 @@ pub fn build(
                     extra_args,
                     use_ccache,
                     enable_assertions,
+                    sanitizer,
                 )?;
             } else if target_env == platforms::TargetEnv::GNU {
                 platforms::aarch64_linux_gnu::build(
@@ -222,6 +229,7 @@ pub fn build(
                     extra_args,
                     use_ccache,
                     enable_assertions,
+                    sanitizer,
                 )?;
             } else {
                 anyhow::bail!("Unsupported target environment for aarch64 and Linux");
@@ -235,6 +243,7 @@ pub fn build(
                 extra_args,
                 use_ccache,
                 enable_assertions,
+                sanitizer,
             )?;
         } else {
             anyhow::bail!("Unsupported target OS for aarch64");

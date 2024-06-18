@@ -18,6 +18,17 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+
+  # Check for cargo licensing issues
+  cargo-license:
+    uses: matter-labs/era-compiler-ci/.github/workflows/cargo-license.yaml@v1
+    secrets: inherit
+
+  # Check for secrets leak in the repository
+  secrets-scanner:
+    uses: matter-labs/era-compiler-ci/.github/workflows/secrets-scanner.yaml@v1
+    secrets: inherit
+
   check-formatting:
     name: Check formatting
     runs-on: ubuntu-latest
@@ -56,7 +67,7 @@ jobs:
 
       - name: Prepare Windows env
         if: runner.os == 'Windows'
-        uses: ./.github/actions/prepare-msys
+        uses: matter-labs/era-compiler-ci/.github/actions/prepare-msys@v1
 
       - name: Prepare MacOS environment
         shell: bash

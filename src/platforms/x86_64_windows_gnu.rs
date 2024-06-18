@@ -9,10 +9,12 @@ use std::process::Command;
 use crate::build_type::BuildType;
 use crate::llvm_path::LLVMPath;
 use crate::platforms::Platform;
+use crate::sanitizer::Sanitizer;
 
 ///
 /// The building sequence.
 ///
+#[allow(clippy::too_many_arguments)]
 pub fn build(
     build_type: BuildType,
     targets: HashSet<Platform>,
@@ -21,6 +23,7 @@ pub fn build(
     extra_args: Vec<String>,
     use_ccache: bool,
     enable_assertions: bool,
+    sanitizer: Option<Sanitizer>,
 ) -> anyhow::Result<()> {
     crate::utils::check_presence("cmake")?;
     crate::utils::check_presence("clang")?;
@@ -78,6 +81,9 @@ pub fn build(
             ))
             .args(crate::platforms::shared::shared_build_opts_assertions(
                 enable_assertions,
+            ))
+            .args(crate::platforms::shared::shared_build_opts_sanitizers(
+                sanitizer,
             )),
         "LLVM building cmake",
     )?;

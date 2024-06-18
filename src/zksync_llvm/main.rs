@@ -56,6 +56,7 @@ fn main_inner() -> anyhow::Result<()> {
             extra_args,
             use_ccache,
             enable_assertions,
+            sanitizer,
         } => {
             let build_type = compiler_llvm_builder::BuildType::from(debug);
 
@@ -94,6 +95,7 @@ fn main_inner() -> anyhow::Result<()> {
                 extra_args_unescaped,
                 use_ccache,
                 enable_assertions,
+                sanitizer,
             )?;
         }
         Arguments::Checkout { force } => {
