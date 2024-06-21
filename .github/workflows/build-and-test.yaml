@@ -19,27 +19,21 @@ concurrency:
 
 jobs:
 
-  # Check for cargo licensing issues
-  cargo-license:
-    uses: matter-labs/era-compiler-ci/.github/workflows/cargo-license.yaml@v1
-    secrets: inherit
-
   # Check for secrets leak in the repository
   secrets-scanner:
     uses: matter-labs/era-compiler-ci/.github/workflows/secrets-scanner.yaml@v1
     secrets: inherit
 
-  check-formatting:
-    name: Check formatting
+  cargo-check:
     runs-on: ubuntu-latest
     container:
       image: matterlabs/llvm_runner:ubuntu22-llvm17-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Run fmt
-        run: cargo fmt --check
-      - name: Run clippy
-        run: cargo clippy
+      - name: Cargo checks
+        uses: matter-labs/era-compiler-ci/.github/actions/cargo-check@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
 
   build-and-test:
     needs: check-formatting
