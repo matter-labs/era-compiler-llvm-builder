@@ -30,6 +30,9 @@ pub enum Arguments {
         /// Additional targets to build LLVM with.
         #[structopt(long = "targets", multiple = true)]
         targets: Vec<String>,
+        /// The default target to build LLVM with.
+        #[structopt(long = "default-target")]
+        default_target: Option<compiler_llvm_builder::platforms::Platform>,
         /// Whether to build the LLVM tests.
         #[structopt(long = "enable-tests")]
         enable_tests: bool,
