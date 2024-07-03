@@ -3,6 +3,7 @@
 //!
 
 use crate::sanitizer::Sanitizer;
+use crate::Platform;
 use std::path::Path;
 use std::process::Command;
 
@@ -27,13 +28,28 @@ pub const SHARED_BUILD_OPTS: [&str; 16] = [
 ];
 
 /// The build options shared by all platforms except MUSL.
-pub const SHARED_BUILD_OPTS_NOT_MUSL: [&str; 5] = [
-    "-DLLVM_DEFAULT_TARGET_TRIPLE='eravm'",
+pub const SHARED_BUILD_OPTS_NOT_MUSL: [&str; 4] = [
     "-DLLVM_OPTIMIZED_TABLEGEN='On'",
     "-DLLVM_BUILD_RUNTIME='Off'",
     "-DLLVM_BUILD_RUNTIMES='Off'",
     "-DLLVM_INCLUDE_RUNTIMES='Off'",
 ];
+
+///
+/// The build options to set the default target.
+///
+pub fn shared_build_opts_default_target(target: Option<Platform>) -> Vec<String> {
+    match target {
+        Some(target) => vec![format!(
+            "-DLLVM_DEFAULT_TARGET_TRIPLE='{}'",
+            target.to_string()
+        )],
+        None => vec![format!(
+            "-DLLVM_DEFAULT_TARGET_TRIPLE='{}'",
+            Platform::EraVM
+        )],
+    }
+}
 
 ///
 /// The `musl` building sequence.

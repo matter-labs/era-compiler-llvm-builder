@@ -18,6 +18,7 @@ use crate::sanitizer::Sanitizer;
 pub fn build(
     build_type: BuildType,
     targets: HashSet<Platform>,
+    default_target: Option<Platform>,
     enable_tests: bool,
     enable_coverage: bool,
     extra_args: Vec<String>,
@@ -69,6 +70,7 @@ pub fn build(
     build_target(
         build_type,
         targets,
+        default_target,
         llvm_module_llvm.as_path(),
         llvm_build_final.as_path(),
         llvm_target_final.as_path(),
@@ -255,6 +257,7 @@ fn build_host(
 fn build_target(
     build_type: BuildType,
     targets: HashSet<Platform>,
+    default_target: Option<Platform>,
     source_directory: &Path,
     build_directory: &Path,
     target_directory: &Path,
@@ -310,6 +313,9 @@ fn build_target(
                 .as_str(),
                 "-DLLVM_ENABLE_PROJECTS='llvm;lld'",
             ])
+            .args(crate::platforms::shared::shared_build_opts_default_target(
+                default_target,
+            ))
             .args(crate::platforms::shared::SHARED_BUILD_OPTS)
             .args(crate::platforms::shared::SHARED_BUILD_OPTS_NOT_MUSL)
             .args(crate::platforms::shared::shared_build_opts_tests(

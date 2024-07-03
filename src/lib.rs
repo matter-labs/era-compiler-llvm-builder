@@ -146,6 +146,7 @@ pub fn build(
     build_type: BuildType,
     target_env: platforms::TargetEnv,
     targets: HashSet<Platform>,
+    default_target: Option<Platform>,
     enable_tests: bool,
     enable_coverage: bool,
     extra_args: Vec<String>,
@@ -161,6 +162,7 @@ pub fn build(
                 platforms::x86_64_linux_musl::build(
                     build_type,
                     targets,
+                    default_target,
                     enable_tests,
                     enable_coverage,
                     extra_args,
@@ -172,6 +174,7 @@ pub fn build(
                 platforms::x86_64_linux_gnu::build(
                     build_type,
                     targets,
+                    default_target,
                     enable_tests,
                     enable_coverage,
                     extra_args,
@@ -186,6 +189,7 @@ pub fn build(
             platforms::x86_64_macos::build(
                 build_type,
                 targets,
+                default_target,
                 enable_tests,
                 enable_coverage,
                 extra_args,
@@ -197,6 +201,7 @@ pub fn build(
             platforms::x86_64_windows_gnu::build(
                 build_type,
                 targets,
+                default_target,
                 enable_tests,
                 enable_coverage,
                 extra_args,
@@ -213,6 +218,7 @@ pub fn build(
                 platforms::aarch64_linux_musl::build(
                     build_type,
                     targets,
+                    default_target,
                     enable_tests,
                     enable_coverage,
                     extra_args,
@@ -224,6 +230,7 @@ pub fn build(
                 platforms::aarch64_linux_gnu::build(
                     build_type,
                     targets,
+                    default_target,
                     enable_tests,
                     enable_coverage,
                     extra_args,
@@ -238,6 +245,7 @@ pub fn build(
             platforms::aarch64_macos::build(
                 build_type,
                 targets,
+                default_target,
                 enable_tests,
                 enable_coverage,
                 extra_args,

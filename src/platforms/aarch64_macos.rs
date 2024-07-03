@@ -17,6 +17,7 @@ use crate::sanitizer::Sanitizer;
 pub fn build(
     build_type: BuildType,
     targets: HashSet<Platform>,
+    default_target: Option<Platform>,
     enable_tests: bool,
     enable_coverage: bool,
     extra_args: Vec<String>,
@@ -58,6 +59,9 @@ pub fn build(
                 "-DLLVM_ENABLE_PROJECTS='lld'",
                 "-DCMAKE_OSX_DEPLOYMENT_TARGET='11.0'",
             ])
+            .args(crate::platforms::shared::shared_build_opts_default_target(
+                default_target,
+            ))
             .args(crate::platforms::shared::shared_build_opts_tests(
                 enable_tests,
             ))
