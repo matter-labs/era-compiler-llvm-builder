@@ -17,7 +17,7 @@ pub enum Arguments {
         deep: bool,
         /// Target environment to build LLVM (GNU or MUSL).
         #[structopt(long = "target-env", default_value = "gnu")]
-        target_env: compiler_llvm_builder::platforms::TargetEnv,
+        target_env: compiler_llvm_builder::target_env::TargetEnv,
     },
     /// Build the LLVM framework.
     Build {
@@ -26,13 +26,13 @@ pub enum Arguments {
         debug: bool,
         /// Target environment to build LLVM (`gnu` or `musl`).
         #[structopt(long = "target-env", default_value = "gnu")]
-        target_env: compiler_llvm_builder::platforms::TargetEnv,
+        target_env: compiler_llvm_builder::target_env::TargetEnv,
         /// Additional targets to build LLVM with.
         #[structopt(long = "targets", multiple = true)]
         targets: Vec<String>,
         /// The default target to build LLVM with.
         #[structopt(long = "default-target")]
-        default_target: Option<compiler_llvm_builder::platforms::Platform>,
+        default_target: Option<compiler_llvm_builder::target_triple::TargetTriple>,
         /// Whether to build the LLVM tests.
         #[structopt(long = "enable-tests")]
         enable_tests: bool,

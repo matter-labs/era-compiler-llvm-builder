@@ -7,6 +7,8 @@ pub mod llvm_path;
 pub mod lock;
 pub mod platforms;
 pub mod sanitizer;
+pub mod target_env;
+pub mod target_triple;
 pub mod utils;
 
 pub use self::build_type::BuildType;
@@ -17,6 +19,7 @@ pub use self::platforms::Platform;
 use std::collections::HashSet;
 use std::path::PathBuf;
 use std::process::Command;
+pub use target_triple::TargetTriple;
 
 ///
 /// Executes the LLVM host repository cloning for stage 1 MUSL builds.
@@ -50,11 +53,11 @@ pub fn clone_host() -> anyhow::Result<()> {
 ///
 /// Executes the LLVM repository cloning.
 ///
-pub fn clone(lock: Lock, deep: bool, target_env: platforms::TargetEnv) -> anyhow::Result<()> {
+pub fn clone(lock: Lock, deep: bool, target_env: target_env::TargetEnv) -> anyhow::Result<()> {
     utils::check_presence("git")?;
 
     // Clone the host repository if the target is musl.
-    if cfg!(target_os = "linux") && target_env == platforms::TargetEnv::MUSL {
+    if cfg!(target_os = "linux") && target_env == target_env::TargetEnv::MUSL {
         clone_host()?;
     }
 
@@ -144,9 +147,9 @@ pub fn checkout(lock: Lock, force: bool) -> anyhow::Result<()> {
 #[allow(clippy::too_many_arguments)]
 pub fn build(
     build_type: BuildType,
-    target_env: platforms::TargetEnv,
+    target_env: target_env::TargetEnv,
     targets: HashSet<Platform>,
-    default_target: Option<Platform>,
+    default_target: Option<TargetTriple>,
     enable_tests: bool,
     enable_coverage: bool,
     extra_args: Vec<String>,
@@ -158,7 +161,7 @@ pub fn build(
 
     if cfg!(target_arch = "x86_64") {
         if cfg!(target_os = "linux") {
-            if target_env == platforms::TargetEnv::MUSL {
+            if target_env == target_env::TargetEnv::MUSL {
                 platforms::x86_64_linux_musl::build(
                     build_type,
                     targets,
@@ -170,7 +173,7 @@ pub fn build(
                     enable_assertions,
                     sanitizer,
                 )?;
-            } else if target_env == platforms::TargetEnv::GNU {
+            } else if target_env == target_env::TargetEnv::GNU {
                 platforms::x86_64_linux_gnu::build(
                     build_type,
                     targets,
@@ -214,7 +217,7 @@ pub fn build(
         }
     } else if cfg!(target_arch = "aarch64") {
         if cfg!(target_os = "linux") {
-            if target_env == platforms::TargetEnv::MUSL {
+            if target_env == target_env::TargetEnv::MUSL {
                 platforms::aarch64_linux_musl::build(
                     build_type,
                     targets,
@@ -226,7 +229,7 @@ pub fn build(
                     enable_assertions,
                     sanitizer,
                 )?;
-            } else if target_env == platforms::TargetEnv::GNU {
+            } else if target_env == target_env::TargetEnv::GNU {
                 platforms::aarch64_linux_gnu::build(
                     build_type,
                     targets,
