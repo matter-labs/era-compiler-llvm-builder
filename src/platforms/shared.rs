@@ -3,7 +3,7 @@
 //!
 
 use crate::sanitizer::Sanitizer;
-use crate::Platform;
+use crate::target_triple::TargetTriple;
 use std::path::Path;
 use std::process::Command;
 
@@ -40,7 +40,7 @@ pub const SHARED_BUILD_OPTS_NOT_MUSL: [&str; 4] = [
 ///
 /// The build options to set the default target.
 ///
-pub fn shared_build_opts_default_target(target: Option<Platform>) -> Vec<String> {
+pub fn shared_build_opts_default_target(target: Option<TargetTriple>) -> Vec<String> {
     match target {
         Some(target) => vec![format!(
             "-DLLVM_DEFAULT_TARGET_TRIPLE='{}'",
@@ -48,7 +48,7 @@ pub fn shared_build_opts_default_target(target: Option<Platform>) -> Vec<String>
         )],
         None => vec![format!(
             "-DLLVM_DEFAULT_TARGET_TRIPLE='{}'",
-            Platform::EraVM
+            TargetTriple::EraVM
         )],
     }
 }

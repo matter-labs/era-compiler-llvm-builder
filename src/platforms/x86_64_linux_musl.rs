@@ -10,6 +10,7 @@ use crate::build_type::BuildType;
 use crate::llvm_path::LLVMPath;
 use crate::platforms::Platform;
 use crate::sanitizer::Sanitizer;
+use crate::target_triple::TargetTriple;
 
 ///
 /// The building sequence.
@@ -18,7 +19,7 @@ use crate::sanitizer::Sanitizer;
 pub fn build(
     build_type: BuildType,
     targets: HashSet<Platform>,
-    default_target: Option<Platform>,
+    default_target: Option<TargetTriple>,
     enable_tests: bool,
     enable_coverage: bool,
     extra_args: Vec<String>,
@@ -257,7 +258,7 @@ fn build_host(
 fn build_target(
     build_type: BuildType,
     targets: HashSet<Platform>,
-    default_target: Option<Platform>,
+    default_target: Option<TargetTriple>,
     source_directory: &Path,
     build_directory: &Path,
     target_directory: &Path,
