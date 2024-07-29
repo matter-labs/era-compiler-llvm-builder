@@ -214,7 +214,7 @@ fn build_host(
                 "-DCOMPILER_RT_BUILD_SANITIZERS='Off'",
                 "-DCOMPILER_RT_BUILD_XRAY='Off'",
                 "-DCOMPILER_RT_BUILD_LIBFUZZER='Off'",
-                "-DCOMPILER_RT_BUILD_PROFILE='Off'",
+                "-DCOMPILER_RT_BUILD_PROFILE='On'",
                 "-DCOMPILER_RT_BUILD_MEMPROF='Off'",
                 "-DCOMPILER_RT_BUILD_ORC='Off'",
                 "-DCOMPILER_RT_DEFAULT_TARGET_ARCH='aarch64'",
