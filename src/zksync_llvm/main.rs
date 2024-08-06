@@ -48,7 +48,7 @@ fn main_inner() -> anyhow::Result<()> {
             compiler_llvm_builder::clone(lock, deep, target_env)?;
         }
         Arguments::Build {
-            debug,
+            build_type,
             target_env,
             targets,
             default_target,
@@ -59,8 +59,6 @@ fn main_inner() -> anyhow::Result<()> {
             enable_assertions,
             sanitizer,
         } => {
-            let build_type = compiler_llvm_builder::BuildType::from(debug);
-
             let mut targets = targets
                 .into_iter()
                 .map(|target| compiler_llvm_builder::Platform::from_str(target.as_str()))

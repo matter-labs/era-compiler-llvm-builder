@@ -11,14 +11,22 @@ pub enum BuildType {
     Debug,
     /// The release build.
     Release,
+    /// The release with debug info build.
+    RelWithDebInfo,
+    /// The minimal size release build.
+    MinSizeRel,
 }
 
-impl From<bool> for BuildType {
-    fn from(is_debug: bool) -> Self {
-        if is_debug {
-            Self::Debug
-        } else {
-            Self::Release
+impl std::str::FromStr for BuildType {
+    type Err = String;
+
+    fn from_str(value: &str) -> Result<Self, Self::Err> {
+        match value {
+            "Debug" => Ok(Self::Debug),
+            "Release" => Ok(Self::Release),
+            "RelWithDebInfo" => Ok(Self::RelWithDebInfo),
+            "MinSizeRel" => Ok(Self::MinSizeRel),
+            value => Err(format!("Unsupported build type: `{}`", value)),
         }
     }
 }
@@ -28,6 +36,8 @@ impl std::fmt::Display for BuildType {
         match self {
             Self::Debug => write!(f, "Debug"),
             Self::Release => write!(f, "Release"),
+            Self::RelWithDebInfo => write!(f, "RelWithDebInfo"),
+            Self::MinSizeRel => write!(f, "MinSizeRel"),
         }
     }
 }
