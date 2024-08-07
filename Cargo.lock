@@ -155,7 +155,7 @@ dependencies = [
 
 [[package]]
 name = "compiler-llvm-builder"
-version = "1.0.29"
+version = "1.0.30"
 dependencies = [
  "anyhow",
  "assert_cmd",

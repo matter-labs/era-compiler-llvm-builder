@@ -21,9 +21,9 @@ pub enum Arguments {
     },
     /// Build the LLVM framework.
     Build {
-        /// Whether to build the 'Debug' version.
-        #[structopt(long = "debug")]
-        debug: bool,
+        /// LLVM build type (`Debug`, `Release`, `RelWithDebInfo`, or `MinSizeRel`).
+        #[structopt(long = "build-type", default_value = "Release")]
+        build_type: compiler_llvm_builder::BuildType,
         /// Target environment to build LLVM (`gnu` or `musl`).
         #[structopt(long = "target-env", default_value = "gnu")]
         target_env: compiler_llvm_builder::target_env::TargetEnv,

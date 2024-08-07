@@ -146,7 +146,8 @@ fn debug_build_with_tests_coverage() -> anyhow::Result<()> {
         .arg("build")
         .arg("--enable-coverage")
         .arg("--enable-tests")
-        .arg("--debug");
+        .arg("--build-type")
+        .arg("Debug");
     build_cmd
         .assert()
         .success()
