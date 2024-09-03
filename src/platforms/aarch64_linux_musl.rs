@@ -26,6 +26,7 @@ pub fn build(
     use_ccache: bool,
     enable_assertions: bool,
     sanitizer: Option<Sanitizer>,
+    enable_valgrind: bool,
 ) -> anyhow::Result<()> {
     crate::utils::check_presence("cmake")?;
     crate::utils::check_presence("clang")?;
@@ -83,6 +84,7 @@ pub fn build(
         use_ccache,
         enable_assertions,
         sanitizer,
+        enable_valgrind,
     )?;
 
     Ok(())
@@ -271,6 +273,7 @@ fn build_target(
     use_ccache: bool,
     enable_assertions: bool,
     sanitizer: Option<Sanitizer>,
+    enable_valgrind: bool,
 ) -> anyhow::Result<()> {
     let mut clang_path = host_target_directory.to_path_buf();
     clang_path.push("bin/clang");
@@ -335,6 +338,9 @@ fn build_target(
             ))
             .args(crate::platforms::shared::shared_build_opts_sanitizers(
                 sanitizer,
+            ))
+            .args(crate::platforms::shared::shared_build_opts_valgrind(
+                enable_valgrind,
             )),
         "LLVM target building cmake",
     )?;

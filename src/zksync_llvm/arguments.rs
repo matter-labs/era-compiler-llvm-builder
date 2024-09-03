@@ -52,6 +52,9 @@ pub enum Arguments {
         /// Build LLVM with sanitizer enabled (`Address`, `Memory`, `MemoryWithOrigins`, `Undefined`, `Thread`, `DataFlow`, or `Address;Undefined`).
         #[structopt(long = "sanitizer")]
         sanitizer: Option<compiler_llvm_builder::sanitizer::Sanitizer>,
+        /// Whether to run LLVM unit tests under valgrind or not.
+        #[structopt(long = "enable-valgrind")]
+        enable_valgrind: bool,
     },
     /// Checkout the branch specified in `LLVM.lock`.
     Checkout {
