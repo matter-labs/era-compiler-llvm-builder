@@ -71,6 +71,7 @@ pub fn build(
             ))
             .args(crate::platforms::shared::SHARED_BUILD_OPTS)
             .args(crate::platforms::shared::SHARED_BUILD_OPTS_NOT_MUSL)
+            .args(crate::platforms::shared::shared_build_opts_werror())
             .args(extra_args)
             .args(crate::platforms::shared::shared_build_opts_ccache(
                 use_ccache,
