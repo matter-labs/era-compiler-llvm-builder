@@ -323,6 +323,7 @@ fn build_target(
             ))
             .args(crate::platforms::shared::SHARED_BUILD_OPTS)
             .args(crate::platforms::shared::SHARED_BUILD_OPTS_NOT_MUSL)
+            .args(crate::platforms::shared::shared_build_opts_werror())
             .args(crate::platforms::shared::shared_build_opts_tests(
                 enable_tests,
             ))

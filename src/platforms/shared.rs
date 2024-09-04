@@ -8,7 +8,7 @@ use std::path::Path;
 use std::process::Command;
 
 /// The build options shared by all platforms.
-pub const SHARED_BUILD_OPTS: [&str; 18] = [
+pub const SHARED_BUILD_OPTS: [&str; 17] = [
     "-DPACKAGE_VENDOR='Matter Labs'",
     "-DCMAKE_BUILD_WITH_INSTALL_RPATH=1",
     "-DLLVM_BUILD_DOCS='Off'",
@@ -25,7 +25,6 @@ pub const SHARED_BUILD_OPTS: [&str; 18] = [
     "-DLLVM_ENABLE_TERMINFO='Off'",
     "-DLLVM_ENABLE_LIBEDIT='Off'",
     "-DLLVM_ENABLE_LIBPFM='Off'",
-    "-DLLVM_ENABLE_WERROR='On'",
     "-DCMAKE_EXPORT_COMPILE_COMMANDS='On'",
 ];
 
@@ -36,6 +35,23 @@ pub const SHARED_BUILD_OPTS_NOT_MUSL: [&str; 4] = [
     "-DLLVM_BUILD_RUNTIMES='Off'",
     "-DLLVM_INCLUDE_RUNTIMES='Off'",
 ];
+
+///
+/// The shared build options to treat warnings as errors.
+///
+/// Disabled on Windows due to the following upstream issue with MSYS2 with mingw-w64:
+/// ProgramTest.cpp:23:15: error: '__p__environ' redeclared without 'dllimport' attribute
+///
+pub fn shared_build_opts_werror() -> Vec<String> {
+    vec![format!(
+        "-DLLVM_ENABLE_WERROR='{}'",
+        if cfg!(target_os = "windows") {
+            "Off"
+        } else {
+            "On"
+        },
+    )]
+}
 
 ///
 /// The build options to set the default target.
