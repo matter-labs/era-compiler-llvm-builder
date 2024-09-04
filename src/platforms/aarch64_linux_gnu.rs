@@ -25,6 +25,7 @@ pub fn build(
     use_ccache: bool,
     enable_assertions: bool,
     sanitizer: Option<Sanitizer>,
+    enable_valgrind: bool,
 ) -> anyhow::Result<()> {
     crate::utils::check_presence("cmake")?;
     crate::utils::check_presence("clang")?;
@@ -85,6 +86,9 @@ pub fn build(
             ))
             .args(crate::platforms::shared::shared_build_opts_sanitizers(
                 sanitizer,
+            ))
+            .args(crate::platforms::shared::shared_build_opts_valgrind(
+                enable_valgrind,
             )),
         "LLVM building cmake",
     )?;

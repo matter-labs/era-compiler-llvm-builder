@@ -58,6 +58,7 @@ fn main_inner() -> anyhow::Result<()> {
             use_ccache,
             enable_assertions,
             sanitizer,
+            enable_valgrind,
         } => {
             let mut targets = targets
                 .into_iter()
@@ -96,6 +97,7 @@ fn main_inner() -> anyhow::Result<()> {
                 use_ccache,
                 enable_assertions,
                 sanitizer,
+                enable_valgrind,
             )?;
         }
         Arguments::Checkout { force } => {
