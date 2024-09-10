@@ -203,7 +203,7 @@ pub fn build(
                 enable_assertions,
                 sanitizer,
             )?;
-        } else if cfg!(target_os = "windows") && cfg!(target_env = "gnu") {
+        } else if cfg!(target_os = "windows") {
             platforms::x86_64_windows_gnu::build(
                 build_type,
                 targets,

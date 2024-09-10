@@ -43,7 +43,7 @@ jobs:
         include:
           - name: "Linux x86_64"
             image: matterlabs/llvm_runner:ubuntu22-llvm17-latest
-            runner: matterlabs-ci-runner
+            runner: matterlabs-ci-runner-high-performance
           - name: "Linux aarch64"
             image: matterlabs/llvm_runner:ubuntu22-llvm17-latest
             runner: matterlabs-ci-runner-arm
