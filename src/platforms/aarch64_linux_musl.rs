@@ -2,15 +2,15 @@
 //! The ZKsync LLVM arm64 `linux-musl` builder.
 //!
 
-use std::collections::HashSet;
-use std::path::Path;
-use std::process::Command;
-
 use crate::build_type::BuildType;
 use crate::llvm_path::LLVMPath;
+use crate::llvm_project::LLVMProject;
 use crate::platforms::Platform;
 use crate::sanitizer::Sanitizer;
 use crate::target_triple::TargetTriple;
+use std::collections::HashSet;
+use std::path::Path;
+use std::process::Command;
 
 ///
 /// The building sequence.
@@ -19,6 +19,8 @@ use crate::target_triple::TargetTriple;
 pub fn build(
     build_type: BuildType,
     targets: HashSet<Platform>,
+    llvm_projects: HashSet<LLVMProject>,
+    enable_rtti: bool,
     default_target: Option<TargetTriple>,
     enable_tests: bool,
     enable_coverage: bool,
@@ -72,6 +74,8 @@ pub fn build(
     build_target(
         build_type,
         targets,
+        llvm_projects,
+        enable_rtti,
         default_target,
         llvm_module_llvm.as_path(),
         llvm_build_final.as_path(),
@@ -261,6 +265,8 @@ fn build_host(
 fn build_target(
     build_type: BuildType,
     targets: HashSet<Platform>,
+    llvm_projects: HashSet<LLVMProject>,
+    enable_rtti: bool,
     default_target: Option<TargetTriple>,
     source_directory: &Path,
     build_directory: &Path,
@@ -316,7 +322,15 @@ fn build_target(
                         .join(";")
                 )
                 .as_str(),
-                "-DLLVM_ENABLE_PROJECTS='llvm;lld'",
+                format!(
+                    "-DLLVM_ENABLE_PROJECTS='{}'",
+                    llvm_projects
+                        .into_iter()
+                        .map(|project| project.to_string())
+                        .collect::<Vec<String>>()
+                        .join(";")
+                )
+                .as_str(),
             ])
             .args(crate::platforms::shared::shared_build_opts_default_target(
                 default_target,
@@ -336,6 +350,9 @@ fn build_target(
             ))
             .args(crate::platforms::shared::shared_build_opts_assertions(
                 enable_assertions,
+            ))
+            .args(crate::platforms::shared::shared_build_opts_rtti(
+                enable_rtti,
             ))
             .args(crate::platforms::shared::shared_build_opts_sanitizers(
                 sanitizer,
