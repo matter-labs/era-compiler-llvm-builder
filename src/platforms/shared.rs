@@ -153,6 +153,16 @@ pub fn shared_build_opts_assertions(enabled: bool) -> Vec<String> {
 }
 
 ///
+/// The build options to build with RTTI support.
+///
+pub fn shared_build_opts_rtti(enabled: bool) -> Vec<String> {
+    vec![format!(
+        "-DLLVM_ENABLE_RTTI='{}'",
+        if enabled { "On" } else { "Off" },
+    )]
+}
+
+///
 /// The build options to enable sanitizers.
 ///
 pub fn shared_build_opts_sanitizers(sanitizer: Option<Sanitizer>) -> Vec<String> {

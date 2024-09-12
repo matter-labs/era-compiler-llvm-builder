@@ -30,6 +30,12 @@ pub enum Arguments {
         /// Additional targets to build LLVM with.
         #[structopt(long = "targets", multiple = true)]
         targets: Vec<String>,
+        /// LLVM projects to build LLVM with.
+        #[structopt(long = "llvm-projects", multiple = true)]
+        llvm_projects: Vec<compiler_llvm_builder::llvm_project::LLVMProject>,
+        /// Whether to build LLVM with run-time type information (RTTI) enabled.
+        #[structopt(long = "enable-rtti")]
+        enable_rtti: bool,
         /// The default target to build LLVM with.
         #[structopt(long = "default-target")]
         default_target: Option<compiler_llvm_builder::target_triple::TargetTriple>,

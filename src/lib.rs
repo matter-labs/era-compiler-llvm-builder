@@ -4,6 +4,7 @@
 
 pub mod build_type;
 pub mod llvm_path;
+pub mod llvm_project;
 pub mod lock;
 pub mod platforms;
 pub mod sanitizer;
@@ -149,6 +150,8 @@ pub fn build(
     build_type: BuildType,
     target_env: target_env::TargetEnv,
     targets: HashSet<Platform>,
+    llvm_projects: HashSet<llvm_project::LLVMProject>,
+    enable_rtti: bool,
     default_target: Option<TargetTriple>,
     enable_tests: bool,
     enable_coverage: bool,
@@ -166,6 +169,8 @@ pub fn build(
                 platforms::x86_64_linux_musl::build(
                     build_type,
                     targets,
+                    llvm_projects,
+                    enable_rtti,
                     default_target,
                     enable_tests,
                     enable_coverage,
@@ -179,6 +184,8 @@ pub fn build(
                 platforms::x86_64_linux_gnu::build(
                     build_type,
                     targets,
+                    llvm_projects,
+                    enable_rtti,
                     default_target,
                     enable_tests,
                     enable_coverage,
@@ -195,6 +202,8 @@ pub fn build(
             platforms::x86_64_macos::build(
                 build_type,
                 targets,
+                llvm_projects,
+                enable_rtti,
                 default_target,
                 enable_tests,
                 enable_coverage,
@@ -207,6 +216,8 @@ pub fn build(
             platforms::x86_64_windows_gnu::build(
                 build_type,
                 targets,
+                llvm_projects,
+                enable_rtti,
                 default_target,
                 enable_tests,
                 enable_coverage,
@@ -224,6 +235,8 @@ pub fn build(
                 platforms::aarch64_linux_musl::build(
                     build_type,
                     targets,
+                    llvm_projects,
+                    enable_rtti,
                     default_target,
                     enable_tests,
                     enable_coverage,
@@ -237,6 +250,8 @@ pub fn build(
                 platforms::aarch64_linux_gnu::build(
                     build_type,
                     targets,
+                    llvm_projects,
+                    enable_rtti,
                     default_target,
                     enable_tests,
                     enable_coverage,
@@ -253,6 +268,8 @@ pub fn build(
             platforms::aarch64_macos::build(
                 build_type,
                 targets,
+                llvm_projects,
+                enable_rtti,
                 default_target,
                 enable_tests,
                 enable_coverage,
