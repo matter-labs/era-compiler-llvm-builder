@@ -3,6 +3,7 @@
 //!
 
 use std::collections::HashSet;
+use std::path::PathBuf;
 use std::process::Command;
 
 use crate::build_type::BuildType;
@@ -108,6 +109,20 @@ pub fn build(
     )?;
 
     crate::utils::ninja(llvm_build_final.as_ref())?;
+
+    let libstdcpp_source_path = match std::env::var("LIBSTDCPP_SOURCE_PATH") {
+        Ok(libstdcpp_source_path) => PathBuf::from(libstdcpp_source_path),
+        Err(error) => anyhow::bail!(
+            "The `LIBSTDCPP_SOURCE_PATH` must be set to the path to the libstdc++.a static library: {}", error
+        ),
+    };
+    let mut libstdcpp_destination_path = llvm_target_final;
+    libstdcpp_destination_path.push("./lib/libstdc++.a");
+    fs_extra::file::copy(
+        crate::utils::path_windows_to_unix(libstdcpp_source_path)?,
+        crate::utils::path_windows_to_unix(libstdcpp_destination_path)?,
+        &fs_extra::file::CopyOptions::default(),
+    )?;
 
     Ok(())
 }
