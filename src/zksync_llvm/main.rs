@@ -58,6 +58,7 @@ fn main_inner() -> anyhow::Result<()> {
             enable_coverage,
             extra_args,
             use_ccache,
+            ccache_variant,
             enable_assertions,
             sanitizer,
             enable_valgrind,
@@ -85,7 +86,7 @@ fn main_inner() -> anyhow::Result<()> {
             }
 
             if use_ccache {
-                compiler_llvm_builder::utils::check_presence("ccache")?;
+                compiler_llvm_builder::utils::check_presence(ccache_variant.to_string().as_str())?;
             }
 
             let mut projects = llvm_projects
@@ -106,6 +107,7 @@ fn main_inner() -> anyhow::Result<()> {
                 enable_coverage,
                 extra_args_unescaped,
                 use_ccache,
+                ccache_variant,
                 enable_assertions,
                 sanitizer,
                 enable_valgrind,

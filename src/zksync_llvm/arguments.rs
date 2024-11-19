@@ -52,6 +52,9 @@ pub enum Arguments {
         /// Whether to use compiler cache (ccache) to speed-up builds.
         #[structopt(long = "use-ccache")]
         use_ccache: bool,
+        /// Compiler cache variant to be used.
+        #[structopt(long = "ccache-variant", default_value = "ccache")]
+        ccache_variant: compiler_llvm_builder::ccache_variant::CcacheVariant,
         /// Whether to build with assertions enabled or not.
         #[structopt(long = "enable-assertions")]
         enable_assertions: bool,
