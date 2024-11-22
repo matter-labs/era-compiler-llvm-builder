@@ -24,3 +24,12 @@ impl std::str::FromStr for TargetEnv {
         }
     }
 }
+
+impl std::fmt::Display for TargetEnv {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::GNU => write!(f, "gnu"),
+            Self::MUSL => write!(f, "musl"),
+        }
+    }
+}

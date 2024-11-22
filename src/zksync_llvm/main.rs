@@ -10,6 +10,7 @@ use std::path::PathBuf;
 use std::str::FromStr;
 
 use anyhow::Context;
+use clap::Parser;
 
 use self::arguments::Arguments;
 
@@ -33,14 +34,7 @@ fn main() {
 /// The entry result wrapper.
 ///
 fn main_inner() -> anyhow::Result<()> {
-    if env::var("VERBOSE").is_ok() {
-        println!("std::env::args(): {:#?}", std::env::args());
-        println!(
-            "\nstd::env::args() collected: {}",
-            std::env::args().collect::<Vec<_>>().join(" ")
-        );
-    }
-    let arguments = Arguments::new();
+    let arguments = Arguments::try_parse()?;
 
     match arguments {
         Arguments::Clone { deep, target_env } => {
