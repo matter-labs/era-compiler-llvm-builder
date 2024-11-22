@@ -3,12 +3,13 @@
 //!
 
 use clap::Parser;
+use compiler_llvm_builder::ccache_variant::CcacheVariant;
 
 ///
 /// The ZKsync LLVM builder arguments.
 ///
 #[derive(Debug, Parser)]
-#[command(about, long_about = None)]
+#[command(version, about, long_about = None)]
 pub enum Arguments {
     /// Clone the branch specified in `LLVM.lock`.
     Clone {
@@ -62,7 +63,7 @@ pub enum Arguments {
 
         /// Whether to use compiler cache (ccache) to speed-up builds.
         #[arg(long)]
-        use_ccache: bool,
+        ccache_variant: Option<CcacheVariant>,
 
         /// Whether to build with assertions enabled or not.
         #[arg(long)]

@@ -2,6 +2,7 @@
 //! The shared options for building various platforms.
 //!
 
+use crate::ccache_variant::CcacheVariant;
 use crate::sanitizer::Sanitizer;
 use crate::target_triple::TargetTriple;
 use std::path::Path;
@@ -220,14 +221,19 @@ pub fn shared_build_opts_coverage(enabled: bool) -> Vec<String> {
 ///
 /// Use of compiler cache (ccache) to speed up the build process.
 ///
-pub fn shared_build_opts_ccache(use_ccache: bool) -> Vec<String> {
-    if use_ccache {
-        vec![
-            "-DCMAKE_C_COMPILER_LAUNCHER='ccache'".to_owned(),
-            "-DCMAKE_CXX_COMPILER_LAUNCHER='ccache'".to_owned(),
-        ]
-    } else {
-        vec![]
+pub fn shared_build_opts_ccache(ccache_variant: Option<CcacheVariant>) -> Vec<String> {
+    match ccache_variant {
+        Some(ccache_variant) => vec![
+            format!(
+                "-DCMAKE_C_COMPILER_LAUNCHER='{}'",
+                ccache_variant.to_string()
+            ),
+            format!(
+                "-DCMAKE_CXX_COMPILER_LAUNCHER='{}'",
+                ccache_variant.to_string()
+            ),
+        ],
+        None => vec![],
     }
 }
 

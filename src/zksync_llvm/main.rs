@@ -34,7 +34,7 @@ fn main() {
 /// The entry result wrapper.
 ///
 fn main_inner() -> anyhow::Result<()> {
-    let arguments = Arguments::try_parse()?;
+    let arguments = Arguments::parse();
 
     match arguments {
         Arguments::Clone { deep, target_env } => {
@@ -51,7 +51,7 @@ fn main_inner() -> anyhow::Result<()> {
             enable_tests,
             enable_coverage,
             extra_args,
-            use_ccache,
+            ccache_variant,
             enable_assertions,
             sanitizer,
             enable_valgrind,
@@ -78,8 +78,8 @@ fn main_inner() -> anyhow::Result<()> {
                 println!("\nextra_args_unescaped: {:#?}", extra_args_unescaped);
             }
 
-            if use_ccache {
-                compiler_llvm_builder::utils::check_presence("ccache")?;
+            if let Some(ccache_variant) = ccache_variant {
+                compiler_llvm_builder::utils::check_presence(ccache_variant.to_string().as_str())?;
             }
 
             let mut projects = llvm_projects
@@ -99,7 +99,7 @@ fn main_inner() -> anyhow::Result<()> {
                 enable_tests,
                 enable_coverage,
                 extra_args_unescaped,
-                use_ccache,
+                ccache_variant,
                 enable_assertions,
                 sanitizer,
                 enable_valgrind,

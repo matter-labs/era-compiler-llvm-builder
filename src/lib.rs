@@ -3,6 +3,7 @@
 //!
 
 pub mod build_type;
+pub mod ccache_variant;
 pub mod llvm_path;
 pub mod llvm_project;
 pub mod lock;
@@ -156,7 +157,7 @@ pub fn build(
     enable_tests: bool,
     enable_coverage: bool,
     extra_args: Vec<String>,
-    use_ccache: bool,
+    ccache_variant: Option<ccache_variant::CcacheVariant>,
     enable_assertions: bool,
     sanitizer: Option<sanitizer::Sanitizer>,
     enable_valgrind: bool,
@@ -175,7 +176,7 @@ pub fn build(
                     enable_tests,
                     enable_coverage,
                     extra_args,
-                    use_ccache,
+                    ccache_variant,
                     enable_assertions,
                     sanitizer,
                     enable_valgrind,
@@ -190,7 +191,7 @@ pub fn build(
                     enable_tests,
                     enable_coverage,
                     extra_args,
-                    use_ccache,
+                    ccache_variant,
                     enable_assertions,
                     sanitizer,
                     enable_valgrind,
@@ -208,7 +209,7 @@ pub fn build(
                 enable_tests,
                 enable_coverage,
                 extra_args,
-                use_ccache,
+                ccache_variant,
                 enable_assertions,
                 sanitizer,
             )?;
@@ -222,7 +223,7 @@ pub fn build(
                 enable_tests,
                 enable_coverage,
                 extra_args,
-                use_ccache,
+                ccache_variant,
                 enable_assertions,
                 sanitizer,
             )?;
@@ -241,7 +242,7 @@ pub fn build(
                     enable_tests,
                     enable_coverage,
                     extra_args,
-                    use_ccache,
+                    ccache_variant,
                     enable_assertions,
                     sanitizer,
                     enable_valgrind,
@@ -256,7 +257,7 @@ pub fn build(
                     enable_tests,
                     enable_coverage,
                     extra_args,
-                    use_ccache,
+                    ccache_variant,
                     enable_assertions,
                     sanitizer,
                     enable_valgrind,
@@ -274,7 +275,7 @@ pub fn build(
                 enable_tests,
                 enable_coverage,
                 extra_args,
-                use_ccache,
+                ccache_variant,
                 enable_assertions,
                 sanitizer,
             )?;
