@@ -2,81 +2,89 @@
 //! The ZKsync LLVM builder arguments.
 //!
 
-use structopt::StructOpt;
+use clap::Parser;
+use compiler_llvm_builder::ccache_variant::CcacheVariant;
 
 ///
 /// The ZKsync LLVM builder arguments.
 ///
-#[derive(Debug, StructOpt)]
-#[structopt(name = "llvm-builder", about = "The ZKsync LLVM framework builder")]
+#[derive(Debug, Parser)]
+#[command(version, about, long_about = None)]
 pub enum Arguments {
     /// Clone the branch specified in `LLVM.lock`.
     Clone {
         /// Clone with full commits history.
-        #[structopt(long)]
+        #[arg(long)]
         deep: bool,
+
         /// Target environment to build LLVM (GNU or MUSL).
-        #[structopt(long = "target-env", default_value = "gnu")]
+        #[arg(long, default_value_t = compiler_llvm_builder::target_env::TargetEnv::GNU)]
         target_env: compiler_llvm_builder::target_env::TargetEnv,
     },
+
     /// Build the LLVM framework.
     Build {
         /// LLVM build type (`Debug`, `Release`, `RelWithDebInfo`, or `MinSizeRel`).
-        #[structopt(long = "build-type", default_value = "Release")]
+        #[arg(long, default_value_t = compiler_llvm_builder::BuildType::Release)]
         build_type: compiler_llvm_builder::BuildType,
+
         /// Target environment to build LLVM (`gnu` or `musl`).
-        #[structopt(long = "target-env", default_value = "gnu")]
+        #[arg(long, default_value = "gnu")]
         target_env: compiler_llvm_builder::target_env::TargetEnv,
+
         /// Additional targets to build LLVM with.
-        #[structopt(long = "targets", multiple = true)]
+        #[arg(long)]
         targets: Vec<String>,
+
         /// LLVM projects to build LLVM with.
-        #[structopt(long = "llvm-projects", multiple = true)]
+        #[arg(long)]
         llvm_projects: Vec<compiler_llvm_builder::llvm_project::LLVMProject>,
+
         /// Whether to build LLVM with run-time type information (RTTI) enabled.
-        #[structopt(long = "enable-rtti")]
+        #[arg(long)]
         enable_rtti: bool,
+
         /// The default target to build LLVM with.
-        #[structopt(long = "default-target")]
+        #[arg(long)]
         default_target: Option<compiler_llvm_builder::target_triple::TargetTriple>,
+
         /// Whether to build the LLVM tests.
-        #[structopt(long = "enable-tests")]
+        #[arg(long)]
         enable_tests: bool,
+
         /// Whether to build LLVM for source-based code coverage.
-        #[structopt(long = "enable-coverage")]
+        #[arg(long)]
         enable_coverage: bool,
+
         /// Extra arguments to pass to CMake.  
         /// A leading backslash will be unescaped.
-        #[structopt(long = "extra-args", multiple = true)]
+        #[arg(long)]
         extra_args: Vec<String>,
+
         /// Whether to use compiler cache (ccache) to speed-up builds.
-        #[structopt(long = "use-ccache")]
-        use_ccache: bool,
+        #[arg(long)]
+        ccache_variant: Option<CcacheVariant>,
+
         /// Whether to build with assertions enabled or not.
-        #[structopt(long = "enable-assertions")]
+        #[arg(long)]
         enable_assertions: bool,
+
         /// Build LLVM with sanitizer enabled (`Address`, `Memory`, `MemoryWithOrigins`, `Undefined`, `Thread`, `DataFlow`, or `Address;Undefined`).
-        #[structopt(long = "sanitizer")]
+        #[arg(long)]
         sanitizer: Option<compiler_llvm_builder::sanitizer::Sanitizer>,
+
         /// Whether to run LLVM unit tests under valgrind or not.
-        #[structopt(long = "enable-valgrind")]
+        #[arg(long)]
         enable_valgrind: bool,
     },
+
     /// Checkout the branch specified in `LLVM.lock`.
     Checkout {
         /// Remove all artifacts preventing the checkout (removes all local changes!).
         #[structopt(long = "force")]
         force: bool,
     },
+
     /// Clean the build artifacts.
     Clean,
-}
-
-impl Arguments {
-    ///
-    /// A shortcut constructor.
-    ///
-    pub fn new() -> Self {
-        Self::from_args()
-    }
 }

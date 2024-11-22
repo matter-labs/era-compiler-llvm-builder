@@ -3,6 +3,7 @@
 //!
 
 use crate::build_type::BuildType;
+use crate::ccache_variant::CcacheVariant;
 use crate::llvm_path::LLVMPath;
 use crate::llvm_project::LLVMProject;
 use crate::platforms::Platform;
@@ -25,7 +26,7 @@ pub fn build(
     enable_tests: bool,
     enable_coverage: bool,
     extra_args: Vec<String>,
-    use_ccache: bool,
+    ccache_variant: Option<CcacheVariant>,
     enable_assertions: bool,
     sanitizer: Option<Sanitizer>,
     enable_valgrind: bool,
@@ -61,7 +62,7 @@ pub fn build(
         llvm_host_module_llvm.as_path(),
         llvm_build_crt.as_path(),
         llvm_target_crt.as_path(),
-        use_ccache,
+        ccache_variant,
     )?;
     build_host(
         llvm_host_module_llvm.as_path(),
@@ -69,7 +70,7 @@ pub fn build(
         llvm_target_host.as_path(),
         musl_target.as_path(),
         llvm_target_crt.as_path(),
-        use_ccache,
+        ccache_variant,
     )?;
     build_target(
         build_type,
@@ -85,7 +86,7 @@ pub fn build(
         enable_tests,
         enable_coverage,
         extra_args,
-        use_ccache,
+        ccache_variant,
         enable_assertions,
         sanitizer,
         enable_valgrind,
@@ -102,7 +103,7 @@ fn build_crt(
     source_directory: &Path,
     build_directory: &Path,
     target_directory: &Path,
-    use_ccache: bool,
+    ccache_variant: Option<CcacheVariant>,
 ) -> anyhow::Result<()> {
     targets.insert(Platform::AArch64);
 
@@ -144,7 +145,7 @@ fn build_crt(
             ])
             .args(crate::platforms::shared::SHARED_BUILD_OPTS)
             .args(crate::platforms::shared::shared_build_opts_ccache(
-                use_ccache,
+                ccache_variant,
             )),
         "CRT building cmake",
     )?;
@@ -169,7 +170,7 @@ fn build_host(
     target_directory: &Path,
     musl_target_directory: &Path,
     crt_target_directory: &Path,
-    use_ccache: bool,
+    ccache_variant: Option<CcacheVariant>,
 ) -> anyhow::Result<()> {
     crate::utils::command(
         Command::new("cmake")
@@ -228,7 +229,7 @@ fn build_host(
             ])
             .args(crate::platforms::shared::SHARED_BUILD_OPTS)
             .args(crate::platforms::shared::shared_build_opts_ccache(
-                use_ccache,
+                ccache_variant,
             )),
         "LLVM host building cmake",
     )?;
@@ -276,7 +277,7 @@ fn build_target(
     enable_tests: bool,
     enable_coverage: bool,
     extra_args: Vec<String>,
-    use_ccache: bool,
+    ccache_variant: Option<CcacheVariant>,
     enable_assertions: bool,
     sanitizer: Option<Sanitizer>,
     enable_valgrind: bool,
@@ -346,7 +347,7 @@ fn build_target(
             ))
             .args(extra_args)
             .args(crate::platforms::shared::shared_build_opts_ccache(
-                use_ccache,
+                ccache_variant,
             ))
             .args(crate::platforms::shared::shared_build_opts_assertions(
                 enable_assertions,

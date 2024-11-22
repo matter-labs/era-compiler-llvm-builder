@@ -5,7 +5,7 @@
 ///
 /// The ZKsync LLVM build type.
 ///
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum BuildType {
     /// The debug build.
     Debug,

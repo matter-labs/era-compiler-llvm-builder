@@ -6,6 +6,7 @@ use std::collections::HashSet;
 use std::process::Command;
 
 use crate::build_type::BuildType;
+use crate::ccache_variant::CcacheVariant;
 use crate::llvm_path::LLVMPath;
 use crate::llvm_project::LLVMProject;
 use crate::platforms::Platform;
@@ -25,7 +26,7 @@ pub fn build(
     enable_tests: bool,
     enable_coverage: bool,
     extra_args: Vec<String>,
-    use_ccache: bool,
+    ccache_variant: Option<CcacheVariant>,
     enable_assertions: bool,
     sanitizer: Option<Sanitizer>,
     enable_valgrind: bool,
@@ -91,7 +92,7 @@ pub fn build(
             .args(crate::platforms::shared::shared_build_opts_werror())
             .args(extra_args)
             .args(crate::platforms::shared::shared_build_opts_ccache(
-                use_ccache,
+                ccache_variant,
             ))
             .args(crate::platforms::shared::shared_build_opts_assertions(
                 enable_assertions,
