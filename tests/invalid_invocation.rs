@@ -38,7 +38,7 @@ fn invalid_option(#[case] subcommand: &str, #[case] option: &str) -> anyhow::Res
     cmd.assert()
         .failure()
         .stderr(predicate::str::contains(format!(
-            "error: unexpected argument \'{}\'  found",
+            "error: unexpected argument \'{}\' found",
             option
         )));
     Ok(())
