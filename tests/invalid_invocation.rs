@@ -38,7 +38,7 @@ fn invalid_option(#[case] subcommand: &str, #[case] option: &str) -> anyhow::Res
     cmd.assert()
         .failure()
         .stderr(predicate::str::contains(format!(
-            "error: Found argument \'{}\' which wasn't expected",
+            "error: unexpected argument \'{}\' found",
             option
         )));
     Ok(())
@@ -70,7 +70,7 @@ fn invalid_subcommand(#[case] subcommand: &str) -> anyhow::Result<()> {
     cmd.assert()
         .failure()
         .stderr(predicate::str::contains(format!(
-            "error: Found argument \'{}\' which wasn't expected",
+            "error: unrecognized subcommand \'{}\'",
             subcommand
         )));
     Ok(())
