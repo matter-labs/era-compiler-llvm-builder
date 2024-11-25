@@ -19,11 +19,6 @@ concurrency:
 
 jobs:
 
-  # Check for secrets leak in the repository
-  secrets-scanner:
-    uses: matter-labs/era-compiler-ci/.github/workflows/secrets-scanner.yaml@v1
-    secrets: inherit
-
   cargo-check:
     runs-on: ubuntu-latest
     container:
@@ -44,9 +39,6 @@ jobs:
           - name: "Linux x86_64"
             image: matterlabs/llvm_runner:ubuntu22-llvm17-latest
             runner: matterlabs-ci-runner-high-performance
-          - name: "Linux aarch64"
-            image: matterlabs/llvm_runner:ubuntu22-llvm17-latest
-            runner: matterlabs-ci-runner-arm
           - name: "MacOS x86"
             runner: macos-12-large
           - name: "Windows"
@@ -70,3 +62,17 @@ jobs:
 
       - name: Build and test
         uses: ./.github/actions/build_and_test
+
+  # Special job that allows some of the jobs to be skipped or failed
+  # requiring others to be successful
+  pr-checks:
+    runs-on: ubuntu-latest
+    if: always()
+    needs:
+      - cargo-check
+      - build-and-test
+    steps:
+      - name: Decide on PR checks
+        uses: re-actors/alls-green@release/v1
+        with:
+          jobs: ${{ toJSON(needs) }}

@@ -8,13 +8,14 @@ runs:
       env:
         LIBSTDCPP_SOURCE_PATH: "C:/a/_temp/msys64/mingw64/lib/libstdc++.a"
       run: |
+        set -x
         cargo install cargo2junit
         [ "${RUNNER_OS}" = "Windows" ] && ADD_FLAGS="--skip debug_build_with_tests_coverage --skip build_with_sanitizers"
-        cargo test --no-fail-fast -- ${ADD_FLAGS} -Z unstable-options --format json \
+        cargo test --no-fail-fast -- ${ADD_FLAGS} ${TEST_THREADS} -Z unstable-options --format json \
           | cargo2junit | tee "${UNIT_TESTS_RESULTS_XML}"
 
     - name: Upload test results (Linux)
-      if: runner.os == 'Linux'
+      if: (success() || failure()) && runner.os == 'Linux'
       uses: EnricoMi/publish-unit-test-result-action@v2
       with:
         check_name: ${{ matrix.name }} Test Results
@@ -23,7 +24,7 @@ runs:
         comment_mode: off
 
     - name: Upload test results (MacOS)
-      if: runner.os == 'macos'
+      if: (success() || failure()) && runner.os == 'macos'
       uses: EnricoMi/publish-unit-test-result-action/macos@v2
       with:
         check_name: ${{ matrix.name }} Test Results
@@ -32,7 +33,7 @@ runs:
         comment_mode: off
 
     - name: Upload test results (windows)
-      if: runner.os == 'Windows'
+      if: (success() || failure()) && runner.os == 'Windows'
       uses: EnricoMi/publish-unit-test-result-action/windows@v2
       with:
         check_name: ${{ matrix.name }} Test Results
