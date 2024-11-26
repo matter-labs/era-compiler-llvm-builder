@@ -27,7 +27,7 @@ pub const SHARED_BUILD_OPTS: [&str; 19] = [
     "-DLLVM_ENABLE_LIBEDIT='Off'",
     "-DLLVM_ENABLE_LIBPFM='Off'",
     "-DCMAKE_EXPORT_COMPILE_COMMANDS='On'",
-    "-DPython3_FIND_REGISTRY='LAST'", // Use Python version from PATH, and not from registry,
+    "-DPython3_FIND_REGISTRY='LAST'", // Use Python version from $PATH, not from registry
     "-DBUG_REPORT_URL='https://github.com/matter-labs/era-compiler-llvm/issues/'",
 ];
 
