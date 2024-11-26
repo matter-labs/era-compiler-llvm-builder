@@ -9,7 +9,7 @@ use std::path::Path;
 use std::process::Command;
 
 /// The build options shared by all platforms.
-pub const SHARED_BUILD_OPTS: [&str; 18] = [
+pub const SHARED_BUILD_OPTS: [&str; 19] = [
     "-DPACKAGE_VENDOR='Matter Labs'",
     "-DCMAKE_BUILD_WITH_INSTALL_RPATH=1",
     "-DLLVM_BUILD_DOCS='Off'",
@@ -27,7 +27,8 @@ pub const SHARED_BUILD_OPTS: [&str; 18] = [
     "-DLLVM_ENABLE_LIBEDIT='Off'",
     "-DLLVM_ENABLE_LIBPFM='Off'",
     "-DCMAKE_EXPORT_COMPILE_COMMANDS='On'",
-    "-DPython3_FIND_REGISTRY='LAST'", // Use Python version from PATH, and not from registry
+    "-DPython3_FIND_REGISTRY='LAST'", // Use Python version from $PATH, not from registry
+    "-DBUG_REPORT_URL='https://github.com/matter-labs/era-compiler-llvm/issues/'",
 ];
 
 /// The build options shared by all platforms except MUSL.
