@@ -177,12 +177,18 @@ pub fn shared_build_opts_sanitizers(sanitizer: Option<Sanitizer>) -> Vec<String>
 ///
 /// The build options to enable Valgrind for LLVM regression tests.
 ///
-pub fn shared_build_opts_valgrind(enabled: bool) -> Vec<String> {
-    if enabled {
-        vec!["-DLLVM_LIT_ARGS='-sv --vg --vg-leak'".to_owned()]
-    } else {
-        vec![]
+pub fn shared_build_opts_valgrind(enabled: bool, valgrind_options: Vec<String>) -> Vec<String> {
+    if !enabled {
+        return vec![];
     }
+
+    let vg_args = valgrind_options
+        .iter()
+        .map(|opt| format!("--vg-arg='{}'", opt))
+        .collect::<Vec<_>>()
+        .join(" ");
+
+    vec![format!("-DLLVM_LIT_ARGS='-sv --vg --vg-leak {}'", vg_args)]
 }
 
 ///

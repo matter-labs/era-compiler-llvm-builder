@@ -76,6 +76,10 @@ pub enum Arguments {
         /// Whether to run LLVM unit tests under valgrind or not.
         #[arg(long)]
         enable_valgrind: bool,
+
+        /// Additional valgrind options to pass to the valgrind command.
+        #[arg(long)]
+        valgrind_options: Vec<String>,
     },
 
     /// Checkout the branch specified in `LLVM.lock`.
