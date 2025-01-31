@@ -11,6 +11,7 @@ runs:
         set -x
         cargo install cargo2junit
         [ "${RUNNER_OS}" = "Windows" ] && ADD_FLAGS="--skip debug_build_with_tests_coverage --skip build_with_sanitizers"
+        [ "${RUNNER_OS}" = "macOS" ] && export PATH="/opt/homebrew/opt/llvm/bin:${PATH}"
         cargo test --no-fail-fast -- ${ADD_FLAGS} ${TEST_THREADS} -Z unstable-options --format json \
           | cargo2junit | tee "${UNIT_TESTS_RESULTS_XML}"
 
