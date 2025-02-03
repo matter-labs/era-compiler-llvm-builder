@@ -55,6 +55,7 @@ fn main_inner() -> anyhow::Result<()> {
             enable_assertions,
             sanitizer,
             enable_valgrind,
+            valgrind_options,
         } => {
             let mut targets = targets
                 .into_iter()
@@ -103,6 +104,7 @@ fn main_inner() -> anyhow::Result<()> {
                 enable_assertions,
                 sanitizer,
                 enable_valgrind,
+                valgrind_options,
             )?;
         }
         Arguments::Checkout { force } => {

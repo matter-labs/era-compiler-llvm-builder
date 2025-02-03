@@ -161,6 +161,7 @@ pub fn build(
     enable_assertions: bool,
     sanitizer: Option<sanitizer::Sanitizer>,
     enable_valgrind: bool,
+    valgrind_options: Vec<String>,
 ) -> anyhow::Result<()> {
     std::fs::create_dir_all(LLVMPath::DIRECTORY_LLVM_TARGET)?;
 
@@ -180,6 +181,7 @@ pub fn build(
                     enable_assertions,
                     sanitizer,
                     enable_valgrind,
+                    valgrind_options,
                 )?;
             } else if target_env == target_env::TargetEnv::GNU {
                 platforms::x86_64_linux_gnu::build(
@@ -195,6 +197,7 @@ pub fn build(
                     enable_assertions,
                     sanitizer,
                     enable_valgrind,
+                    valgrind_options,
                 )?;
             } else {
                 anyhow::bail!("Unsupported target environment for x86_64 and Linux");
@@ -246,6 +249,7 @@ pub fn build(
                     enable_assertions,
                     sanitizer,
                     enable_valgrind,
+                    valgrind_options,
                 )?;
             } else if target_env == target_env::TargetEnv::GNU {
                 platforms::aarch64_linux_gnu::build(
@@ -261,6 +265,7 @@ pub fn build(
                     enable_assertions,
                     sanitizer,
                     enable_valgrind,
+                    valgrind_options,
                 )?;
             } else {
                 anyhow::bail!("Unsupported target environment for aarch64 and Linux");

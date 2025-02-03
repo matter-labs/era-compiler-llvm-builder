@@ -58,7 +58,7 @@ jobs:
       - name: Prepare MacOS environment
         shell: bash
         if: runner.os == 'macOS'
-        run: brew install cmake ninja
+        run: brew install cmake ninja llvm
 
       - name: Build and test
         uses: ./.github/actions/build_and_test

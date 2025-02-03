@@ -30,6 +30,7 @@ pub fn build(
     enable_assertions: bool,
     sanitizer: Option<Sanitizer>,
     enable_valgrind: bool,
+    valgrind_options: Vec<String>,
 ) -> anyhow::Result<()> {
     crate::utils::check_presence("cmake")?;
     crate::utils::check_presence("clang")?;
@@ -105,6 +106,7 @@ pub fn build(
             ))
             .args(crate::platforms::shared::shared_build_opts_valgrind(
                 enable_valgrind,
+                valgrind_options,
             )),
         "LLVM building cmake",
     )?;
