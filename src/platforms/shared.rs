@@ -129,9 +129,19 @@ pub fn build_musl(build_directory: &Path, target_directory: &Path) -> anyhow::Re
     };
     fs_extra::dir::copy(
         "/usr/include/asm-generic",
-        asm_include_directory,
+        asm_include_directory.clone(),
         &copy_options,
     )?;
+
+    let arch_asm_path = format!("/usr/include/{}-linux-gnu/asm", std::env::consts::ARCH);
+    let copy_options = fs_extra::file::CopyOptions::new().overwrite(true);
+    for file in &["byteorder.h", "ptrace.h", "hwcap.h", "sve_context.h", "unistd_64.h"] {
+        let src = std::path::PathBuf::from(&arch_asm_path).join(file);
+        let dst = asm_include_directory.join(file);
+        if src.exists() {
+            fs_extra::file::copy(&src, &dst, &copy_options)?;
+        }
+    }
 
     crate::utils::command(
         Command::new("sed")
