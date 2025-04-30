@@ -17,11 +17,11 @@ pub use self::build_type::BuildType;
 pub use self::llvm_path::LLVMPath;
 pub use self::lock::Lock;
 pub use self::platforms::Platform;
+pub use self::target_triple::TargetTriple;
 
 use std::collections::HashSet;
 use std::path::PathBuf;
 use std::process::Command;
-pub use target_triple::TargetTriple;
 
 ///
 /// Executes the LLVM host repository cloning for stage 1 MUSL builds.
