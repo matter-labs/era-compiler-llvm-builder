@@ -40,7 +40,7 @@ jobs:
             image: matterlabs/llvm_runner:ubuntu22-llvm17-latest
             runner: matterlabs-ci-runner-high-performance
           - name: "MacOS x86"
-            runner: macos-12-large
+            runner: macos-latest-large
           - name: "Windows"
             runner: windows-2022-github-hosted-16core
     runs-on: ${{ matrix.runner }}
