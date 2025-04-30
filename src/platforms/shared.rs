@@ -2,11 +2,12 @@
 //! The shared options for building various platforms.
 //!
 
+use std::path::Path;
+use std::process::Command;
+
 use crate::ccache_variant::CcacheVariant;
 use crate::sanitizer::Sanitizer;
 use crate::target_triple::TargetTriple;
-use std::path::Path;
-use std::process::Command;
 
 /// The build options shared by all platforms.
 pub const SHARED_BUILD_OPTS: [&str; 19] = [
@@ -129,17 +130,25 @@ pub fn build_musl(build_directory: &Path, target_directory: &Path) -> anyhow::Re
     };
     fs_extra::dir::copy(
         "/usr/include/asm-generic",
-        asm_include_directory.clone(),
+        asm_include_directory.as_path(),
         &copy_options,
     )?;
 
     let arch_asm_path = format!("/usr/include/{}-linux-gnu/asm", std::env::consts::ARCH);
     let copy_options = fs_extra::file::CopyOptions::new().overwrite(true);
-    for file in &["byteorder.h", "ptrace.h", "hwcap.h", "sve_context.h", "unistd_64.h"] {
-        let src = std::path::PathBuf::from(&arch_asm_path).join(file);
-        let dst = asm_include_directory.join(file);
-        if src.exists() {
-            fs_extra::file::copy(&src, &dst, &copy_options)?;
+    for file in [
+        "byteorder.h",
+        "ptrace.h",
+        "hwcap.h",
+        "sve_context.h",
+        "unistd_64.h",
+    ]
+    .into_iter()
+    {
+        let source = std::path::PathBuf::from(arch_asm_path.as_str()).join(file);
+        let destination = asm_include_directory.join(file);
+        if source.exists() {
+            fs_extra::file::copy(source.as_path(), destination.as_path(), &copy_options)?;
         }
     }
 
