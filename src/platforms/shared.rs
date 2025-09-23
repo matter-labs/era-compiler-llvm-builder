@@ -34,7 +34,7 @@ pub const SHARED_BUILD_OPTS: [&str; 19] = [
 
 /// The build options shared by all platforms except MUSL.
 pub const SHARED_BUILD_OPTS_NOT_MUSL: [&str; 4] = [
-    "-DLLVM_OPTIMIZED_TABLEGEN='On'",
+    "-DLLVM_OPTIMIZED_TABLEGEN='Off'",
     "-DLLVM_BUILD_RUNTIME='Off'",
     "-DLLVM_BUILD_RUNTIMES='Off'",
     "-DLLVM_INCLUDE_RUNTIMES='Off'",
