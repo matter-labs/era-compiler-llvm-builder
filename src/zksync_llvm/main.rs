@@ -61,7 +61,7 @@ fn main_inner() -> anyhow::Result<()> {
                 .into_iter()
                 .map(|target| compiler_llvm_builder::Platform::from_str(target.as_str()))
                 .collect::<Result<HashSet<compiler_llvm_builder::Platform>, String>>()
-                .map_err(|platform| anyhow::anyhow!("Unknown platform `{}`", platform))?;
+                .map_err(|platform| anyhow::anyhow!("Unknown platform `{platform}`"))?;
             targets.insert(compiler_llvm_builder::Platform::EraVM);
             targets.insert(compiler_llvm_builder::Platform::EVM);
 
@@ -75,19 +75,19 @@ fn main_inner() -> anyhow::Result<()> {
                 })
                 .collect();
             if env::var("VERBOSE").is_ok() {
-                println!("\nextra_args: {:#?}", extra_args);
-                println!("\nextra_args_unescaped: {:#?}", extra_args_unescaped);
+                println!("\nextra_args: {extra_args:#?}");
+                println!("\nextra_args_unescaped: {extra_args_unescaped:#?}");
             }
 
             if let Some(ccache_variant) = ccache_variant {
-                compiler_llvm_builder::utils::check_presence(ccache_variant.to_string().as_str())?;
+                compiler_llvm_builder::utils::exists(ccache_variant.to_string().as_str())?;
             }
 
             let mut projects = llvm_projects
                 .into_iter()
                 .map(|project| compiler_llvm_builder::llvm_project::LLVMProject::from_str(project.to_string().as_str()))
                 .collect::<Result<HashSet<compiler_llvm_builder::llvm_project::LLVMProject>, String>>()
-                .map_err(|project| anyhow::anyhow!("Unknown LLVM project `{}`", project))?;
+                .map_err(|project| anyhow::anyhow!("Unknown LLVM project `{project}`"))?;
             projects.insert(compiler_llvm_builder::llvm_project::LLVMProject::LLD);
 
             compiler_llvm_builder::build(

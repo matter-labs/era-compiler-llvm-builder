@@ -42,16 +42,16 @@ pub const MUSL_SNAPSHOTS_URL: &str = "https://git.musl-libc.org/cgit/musl/snapsh
 ///
 pub fn command(command: &mut Command, description: &str) -> anyhow::Result<()> {
     if std::env::var("VERBOSE").is_ok() {
-        println!("\ndescription: {}; command: {:?}", description, command);
+        println!("\ndescription: {description}; command: {command:?}");
     }
     if std::env::var("DRY_RUN").is_ok() {
         println!("\tOnly a dry run; not executing the command.");
     } else {
         let status = command
             .status()
-            .map_err(|error| anyhow::anyhow!("{} process: {}", description, error))?;
+            .map_err(|error| anyhow::anyhow!("{description} process: {error}"))?;
         if !status.success() {
-            anyhow::bail!("{} failed", description);
+            anyhow::bail!("{description} failed");
         }
     }
     Ok(())
@@ -89,7 +89,7 @@ pub fn unpack_tar(filename: PathBuf, path: &str) -> anyhow::Result<()> {
 ///
 pub fn download_musl(name: &str) -> anyhow::Result<()> {
     let tar_file_name = format!("{name}.tar.gz");
-    let url = format!("{}/{tar_file_name}", MUSL_SNAPSHOTS_URL);
+    let url = format!("{MUSL_SNAPSHOTS_URL}/{tar_file_name}");
     download(url.as_str(), crate::LLVMPath::DIRECTORY_LLVM_TARGET)?;
     let musl_tarball = crate::LLVMPath::musl_source(tar_file_name.as_str())?;
     unpack_tar(musl_tarball, crate::LLVMPath::DIRECTORY_LLVM_TARGET)?;
@@ -128,13 +128,13 @@ pub fn path_windows_to_unix<P: AsRef<Path> + PathBufExt>(path: P) -> anyhow::Res
 ///
 /// Checks if the tool exists in the system.
 ///
-pub fn check_presence(name: &str) -> anyhow::Result<()> {
+pub fn exists(name: &str) -> anyhow::Result<()> {
     let status = Command::new("which")
         .arg(name)
         .status()
-        .map_err(|error| anyhow::anyhow!("`which {}` process: {}", name, error))?;
+        .map_err(|error| anyhow::anyhow!("`which {name}` process: {error}"))?;
     if !status.success() {
-        anyhow::bail!("Tool `{}` is missing. Please install", name);
+        anyhow::bail!("Tool `{name}` is missing. Please install");
     }
     Ok(())
 }
@@ -147,14 +147,14 @@ pub fn get_xcode_version() -> anyhow::Result<u32> {
         .args(["--pkg-info", "com.apple.pkg.CLTools_Executables"])
         .stdout(Stdio::piped())
         .spawn()
-        .map_err(|error| anyhow::anyhow!("`pkgutil` process: {}", error))?;
+        .map_err(|error| anyhow::anyhow!("`pkgutil` process: {error}"))?;
     let grep_version = Command::new("grep")
         .arg("version")
         .stdin(Stdio::from(pkgutil.stdout.expect(
             "Failed to identify XCode version - XCode or CLI tools are not installed",
         )))
         .output()
-        .map_err(|error| anyhow::anyhow!("`grep` process: {}", error))?;
+        .map_err(|error| anyhow::anyhow!("`grep` process: {error}"))?;
     let version_string = String::from_utf8(grep_version.stdout)?;
     let version_regex = regex::Regex::new(r"version: (\d+)\..*")?;
     let captures = version_regex

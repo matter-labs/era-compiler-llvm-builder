@@ -20,7 +20,7 @@ impl std::str::FromStr for TargetEnv {
         match value {
             "gnu" => Ok(Self::GNU),
             "musl" => Ok(Self::MUSL),
-            value => Err(format!("Unsupported target environment: `{}`", value)),
+            value => Err(format!("Unsupported target environment: `{value}`")),
         }
     }
 }

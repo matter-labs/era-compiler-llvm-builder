@@ -22,7 +22,7 @@ impl std::str::FromStr for TargetTriple {
         match value {
             "eravm" => Ok(Self::EraVM),
             "evm" => Ok(Self::EVM),
-            value => Err(format!("Unsupported target triple: `{}`", value)),
+            value => Err(format!("Unsupported target triple: `{value}`")),
         }
     }
 }

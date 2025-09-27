@@ -35,7 +35,7 @@ impl FromStr for Platform {
         match value {
             "EraVM" => Ok(Self::EraVM),
             "EVM" => Ok(Self::EVM),
-            value => Err(format!("Unsupported platform: `{}`", value)),
+            value => Err(format!("Unsupported platform: `{value}`")),
         }
     }
 }

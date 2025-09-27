@@ -30,8 +30,8 @@ pub fn build(
     enable_assertions: bool,
     sanitizer: Option<Sanitizer>,
 ) -> anyhow::Result<()> {
-    crate::utils::check_presence("cmake")?;
-    crate::utils::check_presence("ninja")?;
+    crate::utils::exists("cmake")?;
+    crate::utils::exists("ninja")?;
 
     let llvm_module_llvm = LLVMPath::llvm_module_llvm()?;
     let llvm_build_final = LLVMPath::llvm_build_final()?;

@@ -31,11 +31,11 @@ pub fn build(
     enable_assertions: bool,
     sanitizer: Option<Sanitizer>,
 ) -> anyhow::Result<()> {
-    crate::utils::check_presence("cmake")?;
-    crate::utils::check_presence("clang")?;
-    crate::utils::check_presence("clang++")?;
-    crate::utils::check_presence("lld")?;
-    crate::utils::check_presence("ninja")?;
+    crate::utils::exists("cmake")?;
+    crate::utils::exists("clang")?;
+    crate::utils::exists("clang++")?;
+    crate::utils::exists("lld")?;
+    crate::utils::exists("ninja")?;
 
     let llvm_module_llvm =
         LLVMPath::llvm_module_llvm().and_then(crate::utils::path_windows_to_unix)?;
@@ -114,7 +114,7 @@ pub fn build(
     let libstdcpp_source_path = match std::env::var("LIBSTDCPP_SOURCE_PATH") {
         Ok(libstdcpp_source_path) => PathBuf::from(libstdcpp_source_path),
         Err(error) => anyhow::bail!(
-            "The `LIBSTDCPP_SOURCE_PATH` must be set to the path to the libstdc++.a static library: {}", error
+            "The `LIBSTDCPP_SOURCE_PATH` must be set to the path to the libstdc++.a static library: {error}"
         ),
     };
     let mut libstdcpp_destination_path = llvm_target_final;
