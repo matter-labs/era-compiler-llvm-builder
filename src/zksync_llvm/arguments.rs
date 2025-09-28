@@ -58,7 +58,7 @@ pub enum Arguments {
 
         /// Extra arguments to pass to CMake.  
         /// A leading backslash will be unescaped.
-        #[arg(long)]
+        #[arg(long, num_args = 1..)]
         extra_args: Vec<String>,
 
         /// Whether to use compiler cache (ccache) to speed-up builds.

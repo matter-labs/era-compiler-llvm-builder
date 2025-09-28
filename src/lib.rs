@@ -29,10 +29,7 @@ use std::process::Command;
 pub fn clone_host() -> anyhow::Result<()> {
     let destination_path = PathBuf::from(LLVMPath::DIRECTORY_LLVM_HOST_SOURCE);
     if destination_path.exists() {
-        eprintln!(
-            "The host repository is already cloned at {:?}. Skipping...",
-            destination_path
-        );
+        eprintln!("The host repository is already cloned at {destination_path:?}. Skipping...",);
         return Ok(());
     }
 
@@ -56,7 +53,7 @@ pub fn clone_host() -> anyhow::Result<()> {
 /// Executes the LLVM repository cloning.
 ///
 pub fn clone(lock: Lock, deep: bool, target_env: target_env::TargetEnv) -> anyhow::Result<()> {
-    utils::check_presence("git")?;
+    utils::exists("git")?;
 
     // Clone the host repository if the target is musl.
     if cfg!(target_os = "linux") && target_env == target_env::TargetEnv::MUSL {
@@ -66,8 +63,7 @@ pub fn clone(lock: Lock, deep: bool, target_env: target_env::TargetEnv) -> anyho
     let destination_path = PathBuf::from(LLVMPath::DIRECTORY_LLVM_SOURCE);
     if destination_path.exists() {
         anyhow::bail!(
-            "The repository is already cloned at {:?}. Use `checkout` instead",
-            destination_path
+            "The repository is already cloned at {destination_path:?}. Use `checkout` instead",
         );
     }
 

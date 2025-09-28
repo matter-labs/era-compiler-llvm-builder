@@ -33,11 +33,11 @@ pub fn build(
     enable_valgrind: bool,
     valgrind_options: Vec<String>,
 ) -> anyhow::Result<()> {
-    crate::utils::check_presence("cmake")?;
-    crate::utils::check_presence("clang")?;
-    crate::utils::check_presence("clang++")?;
-    crate::utils::check_presence("lld")?;
-    crate::utils::check_presence("ninja")?;
+    crate::utils::exists("cmake")?;
+    crate::utils::exists("clang")?;
+    crate::utils::exists("clang++")?;
+    crate::utils::exists("lld")?;
+    crate::utils::exists("ninja")?;
 
     let musl_name = "musl-1.2.3";
     let musl_build = LLVMPath::musl_build(musl_name)?;

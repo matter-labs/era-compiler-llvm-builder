@@ -188,7 +188,7 @@ pub fn shared_build_opts_rtti(enabled: bool) -> Vec<String> {
 ///
 pub fn shared_build_opts_sanitizers(sanitizer: Option<Sanitizer>) -> Vec<String> {
     match sanitizer {
-        Some(sanitizer) => vec![format!("-DLLVM_USE_SANITIZER='{}'", sanitizer)],
+        Some(sanitizer) => vec![format!("-DLLVM_USE_SANITIZER='{sanitizer}'")],
         None => vec![],
     }
 }
@@ -203,11 +203,11 @@ pub fn shared_build_opts_valgrind(enabled: bool, valgrind_options: Vec<String>) 
 
     let vg_args = valgrind_options
         .iter()
-        .map(|opt| format!("--vg-arg='{}'", opt))
+        .map(|opt| format!("--vg-arg='{opt}'"))
         .collect::<Vec<_>>()
         .join(" ");
 
-    vec![format!("-DLLVM_LIT_ARGS='-sv --vg --vg-leak {}'", vg_args)]
+    vec![format!("-DLLVM_LIT_ARGS='-sv --vg --vg-leak {vg_args}'")]
 }
 
 ///
